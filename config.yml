@@ -1,0 +1,19 @@
+#mqtthost: broker.hivemq.com
+#mqtthost: 127.0.0.1
+username: oceanlec
+password: ocl2023pw
+#mqttport: 1883
+mqtthost: 131.113.98.83 #plugfest.west.sd.keio.ac.jp
+mqttport: 24883
+# needs / in the end
+spfx: _1451.1.6/
+tomdop: D/
+tomcop: D0C/
+tomd0op: D0/
+# Does not need / in the end
+loc: OUC-LEC/2023/ncap0
+locclient: OUC-LEC/2023/application0
+slowsample: 1
+fastsample: 500
+reqtopic: NCAP/1451OPE
+restopic: SERVICE/1451RES
