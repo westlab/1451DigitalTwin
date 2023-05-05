@@ -74,6 +74,19 @@ if pflag == False:
 else:
     print('Pseudo Sensors')
 
+if not confdata.get('spfx'):
+    confdata['spfx'] = '_1451.1.6/'
+if not confdata.get('tomdop'):
+    confdata['tomdop'] = 'D/'
+if not confdata.get('tomcop'):
+    confdata['tomcop'] = 'D0C/'
+if not confdata.get('tomd0op'):
+    confdata['tomd0op'] = 'D0/'
+if not confdata.get('loc'):
+    confdata['loc'] = 'LOC-NCAP-SERVER'
+if not confdata.get('locclient'):
+    confdata['locclient'] = 'LOC-NCAP-CLIENT'
+topicdop = confdata['spfx']+confdata['tomdop']+confdata['loc']+'/' # publish
 topicdop = confdata['spfx']+confdata['tomdop']+confdata['loc']+'/' # publish
 topiccop = confdata['spfx']+confdata['tomcop']+confdata['loc'] # subscribe
 topiccopres = confdata['spfx']+confdata['tomcop']+confdata['locclient'] # publish
@@ -84,9 +97,6 @@ print("Topics for subscribe")
 pprint.pprint([topiccop, topicd0op])
 print("Topics for publish")
 pprint.pprint([topiccopres, topicd0opres])
-#subscriptor = [
-#    gmqtt.Subscription(topiccop, qos=2), gmqtt.Subscription(topicd0op, qos=2)
-#]
 
 vhumid = {}
 vtemp = {}
@@ -405,13 +415,16 @@ if __name__ == '__main__':
     addrm = addr+'mqtt'
     print(' - Client ID='+addr)
     client = mqtt.Client(protocol=mqtt.MQTTv311)
-    if (confdata['username']):
+    if confdata.get('username'):
         client.username_pw_set(confdata['username'], confdata['password'])
         print("AUTH:"+confdata['username']+' '+confdata['password'])
+    if confdata.get('mqtttls'):
+        client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
+        print("TLS ON")
     client.on_connect = on_connect
     client.on_message = on_message
     client.on_disconnect = on_disconnect
-    client.enable_bridge_mode()
+#    client.enable_bridge_mode()
     client.connect(confdata['mqtthost'], port=int(confdata['mqttport']), keepalive=60)
     client.loop(.1)
     client.loop_start()
