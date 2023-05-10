@@ -105,7 +105,7 @@ binblk_read = {
     'netSvcType'        : {'offset': 0,  'type': '<B'},
     'netSvcID'          : {'offset': 1,  'type': '<B'},
     'msgType'           : {'offset': 2,  'type': '<B'},
-    'msgLength'         : {'offset': 3,  'type': '<H'},
+    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
     'appId'             : {'offset': 5,  'type': '<16s'},
     'ncapId'            : {'offset': 21, 'type': '<16s'},
     'timId'             : {'offset': 37, 'type': '<16s'},
@@ -118,7 +118,7 @@ binblk_read = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
-#    'msgLength'         : {'offset': 3,  'type': '<H'},
+#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
 #    'errCode'           : {'offset': 5,  'type': '<2s'},
 #    'appId'             : {'offset': 7,  'type': '<16s'},
 #    'ncapId'            : {'offset': 23, 'type': '<16s'},
@@ -132,7 +132,7 @@ binblk_write = {
     'netSvcType'        : {'offset': 0,  'type': '<B'},
     'netSvcID'          : {'offset': 1,  'type': '<B'},
     'msgType'           : {'offset': 2,  'type': '<B'},
-    'msgLength'         : {'offset': 3,  'type': '<H'},
+    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
     'appId'             : {'offset': 5,  'type': '<16s'},
     'ncapId'            : {'offset': 21, 'type': '<16s'},
     'timId'             : {'offset': 37, 'type': '<16s'},
@@ -146,7 +146,7 @@ binblk_write = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
-#    'msgLength'         : {'offset': 3,  'type': '<H'},
+#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
 #    'errCode'           : {'offset': 5,  'type': '<2s'},
 #    'appId'             : {'offset': 7,  'type': '<16s'},
 #    'ncapId'            : {'offset': 23, 'type': '<16s'},
@@ -158,7 +158,7 @@ binblk_teds = {
     'netSvcType'        : {'offset': 0,  'type': '<B'},
     'netSvcID'          : {'offset': 1,  'type': '<B'},
     'msgType'           : {'offset': 2,  'type': '<B'},
-    'msgLength'         : {'offset': 3,  'type': '<H'},
+    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
     'appId'             : {'offset': 5,  'type': '<16s'},
     'ncapId'            : {'offset': 21, 'type': '<16s'},
     'timId'             : {'offset': 37, 'type': '<16s'},
@@ -172,7 +172,7 @@ binblk_teds = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
-#    'msgLength'         : {'offset': 3,  'type': '<H'},
+#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
 #    'appId'             : {'offset': 5,  'type': '<16s'},
 #    'ncapId'            : {'offset': 21, 'type': '<16s'},
 #    'timId'             : {'offset': 37, 'type': '<16s'},
@@ -248,91 +248,88 @@ def on_message(mqttc, obj, msg):
         for mline in rmsg:
             if mline[0]+mline[1]+mline[2] == '211':
                 print('Read Sensor Data COP')
-                print('msgLength', mline[3])
-                print('appId', mline[4])
-                print('ncapId', mline[5])
-                print('timId', mline[6])
-                print('channelid', mline[7])
-                print('samplingMode', mline[8])
-                print('timeout', mline[9])
-                chid = int(mline[7])
-                if mline[5] == uuid0:
-                    if mline[6] == uuid0:
+                print('appId', mline[3])
+                print('ncapId', mline[4])
+                print('timId', mline[5])
+                print('channelid', mline[6])
+                print('samplingMode', mline[7])
+                print('timeout', mline[8])
+                chid = int(mline[6])
+                if mline[4] == uuid0:
+                    if mline[5] == uuid0:
                         print(topiccopres)
-                        print('publish: appId as ml 4:', mline[4])
-                        print('publish: ncapId as ml 5:', mline[5])
-                        print('publish: timId as ml 6:', mline[6])
+                        print('publish: appId as ml 3:', mline[3])
+                        print('publish: ncapId as ml 4:', mline[4])
+                        print('publish: timId as ml 5:', mline[5])
                         print('publish: chid:', str(chid))
                         print('publish: sampleData:', str(vtemp[chid]))
                         print('publish: sts:', sts)
-                        client.publish(topiccopres, '2,1,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+str(chid)+','+str(vtemp[chid])+','+sts)
+                        client.publish(topiccopres, '2,1,2,0,'+mline[3]+','+mline[4]+','+mline[5]+','+str(chid)+','+str(vtemp[chid])+','+sts)
                         print("Read TEMP Response")
-                    elif mline[6] == uuid1:
+                    elif mline[5] == uuid1:
                         print(topiccopres)
-                        print('publish: appId as ml 4:', mline[4])
-                        print('publish: ncapId as ml 5:', mline[5])
-                        print('publish: timId as ml 6:', mline[6])
+                        print('publish: appId as ml 4:', mline[3])
+                        print('publish: ncapId as ml 5:', mline[4])
+                        print('publish: timId as ml 6:', mline[5])
                         print('publish: chid:', str(chid))
                         print('publish: sampleData:', str(vhumid[chid]))
                         print('publish: sts:', sts)
-                        client.publish(topiccopres, '2,1,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+str(chid)+','+str(vhumid[chid])+','+sts)
+                        client.publish(topiccopres, '2,1,2,0,'+mline[3]+','+mline[4]+','+mline[5]+','+str(chid)+','+str(vhumid[chid])+','+sts)
                         print("Read HUMID")
                     else:
-                        print("timId Error:", mline[6])
+                        print("timId Error:", mline[5])
                 else:
-                    print("ncapId Error:", mline[5])
+                    print("ncapId Error:", mline[4])
             elif mline[0]+mline[1]+mline[2] == '271':
                 print('Write Xdcr COP')
-                print('msgLength', mline[3])
-                print('appId', mline[4])
-                print('ncapId', mline[5])
-                print('timId', mline[6])
-                print('channelid', mline[7])
-                print('samplingMode', mline[8])
-                print('VAL', mline[9])
-                chid = int(mline[7])
-                if mline[5] == uuid0:
-                    if mline[6] == uuid2:
-                        print('publish: appId as ml 4:', mline[4])
-                        print('publish: ncapId as ml 5:', mline[5])
-                        print('publish: timId as ml 6:', mline[6])
+                print('appId', mline[3])
+                print('ncapId', mline[4])
+                print('timId', mline[5])
+                print('channelid', mline[6])
+                print('samplingMode', mline[7])
+                print('VAL', mline[8])
+                chid = int(mline[6])
+                if mline[4] == uuid0:
+                    if mline[5] == uuid2:
+                        print('publish: appId as ml 4:', mline[3])
+                        print('publish: ncapId as ml 5:', mline[4])
+                        print('publish: timId as ml 6:', mline[5])
                         print('publish: chid:', str(chid))
-                        print('publish: writeData:', mline[9])
-                        print('publish: DutyCycle:', int(mline[9])/25+2.4)
+                        print('publish: writeData:', mline[8])
+                        print('publish: DutyCycle:', int(mline[8])/25+2.4)
                         print('publish: sts:', sts)
                         if pflag == False:
-                            p.ChangeDutyCycle(int(mline[9])/25+2.4)
+                            p.ChangeDutyCycle(int(mline[8])/25+2.4)
                             time.sleep(0.4)
                             p.ChangeDutyCycle(0.0)
-                            client.publish(topiccopres, '2,7,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+str(chid))
+                            client.publish(topiccopres, '2,7,2,0,'+mline[3]+','+mline[4]+','+mline[5]+','+str(chid))
                             print("Write Servo Response")
                         else:
-                            print("++++++++++++ Psuedo Servo:", mline[9]);
+                            print("++++++++++++ Psuedo Servo:", mline[8]);
                     else:
-                        print("timId Error:", mline[6])
+                        print("timId Error:", mline[5])
                 else:
-                    print("ncapId Error:", mline[5])
+                    print("ncapId Error:", mline[4])
             elif mline[0]+mline[1]+mline[2] == '321':
                 print("Read TEDS Data COP")
-                print('msgLength', mline[3])
-                print('appId', mline[4])
-                print('ncapId', mline[5])
-                print('timId', mline[6])
-                print('channelid', mline[7])
-                print('TedsAccessCode = 4', mline[8])
-                print('tedsOffset', mline[9])
-                chid = int(mline[7])
-                if mline[5] == uuid0:
-                    if mline[6] == uuid0:
-                        client.publish(topiccopres, '3,2,2,0,'+mline[4]+','+mline[5]+','+mline[6]+','+mline[7]+','+mline[9]+',TEMPTEDS')
+                print('appId', mline[3])
+                print('ncapId', mline[4])
+                print('timId', mline[5])
+                print('channelid', mline[6])
+                print('TedsAccessCode = 4', mline[7])
+                print('tedsOffset', mline[8])
+                chid = int(mline[6])
+                if mline[4] == uuid0:
+                    if mline[5] == uuid0:
+                        client.publish(topiccopres, '3,2,2,'+mline[3]+','+mline[4]+','+mline[5]+','+mline[6]+','+mline[8]+',TEMPTEDS')
                         print("Read TEMP TEDS")
-                    elif mline[6] == uuid1:
-                        client.publish(topiccopres, '3,2,2,0,'+mline[4]+','+mline[5]+','+mline[6]+','+mline[7]+','+mline[9]+',HUMITEDS')
+                    elif mline[5] == uuid1:
+                        client.publish(topiccopres, '3,2,2,'+mline[3]+','+mline[4]+','+mline[5]+','+mline[6]+','+mline[8]+',HUMITEDS')
                         print("Read HUMID TEDS")
                     else:
-                        print("timId Error:",mline[5])
+                        print("timId Error:",mline[4])
                 else:
-                    print("ncapId Error:",mline[4])
+                    print("ncapId Error:",mline[3])
     elif stopic[1] == 'D0':
         print("D0")
         mline = {}

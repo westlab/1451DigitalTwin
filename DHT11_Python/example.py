@@ -19,8 +19,7 @@ try:
 	        print("Temperature: %-3.1f C" % result.temperature)
 	        print("Humidity: %-3.1f %%" % result.humidity)
 
-#	    time.sleep(3)
-	    print("hoge\n")
+	#    time.sleep(3)
 
 except KeyboardInterrupt:
     print("Cleanup")
