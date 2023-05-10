@@ -79,7 +79,7 @@ if not confdata.get('spfx'):
 if not confdata.get('tomdop'):
     confdata['tomdop'] = 'D/'
 if not confdata.get('tomcop'):
-    confdata['tomcop'] = 'D0C/'
+    confdata['tomcop'] = 'C/'
 if not confdata.get('tomd0op'):
     confdata['tomd0op'] = 'D0/'
 if not confdata.get('loc'):
@@ -105,7 +105,7 @@ binblk_read = {
     'netSvcType'        : {'offset': 0,  'type': '<B'},
     'netSvcID'          : {'offset': 1,  'type': '<B'},
     'msgType'           : {'offset': 2,  'type': '<B'},
-    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
+    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in C
     'appId'             : {'offset': 5,  'type': '<16s'},
     'ncapId'            : {'offset': 21, 'type': '<16s'},
     'timId'             : {'offset': 37, 'type': '<16s'},
@@ -118,7 +118,7 @@ binblk_read = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
-#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
+#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in C
 #    'errCode'           : {'offset': 5,  'type': '<2s'},
 #    'appId'             : {'offset': 7,  'type': '<16s'},
 #    'ncapId'            : {'offset': 23, 'type': '<16s'},
@@ -132,7 +132,7 @@ binblk_write = {
     'netSvcType'        : {'offset': 0,  'type': '<B'},
     'netSvcID'          : {'offset': 1,  'type': '<B'},
     'msgType'           : {'offset': 2,  'type': '<B'},
-    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
+    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in C
     'appId'             : {'offset': 5,  'type': '<16s'},
     'ncapId'            : {'offset': 21, 'type': '<16s'},
     'timId'             : {'offset': 37, 'type': '<16s'},
@@ -146,7 +146,7 @@ binblk_write = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
-#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
+#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in C
 #    'errCode'           : {'offset': 5,  'type': '<2s'},
 #    'appId'             : {'offset': 7,  'type': '<16s'},
 #    'ncapId'            : {'offset': 23, 'type': '<16s'},
@@ -158,7 +158,7 @@ binblk_teds = {
     'netSvcType'        : {'offset': 0,  'type': '<B'},
     'netSvcID'          : {'offset': 1,  'type': '<B'},
     'msgType'           : {'offset': 2,  'type': '<B'},
-    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
+    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in C
     'appId'             : {'offset': 5,  'type': '<16s'},
     'ncapId'            : {'offset': 21, 'type': '<16s'},
     'timId'             : {'offset': 37, 'type': '<16s'},
@@ -172,7 +172,7 @@ binblk_teds = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
-#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in D0C
+#    'msgLength'         : {'offset': 3,  'type': '<H'}, # NaN in C
 #    'appId'             : {'offset': 5,  'type': '<16s'},
 #    'ncapId'            : {'offset': 21, 'type': '<16s'},
 #    'timId'             : {'offset': 37, 'type': '<16s'},
@@ -236,8 +236,8 @@ def on_message(mqttc, obj, msg):
     ts = datetime.datetime.now()
     bts = temporenc.packb(ts)
     sts = str(ts)
-    if stopic[1] == 'D0C':
-        print("D0C")
+    if stopic[1]+'/' == confdata['tomcop']:
+        print("C")
         f = io.StringIO()
         f.write(msg)
         f.seek(0)
@@ -330,7 +330,7 @@ def on_message(mqttc, obj, msg):
                         print("timId Error:",mline[4])
                 else:
                     print("ncapId Error:",mline[3])
-    elif stopic[1] == 'D0':
+    elif stopic[1]+'/' == confdata['tomd0op']:
         print("D0")
         mline = {}
         if msg[0:3].encode() == b'\x02\x01\x01':

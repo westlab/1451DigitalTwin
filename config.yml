@@ -7,7 +7,7 @@ mqttport: 1883
 # needs / in the end
 spfx: _1451.1.6/
 tomdop: D/
-tomcop: D0C/
+tomcop: C/
 tomd0op: D0/
 # Does not need / in the end
 loc: OUC-LEC/2023/ncap0
