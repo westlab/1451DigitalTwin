@@ -92,6 +92,18 @@ topiccop = confdata['spfx']+confdata['tomcop']+confdata['loc'] # subscribe
 topiccopres = confdata['spfx']+confdata['tomcop']+confdata['locclient'] # publish
 topicd0op = confdata['spfx']+confdata['tomd0op']+confdata['loc'] # subscribe
 topicd0opres = confdata['spfx']+confdata['tomd0op']+confdata['locclient'] # publish
+if not confdata.get('TEMPTEDS'):
+    confdata['TEMPTEDS'] = 'TEMPTEDS';
+if not confdata.get('HUMIDTEDS'):
+    confdata['HUMIDTEDS'] = 'HUMIDTEDS';
+if not confdata.get('SERVOTEDS'):
+    confdata['SERVOTEDS'] = 'SERVOTEDS';
+if not confdata.get('TEMPBINTEDS'):
+    confdata['TEMPBINTEDS'] = 'TEMPBINTEDS';
+if not confdata.get('HUMIDTEDS'):
+    confdata['HUMIDBINTEDS'] = 'HUMIDBINTEDS';
+if not confdata.get('SERVOTEDS'):
+    confdata['SERVOBINTEDS'] = 'SERVOBINTEDS';
 #'_1451.1.6(SPFX)/D0(TOM)/LOC'
 print("Topics for subscribe")
 pprint.pprint([topiccop, topicd0op])
@@ -321,11 +333,14 @@ def on_message(mqttc, obj, msg):
                 chid = int(mline[6])
                 if mline[4] == uuid0:
                     if mline[5] == uuid0:
-                        client.publish(topiccopres, '3,2,2,'+mline[3]+','+mline[4]+','+mline[5]+','+mline[6]+','+mline[8]+',TEMPTEDS')
+                        client.publish(topiccopres, '3,2,2,'+mline[3]+','+mline[4]+','+mline[5]+','+mline[6]+','+mline[8]+','+confdata['TEMPTEDS'])
                         print("Read TEMP TEDS")
                     elif mline[5] == uuid1:
-                        client.publish(topiccopres, '3,2,2,'+mline[3]+','+mline[4]+','+mline[5]+','+mline[6]+','+mline[8]+',HUMITEDS')
+                        client.publish(topiccopres, '3,2,2,'+mline[3]+','+mline[4]+','+mline[5]+','+mline[6]+','+mline[8]+','+confdata['HUMIDTEDS'])
                         print("Read HUMID TEDS")
+                    elif mline[5] == uuid2:
+                        client.publish(topiccopres, '3,2,2,'+mline[3]+','+mline[4]+','+mline[5]+','+mline[6]+','+mline[8]+','+confdata['SERVOTEDS'])
+                        print("Read SERVO TEDS")
                     else:
                         print("timId Error:",mline[4])
                 else:
@@ -387,11 +402,14 @@ def on_message(mqttc, obj, msg):
             if mline['ncapId'] == buuid0:
                 sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
                 if mline['timId'] == buuid0:
-                  client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray('TEMP_BIN_TEDS'.encode()))
-                  print("Read TEMP TEDS")
+                  client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['TEMPBINTEDS'].encode()))
+                  print("Read TEMP BINARY TEDS")
                 elif mline['timId'] == buuid1:
-                  client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray('HUMID_BIN_TEDS'.encode()))
-                  print("Read HUMID TEDS")
+                  client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['HUMIDBINTEDS'].encode()))
+                  print("Read HUMID BINARY TEDS")
+                elif mline['timId'] == buuid2:
+                  client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SERVOBINTEDS'].encode()))
+                  print("Read SERVO BINARY TEDS")
                 else:
                     print("timId Error", mline['timId'])
             else:
