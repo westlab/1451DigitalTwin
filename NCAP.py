@@ -445,9 +445,8 @@ if __name__ == '__main__':
     client.loop_start()
     print("D0 Publish To:"+topicdop+str(0)+'/TIME '+topicdop+str(0)+'/TEMP '+topicdop+str(0)+'/HUMID')
     while True:
-        # read data using pin 14
         if pflag == False:
-            instance = dht11.DHT11(pin=14)
+            instance = dht11.DHT11(pin=15)
         try:
             while True:
                 if pflag == False:
