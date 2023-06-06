@@ -3,9 +3,9 @@
 ## Simple start:
 
 - Access to:
-https://github.com/westlab/IEEEP1451.1.6-2023/blob/master/Lecture.pdf
+https://www.west.sd.keio.ac.jp/~west/OUClec.pdf
 
-- Or clone the github repository on your PC:
+- Clone the github repository on your PC:
 git clone https://github.com/westlab/IEEEP1451.1.6-2023
 
 - You can also download the zip file of whole designs from github.
