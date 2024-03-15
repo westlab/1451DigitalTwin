@@ -1,60 +1,42 @@
 [
     {
-        "id": "6c50930ac63c330c",
-        "type": "tab",
-        "label": "D (Direct Mode)",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "19784f628032988e",
+        "id": "0c7a731dc303bfda",
         "type": "tab",
         "label": "D0C (Dot Zero CSV Mode)",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "79d9c96a033c3d45",
+        "id": "d846a1a921681d74",
+        "type": "tab",
+        "label": "D (Direct Mode)",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a4c183a95164db51",
         "type": "tab",
         "label": "D0 (Dot Zero Mode)",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "45f7913661ead6e8",
-        "type": "mqtt-broker",
-        "name": "plugfest.west.sd.keio.ac.jp",
-        "broker": "plugfest.west.sd.keio.ac.jp",
-        "port": "24883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "sessionExpiry": ""
+        "id": "5c89debf5554f02b",
+        "type": "ui_tab",
+        "name": "ホーム",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
     },
     {
-        "id": "9ac79c2096db5ea0",
+        "id": "181bc49a8d119df2",
         "type": "ui_base",
         "theme": {
             "name": "theme-light",
             "lightTheme": {
                 "default": "#0094CE",
                 "baseColor": "#0094CE",
-                "baseFont": "Copperplate,Copperplate Gothic Light,fantasy",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
                 "edited": true,
                 "reset": false
             },
@@ -113,7 +95,7 @@
                     "edited": false
                 },
                 "base-font": {
-                    "value": "Copperplate,Copperplate Gothic Light,fantasy"
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
                 }
             },
             "angularTheme": {
@@ -125,12 +107,12 @@
             }
         },
         "site": {
-            "name": "1451.1.6 Simple Visualizer",
+            "name": "Node-RED ダッシュボード",
             "hideToolbar": "false",
-            "allowSwipe": "mouse",
-            "lockMenu": "true",
+            "allowSwipe": "false",
+            "lockMenu": "false",
             "allowTempTheme": "true",
-            "dateFormat": "DD/MM/YYYY",
+            "dateFormat": "YYYY/MM/DD",
             "sizes": {
                 "sx": 48,
                 "sy": 48,
@@ -144,35 +126,9 @@
         }
     },
     {
-        "id": "fde6bff06edb2787",
-        "type": "mqtt-broker",
-        "name": "hivemq.com",
-        "broker": "broker.hivemq.com",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "sessionExpiry": ""
-    },
-    {
         "id": "69053d56.095ee4",
         "type": "mqtt-broker",
-        "name": "Raspberry Pi Broker",
+        "name": "local(10.1.20.227)",
         "broker": "10.1.20.227",
         "port": "1883",
         "clientid": "",
@@ -194,16 +150,28 @@
         "willQos": "0",
         "willPayload": "",
         "willMsg": {},
+        "userProps": "",
         "sessionExpiry": ""
     },
     {
         "id": "28fc1298.f8e59e",
         "type": "ui_tab",
-        "name": "Direct Access",
+        "name": "DASHBOARD",
         "icon": "dashboard",
         "order": 1,
         "disabled": false,
         "hidden": false
+    },
+    {
+        "id": "37491b3c.791b74",
+        "type": "ui_group",
+        "name": "TEMP",
+        "tab": "28fc1298.f8e59e",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
     },
     {
         "id": "86483328.1e604",
@@ -217,7 +185,7 @@
     {
         "id": "74864aa2.194b24",
         "type": "ui_group",
-        "name": "D0C TEMP/HUMID/SERVO",
+        "name": "D0C TEMP/HUMID",
         "tab": "86483328.1e604",
         "order": 1,
         "disp": true,
@@ -226,11 +194,33 @@
         "className": ""
     },
     {
+        "id": "c3134a.6ced2cb8",
+        "type": "ui_group",
+        "name": "D0C SERVO",
+        "tab": "86483328.1e604",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
         "id": "646a2c33.077d74",
         "type": "ui_group",
-        "name": "D0 TEMP/HUMID/SERVO",
+        "name": "D0 TEMP/HUMID",
         "tab": "86483328.1e604",
         "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e960bf17.9f3d",
+        "type": "ui_group",
+        "name": "D0 SERVO",
+        "tab": "86483328.1e604",
+        "order": 4,
         "disp": true,
         "width": "6",
         "collapse": false,
@@ -248,11 +238,11 @@
     {
         "id": "21792d07.e6fa52",
         "type": "ui_group",
-        "name": "D0C/D0 TEDS Request-Response",
+        "name": "D0C",
         "tab": "a9846458.3ae7f8",
         "order": 1,
         "disp": true,
-        "width": "12",
+        "width": "6",
         "collapse": false,
         "className": ""
     },
@@ -268,10 +258,10 @@
         "className": ""
     },
     {
-        "id": "79c8ddf62380d6ad",
+        "id": "60b99301e2ebe467",
         "type": "ui_group",
-        "name": "D0C SERVO",
-        "tab": "86483328.1e604",
+        "name": "HUMID",
+        "tab": "28fc1298.f8e59e",
         "order": 2,
         "disp": true,
         "width": "6",
@@ -279,18 +269,34 @@
         "className": ""
     },
     {
-        "id": "3cf86b88bd70ca08",
-        "type": "ui_group",
-        "name": "D0 SERVO",
-        "tab": "86483328.1e604",
-        "order": 4,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
+        "id": "5a9743cc0606ae91",
+        "type": "mqtt-broker",
+        "name": "plugfest.west.sd.keio.ac.jp",
+        "broker": "plugfest.west.sd.keio.ac.jp",
+        "port": "24883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
     },
     {
-        "id": "c0b5198aba36e154",
+        "id": "906f032e60f3a30d",
         "type": "mqtt-broker",
         "name": "plugfest.west.sd.keio.ac.jp",
         "broker": "plugfest.west.sd.keio.ac.jp",
@@ -316,33 +322,7 @@
         "sessionExpiry": ""
     },
     {
-        "id": "9cec6b3e57b10d4c",
-        "type": "mqtt-broker",
-        "name": "plugfest.west.sd.keio.ac.jp",
-        "broker": "plugfest.west.sd.keio.ac.jp",
-        "port": "24883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "sessionExpiry": ""
-    },
-    {
-        "id": "f0bc150f8cc49abd",
+        "id": "39d5aa93d6951ccb",
         "type": "mqtt-broker",
         "name": "hivemq.com",
         "broker": "broker.hivemq.com",
@@ -365,10 +345,11 @@
         "willQos": "0",
         "willPayload": "",
         "willMsg": {},
+        "userProps": "",
         "sessionExpiry": ""
     },
     {
-        "id": "7fee91ab236e6546",
+        "id": "5edc36c3bab09ec7",
         "type": "ui_group",
         "name": "TEMP",
         "tab": "28fc1298.f8e59e",
@@ -379,7 +360,7 @@
         "className": ""
     },
     {
-        "id": "0a39738c49dedd6c",
+        "id": "cf36aea37165a29c",
         "type": "ui_group",
         "name": "HUMID",
         "tab": "28fc1298.f8e59e",
@@ -390,53 +371,849 @@
         "className": ""
     },
     {
-        "id": "56c6b3d1ebb8fd05",
-        "type": "mqtt in",
-        "z": "6c50930ac63c330c",
+        "id": "b9dd3726fd79b97b",
+        "type": "inject",
+        "z": "0c7a731dc303bfda",
+        "name": "HUMID-D0C",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "6953f87eda0037a4"
+            ]
+        ]
+    },
+    {
+        "id": "6953f87eda0037a4",
+        "type": "ui_button",
+        "z": "0c7a731dc303bfda",
         "name": "",
-        "topic": "_1451.1.6/D/OUC-LEC/2023/west/ncap0/0/TEMP",
+        "group": "74864aa2.194b24",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "HUMID-D0C-REQ",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "2,1,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000001,0,0,0",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 410,
+        "y": 120,
+        "wires": [
+            [
+                "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "aa8973059778364c",
+        "type": "ui_gauge",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "group": "74864aa2.194b24",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "HUMID-D0C",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "80",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1510,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "db025ff4dc431463",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1510,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "5bc9770f403cd284",
+        "type": "mqtt in",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "topic": "_1451.1.6/C/INTEROP/2023/application0",
         "qos": "0",
         "datatype": "auto",
-        "broker": "f0bc150f8cc49abd",
+        "broker": "39d5aa93d6951ccb",
         "nl": false,
         "rap": false,
         "inputs": 0,
-        "x": 300,
+        "x": 220,
+        "y": 560,
+        "wires": [
+            [
+                "bd93661acb03e458",
+                "a8a7db9f3b24e504"
+            ]
+        ]
+    },
+    {
+        "id": "ccbb4021f26245f6",
+        "type": "ui_gauge",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "group": "74864aa2.194b24",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "TEMP-D0C",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1510,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "797be9366cb3cffc",
+        "type": "switch",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "property": "timid",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "0x00000000000000000000000000000000",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "0x00000000000000000000000000000001",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 1170,
+        "y": 680,
+        "wires": [
+            [
+                "ccbb4021f26245f6",
+                "db025ff4dc431463"
+            ],
+            [
+                "aa8973059778364c",
+                "db025ff4dc431463"
+            ]
+        ]
+    },
+    {
+        "id": "510bc89faa4516fe",
+        "type": "mqtt out",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "topic": "_1451.1.6/C/INTEROP/2023/ncap0",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "39d5aa93d6951ccb",
+        "x": 1120,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e6e810e6bca9657f",
+        "type": "ui_toast",
+        "z": "0c7a731dc303bfda",
+        "position": "top left",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 1070,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "48eb6497066517cb",
+        "type": "ui_toast",
+        "z": "0c7a731dc303bfda",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 870,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "f4dc1efa4ddec667",
+        "type": "function",
+        "z": "0c7a731dc303bfda",
+        "name": "THRU",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [
+                "510bc89faa4516fe",
+                "e6e810e6bca9657f",
+                "e11c12ee81eab931"
+            ]
+        ]
+    },
+    {
+        "id": "b1f07d0c6a916fe8",
+        "type": "inject",
+        "z": "0c7a731dc303bfda",
+        "name": "HUMID-TEDS-D0C",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 150,
+        "y": 280,
+        "wires": [
+            [
+                "1c067cb4f34ee513"
+            ]
+        ]
+    },
+    {
+        "id": "adfc67441acbcc02",
+        "type": "inject",
+        "z": "0c7a731dc303bfda",
+        "name": "TEMP-TEDS-D0C",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "f5f10596308e31c7"
+            ]
+        ]
+    },
+    {
+        "id": "1c067cb4f34ee513",
+        "type": "ui_button",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "group": "21792d07.e6fa52",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "HUMID-TEDS-D0C-REQ",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "3,2,1,0,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000001,0,4,0",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 430,
+        "y": 280,
+        "wires": [
+            [
+                "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "f5f10596308e31c7",
+        "type": "ui_button",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "group": "21792d07.e6fa52",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "TEMP-TEDS-D0C-REQ",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "3,2,1,0,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0,4,0",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "e11c12ee81eab931",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "6fbfbaf089ccd2ab",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "bd93661acb03e458",
+        "type": "function",
+        "z": "0c7a731dc303bfda",
+        "name": "Array2Str",
+        "func": "let pa = msg.payload.split(',');\nmsg.typeid = pa.slice(0, 3).join();\nmsg.timid = pa.slice(7, 8);\nmsg.sample = pa.slice(8, 9);\nmsg.teds = pa.slice(10);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 560,
+        "wires": [
+            [
+                "6fbfbaf089ccd2ab",
+                "48eb6497066517cb",
+                "8a5fc0dd6b0dfc14",
+                "a8a6354eb16b3655",
+                "1096085ef5376371",
+                "740823ac03c904f1",
+                "3b4fa548f6bba24c"
+            ]
+        ]
+    },
+    {
+        "id": "a8a6354eb16b3655",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "timid",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "8a5fc0dd6b0dfc14",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "typeid",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1096085ef5376371",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "sample",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "740823ac03c904f1",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "teds",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "3b4fa548f6bba24c",
+        "type": "switch",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "property": "typeid",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "2,1,2",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "3,2,2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 790,
+        "y": 780,
+        "wires": [
+            [
+                "37725cd568c488dc"
+            ],
+            [
+                "e95d97c4e58076c8"
+            ]
+        ]
+    },
+    {
+        "id": "37725cd568c488dc",
+        "type": "template",
+        "z": "0c7a731dc303bfda",
+        "name": "sample",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{sample}}",
+        "output": "str",
+        "x": 1000,
+        "y": 680,
+        "wires": [
+            [
+                "797be9366cb3cffc"
+            ]
+        ]
+    },
+    {
+        "id": "e95d97c4e58076c8",
+        "type": "template",
+        "z": "0c7a731dc303bfda",
+        "name": "TEDS",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{teds}}",
+        "output": "str",
+        "x": 990,
+        "y": 800,
+        "wires": [
+            [
+                "979eb85cc7eda7d5"
+            ]
+        ]
+    },
+    {
+        "id": "979eb85cc7eda7d5",
+        "type": "ui_text",
+        "z": "0c7a731dc303bfda",
+        "group": "21792d07.e6fa52",
+        "order": 6,
+        "width": "6",
+        "height": "12",
+        "name": "",
+        "label": "D0C TEDS",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "TEDSTEXT",
+        "x": 1190,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "5c3dd95a5ffb4898",
+        "type": "inject",
+        "z": "0c7a731dc303bfda",
+        "name": "TEMP-D0C",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 130,
         "y": 80,
         "wires": [
             [
-                "b102f7f59d5645dc",
-                "89e8ac75bad8351e"
+                "d0c694862d5c1adf"
             ]
         ]
     },
     {
-        "id": "7b706cdb6a3dc4b0",
-        "type": "mqtt in",
-        "z": "6c50930ac63c330c",
+        "id": "d0c694862d5c1adf",
+        "type": "ui_button",
+        "z": "0c7a731dc303bfda",
         "name": "",
-        "topic": "_1451.1.6/D/OUC-LEC/2023/west/ncap0/0/HUMID",
+        "group": "74864aa2.194b24",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "TEMP-D0C-REQ",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "2,1,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0,0,0",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 410,
+        "y": 80,
+        "wires": [
+            [
+                "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "975791de93d333ec",
+        "type": "ui_slider",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "label": "D0C SERVO",
+        "tooltip": "",
+        "group": "74864aa2.194b24",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "payload",
+        "topicType": "msg",
+        "min": 0,
+        "max": "255",
+        "step": 1,
+        "className": "",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "c3fa091a3f412a45"
+            ]
+        ]
+    },
+    {
+        "id": "c3fa091a3f412a45",
+        "type": "function",
+        "z": "0c7a731dc303bfda",
+        "name": "SyncWriteCmd",
+        "func": "msg.payload = '2,7,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000010,0,0,'+\n    + msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "a8a7db9f3b24e504",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "def776d0f9b52193",
+        "type": "inject",
+        "z": "0c7a731dc303bfda",
+        "name": "SERVO-TEDS-D0C",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "994cf8d5638d2680"
+            ]
+        ]
+    },
+    {
+        "id": "994cf8d5638d2680",
+        "type": "ui_button",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "group": "21792d07.e6fa52",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "SERVO-TEDS-D0C-REQ",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "3,2,1,0,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000010,0,4,0",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 430,
+        "y": 320,
+        "wires": [
+            [
+                "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "a560ed5dfcee56fe",
+        "type": "inject",
+        "z": "0c7a731dc303bfda",
+        "name": "SECURITY-TEDS-D0C",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 160,
+        "y": 360,
+        "wires": [
+            [
+                "eef992bfdac662de"
+            ]
+        ]
+    },
+    {
+        "id": "eef992bfdac662de",
+        "type": "ui_button",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "group": "21792d07.e6fa52",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "SECURITY-TEDS-D0C-REQ",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "3,2,1,0,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000010,0,16,0",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 440,
+        "y": 360,
+        "wires": [
+            [
+                "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "3b80644f6be2f167",
+        "type": "mqtt in",
+        "z": "d846a1a921681d74",
+        "name": "",
+        "topic": "_1451.1.6/D/INTEROP/2023/ncap0/0/TEMP",
         "qos": "0",
         "datatype": "auto",
-        "broker": "f0bc150f8cc49abd",
+        "broker": "39d5aa93d6951ccb",
         "nl": false,
         "rap": false,
         "inputs": 0,
-        "x": 310,
-        "y": 200,
+        "x": 290,
+        "y": 80,
         "wires": [
             [
-                "4077689bbdf72fde",
-                "3855247e4cc141bf"
+                "6d02242692f63871",
+                "443ecd1f7b1aaf18"
             ]
         ]
     },
     {
-        "id": "b102f7f59d5645dc",
-        "type": "ui_chart",
-        "z": "6c50930ac63c330c",
+        "id": "35b78994b3fdc629",
+        "type": "mqtt in",
+        "z": "d846a1a921681d74",
         "name": "",
-        "group": "7fee91ab236e6546",
+        "topic": "_1451.1.6/D/INTEROP/2023/ncap0/0/HUMID",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "39d5aa93d6951ccb",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 290,
+        "y": 200,
+        "wires": [
+            [
+                "2ae29e83064070a6",
+                "947a78c06fb55219"
+            ]
+        ]
+    },
+    {
+        "id": "6d02242692f63871",
+        "type": "ui_chart",
+        "z": "d846a1a921681d74",
+        "name": "",
+        "group": "5edc36c3bab09ec7",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -469,18 +1246,18 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 680,
+        "x": 560,
         "y": 80,
         "wires": [
             []
         ]
     },
     {
-        "id": "89e8ac75bad8351e",
+        "id": "443ecd1f7b1aaf18",
         "type": "ui_gauge",
-        "z": "6c50930ac63c330c",
+        "z": "d846a1a921681d74",
         "name": "",
-        "group": "7fee91ab236e6546",
+        "group": "5edc36c3bab09ec7",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -499,16 +1276,16 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 670,
+        "x": 550,
         "y": 120,
         "wires": []
     },
     {
-        "id": "4077689bbdf72fde",
+        "id": "2ae29e83064070a6",
         "type": "ui_chart",
-        "z": "6c50930ac63c330c",
+        "z": "d846a1a921681d74",
         "name": "",
-        "group": "0a39738c49dedd6c",
+        "group": "cf36aea37165a29c",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -541,18 +1318,18 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 680,
+        "x": 560,
         "y": 200,
         "wires": [
             []
         ]
     },
     {
-        "id": "3855247e4cc141bf",
+        "id": "947a78c06fb55219",
         "type": "ui_gauge",
-        "z": "6c50930ac63c330c",
+        "z": "d846a1a921681d74",
         "name": "",
-        "group": "0a39738c49dedd6c",
+        "group": "cf36aea37165a29c",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -571,19 +1348,19 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 680,
+        "x": 560,
         "y": 240,
         "wires": []
     },
     {
-        "id": "fbe39f655855ad13",
+        "id": "81bbbf51f7a0f771",
         "type": "mqtt in",
-        "z": "6c50930ac63c330c",
+        "z": "d846a1a921681d74",
         "name": "",
         "topic": "_1451.1.6/#",
         "qos": "0",
         "datatype": "auto-detect",
-        "broker": "f0bc150f8cc49abd",
+        "broker": "39d5aa93d6951ccb",
         "nl": false,
         "rap": true,
         "rh": 0,
@@ -592,14 +1369,14 @@
         "y": 340,
         "wires": [
             [
-                "851bb0cb34f5828e"
+                "87a12997c545fd7d"
             ]
         ]
     },
     {
-        "id": "851bb0cb34f5828e",
+        "id": "87a12997c545fd7d",
         "type": "debug",
-        "z": "6c50930ac63c330c",
+        "z": "d846a1a921681d74",
         "name": "Monitor All",
         "active": false,
         "tosidebar": true,
@@ -614,773 +1391,9 @@
         "wires": []
     },
     {
-        "id": "0464e0536d730eb4",
+        "id": "a176aea009a7176b",
         "type": "inject",
-        "z": "19784f628032988e",
-        "name": "HUMID-D0C",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "str",
-        "x": 130,
-        "y": 120,
-        "wires": [
-            [
-                "d038fd487337c3e2"
-            ]
-        ]
-    },
-    {
-        "id": "d038fd487337c3e2",
-        "type": "ui_button",
-        "z": "19784f628032988e",
-        "name": "",
-        "group": "74864aa2.194b24",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "label": "HUMID-D0C-REQ",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "2,1,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000001,0,0,0",
-        "payloadType": "str",
-        "topic": "",
-        "topicType": "str",
-        "x": 410,
-        "y": 120,
-        "wires": [
-            [
-                "f6ad9b87bbefb41b"
-            ]
-        ]
-    },
-    {
-        "id": "1967b208cf1c155a",
-        "type": "ui_gauge",
-        "z": "19784f628032988e",
-        "name": "",
-        "group": "74864aa2.194b24",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "HUMID-D0C",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "80",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "className": "",
-        "x": 1510,
-        "y": 680,
-        "wires": []
-    },
-    {
-        "id": "f276215f8f14d6f8",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1510,
-        "y": 580,
-        "wires": []
-    },
-    {
-        "id": "18810e242bdc77ff",
-        "type": "mqtt in",
-        "z": "19784f628032988e",
-        "name": "",
-        "topic": "_1451.1.6/C/OUC-LEC/2023/west/application0",
-        "qos": "0",
-        "datatype": "auto",
-        "broker": "f0bc150f8cc49abd",
-        "nl": false,
-        "rap": false,
-        "inputs": 0,
-        "x": 210,
-        "y": 560,
-        "wires": [
-            [
-                "5c2e63f74a6f2399",
-                "1eb6f442800fb602"
-            ]
-        ]
-    },
-    {
-        "id": "f722ed0953adbdf9",
-        "type": "ui_gauge",
-        "z": "19784f628032988e",
-        "name": "",
-        "group": "74864aa2.194b24",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "TEMP-D0C",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "40",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "className": "",
-        "x": 1510,
-        "y": 640,
-        "wires": []
-    },
-    {
-        "id": "b661f029ed4d3328",
-        "type": "switch",
-        "z": "19784f628032988e",
-        "name": "",
-        "property": "timid",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "0x00000000000000000000000000000000",
-                "vt": "str"
-            },
-            {
-                "t": "cont",
-                "v": "0x00000000000000000000000000000001",
-                "vt": "str"
-            }
-        ],
-        "checkall": "false",
-        "repair": false,
-        "outputs": 2,
-        "x": 1170,
-        "y": 680,
-        "wires": [
-            [
-                "f722ed0953adbdf9",
-                "f276215f8f14d6f8"
-            ],
-            [
-                "1967b208cf1c155a",
-                "f276215f8f14d6f8"
-            ]
-        ]
-    },
-    {
-        "id": "67e70982c7af93e3",
-        "type": "mqtt out",
-        "z": "19784f628032988e",
-        "name": "",
-        "topic": "_1451.1.6/C/OUC-LEC/2023/west/ncap0",
-        "qos": "0",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "f0bc150f8cc49abd",
-        "x": 1140,
-        "y": 180,
-        "wires": []
-    },
-    {
-        "id": "feb1c348f7faa5e6",
-        "type": "ui_toast",
-        "z": "19784f628032988e",
-        "position": "top left",
-        "displayTime": "3",
-        "highlight": "",
-        "sendall": true,
-        "outputs": 0,
-        "ok": "OK",
-        "cancel": "",
-        "raw": false,
-        "className": "",
-        "topic": "",
-        "name": "",
-        "x": 1070,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "0509cb13f2dde977",
-        "type": "ui_toast",
-        "z": "19784f628032988e",
-        "position": "top right",
-        "displayTime": "3",
-        "highlight": "",
-        "sendall": true,
-        "outputs": 0,
-        "ok": "OK",
-        "cancel": "",
-        "raw": false,
-        "className": "",
-        "topic": "",
-        "name": "",
-        "x": 870,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "f6ad9b87bbefb41b",
-        "type": "function",
-        "z": "19784f628032988e",
-        "name": "THRU",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 770,
-        "y": 140,
-        "wires": [
-            [
-                "67e70982c7af93e3",
-                "feb1c348f7faa5e6",
-                "ab153ca190e1bf1b"
-            ]
-        ]
-    },
-    {
-        "id": "6aad24c209a1e2be",
-        "type": "inject",
-        "z": "19784f628032988e",
-        "name": "HUMID-TEDS-D0C",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "str",
-        "x": 150,
-        "y": 280,
-        "wires": [
-            [
-                "cd91f0114cfa01c8"
-            ]
-        ]
-    },
-    {
-        "id": "626fde3ffc071367",
-        "type": "inject",
-        "z": "19784f628032988e",
-        "name": "TEMP-TEDS-D0C",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "str",
-        "x": 150,
-        "y": 240,
-        "wires": [
-            [
-                "86218fa0b5e70fa4"
-            ]
-        ]
-    },
-    {
-        "id": "cd91f0114cfa01c8",
-        "type": "ui_button",
-        "z": "19784f628032988e",
-        "name": "",
-        "group": "21792d07.e6fa52",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "label": "HUMID-TEDS-D0C-REQ",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "3,2,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000001,0,0,0",
-        "payloadType": "str",
-        "topic": "",
-        "topicType": "str",
-        "x": 430,
-        "y": 280,
-        "wires": [
-            [
-                "f6ad9b87bbefb41b"
-            ]
-        ]
-    },
-    {
-        "id": "86218fa0b5e70fa4",
-        "type": "ui_button",
-        "z": "19784f628032988e",
-        "name": "",
-        "group": "21792d07.e6fa52",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "label": "TEMP-TEDS-D0C-REQ",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "3,2,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0,0,0",
-        "payloadType": "str",
-        "topic": "",
-        "topicType": "str",
-        "x": 430,
-        "y": 240,
-        "wires": [
-            [
-                "f6ad9b87bbefb41b"
-            ]
-        ]
-    },
-    {
-        "id": "ab153ca190e1bf1b",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1050,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "58c1eeb6a3d39b6d",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 850,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "5c2e63f74a6f2399",
-        "type": "function",
-        "z": "19784f628032988e",
-        "name": "Array2Str",
-        "func": "let pa = msg.payload.split(',');\nmsg.typeid = pa.slice(0, 3).join();\nmsg.timid = pa.slice(6, 7);\nmsg.sample = pa.slice(8, 9);\nmsg.teds = pa.slice(8);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 540,
-        "y": 560,
-        "wires": [
-            [
-                "58c1eeb6a3d39b6d",
-                "0509cb13f2dde977",
-                "10947db1a4a38bb4",
-                "1fc6153637a49ec1",
-                "bafd8a28434c3203",
-                "3df34445a6e16d35",
-                "9bf5e2189998a376"
-            ]
-        ]
-    },
-    {
-        "id": "1fc6153637a49ec1",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "timid",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 840,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "10947db1a4a38bb4",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "typeid",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 850,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "bafd8a28434c3203",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "sample",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 850,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "3df34445a6e16d35",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "teds",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 840,
-        "y": 520,
-        "wires": []
-    },
-    {
-        "id": "9bf5e2189998a376",
-        "type": "switch",
-        "z": "19784f628032988e",
-        "name": "",
-        "property": "typeid",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "2,1,2",
-                "vt": "str"
-            },
-            {
-                "t": "cont",
-                "v": "3,2,2",
-                "vt": "str"
-            }
-        ],
-        "checkall": "false",
-        "repair": false,
-        "outputs": 2,
-        "x": 790,
-        "y": 780,
-        "wires": [
-            [
-                "2656b5a84e89833e"
-            ],
-            [
-                "1d0117b99241ede6"
-            ]
-        ]
-    },
-    {
-        "id": "2656b5a84e89833e",
-        "type": "template",
-        "z": "19784f628032988e",
-        "name": "sample",
-        "field": "payload",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "{{sample}}",
-        "output": "str",
-        "x": 1000,
-        "y": 680,
-        "wires": [
-            [
-                "b661f029ed4d3328"
-            ]
-        ]
-    },
-    {
-        "id": "1d0117b99241ede6",
-        "type": "template",
-        "z": "19784f628032988e",
-        "name": "TEDS",
-        "field": "payload",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "{{teds}}",
-        "output": "str",
-        "x": 990,
-        "y": 800,
-        "wires": [
-            [
-                "447869c0feab91b3"
-            ]
-        ]
-    },
-    {
-        "id": "447869c0feab91b3",
-        "type": "ui_text",
-        "z": "19784f628032988e",
-        "group": "21792d07.e6fa52",
-        "order": 5,
-        "width": "12",
-        "height": "4",
-        "name": "",
-        "label": "D0C TEDS",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "className": "TEDSTEXT",
-        "x": 1160,
-        "y": 800,
-        "wires": []
-    },
-    {
-        "id": "c97cb965faf9c06a",
-        "type": "inject",
-        "z": "19784f628032988e",
-        "name": "TEMP-D0C",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "str",
-        "x": 130,
-        "y": 80,
-        "wires": [
-            [
-                "f2f59f9f73c7195c"
-            ]
-        ]
-    },
-    {
-        "id": "f2f59f9f73c7195c",
-        "type": "ui_button",
-        "z": "19784f628032988e",
-        "name": "",
-        "group": "74864aa2.194b24",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "label": "TEMP-D0C-REQ",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "2,1,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0,0,0",
-        "payloadType": "str",
-        "topic": "",
-        "topicType": "str",
-        "x": 410,
-        "y": 80,
-        "wires": [
-            [
-                "f6ad9b87bbefb41b"
-            ]
-        ]
-    },
-    {
-        "id": "6461ba7e42a2c163",
-        "type": "ui_slider",
-        "z": "19784f628032988e",
-        "name": "",
-        "label": "D0C SERVO",
-        "tooltip": "",
-        "group": "74864aa2.194b24",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "outs": "end",
-        "topic": "payload",
-        "topicType": "msg",
-        "min": 0,
-        "max": "255",
-        "step": 1,
-        "className": "",
-        "x": 130,
-        "y": 160,
-        "wires": [
-            [
-                "f050a790b6bd789e"
-            ]
-        ]
-    },
-    {
-        "id": "f050a790b6bd789e",
-        "type": "function",
-        "z": "19784f628032988e",
-        "name": "SyncWriteCmd",
-        "func": "msg.payload = '2,7,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000010,0,0,'+\n    + msg.payload;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 400,
-        "y": 160,
-        "wires": [
-            [
-                "f6ad9b87bbefb41b"
-            ]
-        ]
-    },
-    {
-        "id": "1eb6f442800fb602",
-        "type": "debug",
-        "z": "19784f628032988e",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 550,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "4ab9265e984e70c6",
-        "type": "ui_template",
-        "z": "19784f628032988e",
-        "group": "21792d07.e6fa52",
-        "name": "",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "format": "<style>\n    .TEDSTEXT {\n            font-size: 12px;\n            height: 12px;\n    }\n</style>",
-        "storeOutMessages": true,
-        "fwdInMessages": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 1140,
-        "y": 840,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "125aef65ff243ffc",
-        "type": "inject",
-        "z": "19784f628032988e",
-        "name": "SERVO-TEDS-D0C",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "str",
-        "x": 150,
-        "y": 320,
-        "wires": [
-            [
-                "3ccaa52e023a19af"
-            ]
-        ]
-    },
-    {
-        "id": "3ccaa52e023a19af",
-        "type": "ui_button",
-        "z": "19784f628032988e",
-        "name": "",
-        "group": "21792d07.e6fa52",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "label": "SERVO-TEDS-D0C-REQ",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "3,2,1,0x00000000000000000000000000000000,0x00000000000000000000000000000000,0x00000000000000000000000000000010,0,0,0",
-        "payloadType": "str",
-        "topic": "",
-        "topicType": "str",
-        "x": 430,
-        "y": 320,
-        "wires": [
-            [
-                "f6ad9b87bbefb41b"
-            ]
-        ]
-    },
-    {
-        "id": "ecac5185669a1d4f",
-        "type": "inject",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "TEMP-D0",
         "props": [
             {
@@ -1398,14 +1411,14 @@
         "y": 40,
         "wires": [
             [
-                "1a575a968f1a5ca5"
+                "8515346c52346c95"
             ]
         ]
     },
     {
-        "id": "1a575a968f1a5ca5",
+        "id": "8515346c52346c95",
         "type": "ui_button",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "group": "646a2c33.077d74",
         "order": 1,
@@ -1426,36 +1439,36 @@
         "y": 40,
         "wires": [
             [
-                "ed904dc53ba7c69a"
+                "055b25eceac2df9f"
             ]
         ]
     },
     {
-        "id": "12f52f55f265f1c3",
+        "id": "8f0d081d6599b7e6",
         "type": "mqtt in",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
-        "topic": "_1451.1.6/D0/OUC-LEC/2023/west/application0",
+        "topic": "_1451.1.6/D0/INTEROP/2023/application0",
         "qos": "1",
         "datatype": "auto",
-        "broker": "f0bc150f8cc49abd",
+        "broker": "39d5aa93d6951ccb",
         "nl": false,
         "rap": false,
         "inputs": 0,
-        "x": 240,
+        "x": 220,
         "y": 560,
         "wires": [
             [
-                "0ea925e949e69395",
-                "c1b26004874daf96",
-                "f2d4d89bef4001d9"
+                "dc076277db143607",
+                "c7583948860ccdb6",
+                "611ded86214b1bb3"
             ]
         ]
     },
     {
-        "id": "ed904dc53ba7c69a",
+        "id": "055b25eceac2df9f",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "TEMP D0 BIN",
         "func": "var buf = new Buffer(64); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 1;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 0; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = 0; // TimeDuration 0\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 4\nbuf[61] = 0; // 5\nbuf[62] = 0; // 6\nbuf[63] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
@@ -1467,14 +1480,14 @@
         "y": 40,
         "wires": [
             [
-                "d5b078f3d5ede44c"
+                "4d79897b5485f473"
             ]
         ]
     },
     {
-        "id": "0ea925e949e69395",
+        "id": "dc076277db143607",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "Array2Str",
         "func": "msg.typeid = msg.payload.slice(0,3).join()\nmsg.timid = parseInt(msg.payload.slice(39,55)[15]);\n//msg.timid = msg.payload.slice(39, 55);\nmsg.sample = '' + msg.payload.slice(57, 65);\nmsg.teds = msg.payload.slice(59)\nreturn msg;",
         "outputs": 1,
@@ -1486,19 +1499,19 @@
         "y": 560,
         "wires": [
             [
-                "be8fb119d7de7428",
-                "170852253b72cfb7",
-                "f5c8a0149fceaceb",
-                "ad3707fef74a7238",
-                "24e7d3a07e7a588a",
-                "6aa0c146d190cdb2"
+                "30fd5a99a9e5d16e",
+                "7a901a05159d97a0",
+                "3a84580609f34008",
+                "1e46a66b9925cc0d",
+                "d542f8e0b35fddcc",
+                "adafa614399b6d2e"
             ]
         ]
     },
     {
-        "id": "39d9c93fb532e422",
+        "id": "4a76375d90ee0a70",
         "type": "ui_gauge",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "group": "646a2c33.077d74",
         "order": 2,
@@ -1524,11 +1537,11 @@
         "wires": []
     },
     {
-        "id": "c1b26004874daf96",
+        "id": "c7583948860ccdb6",
         "type": "debug",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1540,9 +1553,9 @@
         "wires": []
     },
     {
-        "id": "88e5bdacefefa05f",
+        "id": "eb33ad749afe266f",
         "type": "inject",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "HUMID-D0",
         "props": [
             {
@@ -1560,14 +1573,14 @@
         "y": 80,
         "wires": [
             [
-                "229ab08d73c16ed9"
+                "d9da488c657a553f"
             ]
         ]
     },
     {
-        "id": "229ab08d73c16ed9",
+        "id": "d9da488c657a553f",
         "type": "ui_button",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "group": "646a2c33.077d74",
         "order": 3,
@@ -1588,14 +1601,14 @@
         "y": 80,
         "wires": [
             [
-                "7df52c945cced612"
+                "2d6bae1e986f897f"
             ]
         ]
     },
     {
-        "id": "7df52c945cced612",
+        "id": "2d6bae1e986f897f",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "HUMID D0 BIN",
         "func": "var buf = new Buffer(64); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 1;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 0; // 14\nbuf[52] = 1; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = 0; // TimeDuration 0\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 4\nbuf[61] = 0; // 5\nbuf[62] = 0; // 6\nbuf[63] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
@@ -1607,16 +1620,16 @@
         "y": 80,
         "wires": [
             [
-                "d5b078f3d5ede44c"
+                "4d79897b5485f473"
             ]
         ]
     },
     {
-        "id": "8225956ef6540a72",
+        "id": "49721123dda12dc1",
         "type": "mqtt out",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
-        "topic": "_1451.1.6/D0/OUC-LEC/2023/west/ncap0",
+        "topic": "_1451.1.6/D0/INTEROP/2023/ncap0",
         "qos": "1",
         "retain": "",
         "respTopic": "",
@@ -1624,15 +1637,15 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "f0bc150f8cc49abd",
-        "x": 1220,
+        "broker": "39d5aa93d6951ccb",
+        "x": 1210,
         "y": 120,
         "wires": []
     },
     {
-        "id": "680ba5f51fab73f1",
+        "id": "b4b4fbcd349c97ec",
         "type": "ui_toast",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "position": "top left",
         "displayTime": "3",
         "highlight": "",
@@ -1649,9 +1662,9 @@
         "wires": []
     },
     {
-        "id": "d5b078f3d5ede44c",
+        "id": "4d79897b5485f473",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "THRU",
         "func": "\nreturn msg;",
         "outputs": 1,
@@ -1662,16 +1675,16 @@
         "y": 120,
         "wires": [
             [
-                "8225956ef6540a72",
-                "3ac81bd29f1f688d",
-                "1981f2b484413289"
+                "49721123dda12dc1",
+                "7ce46b8dbc03ff46",
+                "611907424fd0e7cc"
             ]
         ]
     },
     {
-        "id": "b58142dc7bbe6296",
+        "id": "bf918d6a9f2f1804",
         "type": "ui_toast",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "position": "top right",
         "displayTime": "3",
         "highlight": "",
@@ -1688,9 +1701,9 @@
         "wires": []
     },
     {
-        "id": "d065e2af679caf59",
+        "id": "2409118d90faf447",
         "type": "switch",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "property": "timid",
         "propertyType": "msg",
@@ -1713,17 +1726,17 @@
         "y": 680,
         "wires": [
             [
-                "39d9c93fb532e422"
+                "4a76375d90ee0a70"
             ],
             [
-                "bb39c5ebfe893991"
+                "9c09104671edbe28"
             ]
         ]
     },
     {
-        "id": "3ac81bd29f1f688d",
+        "id": "7ce46b8dbc03ff46",
         "type": "debug",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -1737,9 +1750,9 @@
         "wires": []
     },
     {
-        "id": "bb39c5ebfe893991",
+        "id": "9c09104671edbe28",
         "type": "ui_gauge",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "group": "646a2c33.077d74",
         "order": 4,
@@ -1764,9 +1777,9 @@
         "wires": []
     },
     {
-        "id": "12419d385135c6d7",
+        "id": "a2f6ddee3c612cd4",
         "type": "inject",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "TEMP-TEDS-D0",
         "props": [
             {
@@ -1784,17 +1797,17 @@
         "y": 200,
         "wires": [
             [
-                "a47e95d0be0b59fd"
+                "34ec58c9942e20cd"
             ]
         ]
     },
     {
-        "id": "a47e95d0be0b59fd",
+        "id": "34ec58c9942e20cd",
         "type": "ui_button",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
-        "group": "21792d07.e6fa52",
-        "order": 6,
+        "group": "3a3f9853.90cc98",
+        "order": 1,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -1808,18 +1821,18 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 360,
+        "x": 400,
         "y": 200,
         "wires": [
             [
-                "f0e0632a2ea4b96c"
+                "3c97b5834c8ee6f3"
             ]
         ]
     },
     {
-        "id": "7277e6e198be1492",
+        "id": "4565132da9b2025c",
         "type": "inject",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "HUMID-TEDS-D0",
         "props": [
             {
@@ -1837,17 +1850,17 @@
         "y": 240,
         "wires": [
             [
-                "38b23a99895a3f3b"
+                "7fa3e401202cf7ba"
             ]
         ]
     },
     {
-        "id": "38b23a99895a3f3b",
+        "id": "7fa3e401202cf7ba",
         "type": "ui_button",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
-        "group": "21792d07.e6fa52",
-        "order": 7,
+        "group": "3a3f9853.90cc98",
+        "order": 2,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -1861,56 +1874,56 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 370,
+        "x": 410,
         "y": 240,
         "wires": [
             [
-                "14526c748aa11158"
+                "f28f2897e5d9aa99"
             ]
         ]
     },
     {
-        "id": "f0e0632a2ea4b96c",
+        "id": "3c97b5834c8ee6f3",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "TEMP TEDS D0 BIN",
-        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 0; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // 0 tedsAccessCode\nbuf[56] = 0; // 1\nbuf[57] = 0; // 2\nbuf[58] = 0; // 3\nbuf[59] = 0; // 0 tedsOffset\nbuf[60] = 0; // 1\nbuf[61] = 0; // 2\nbuf[62] = 0; // 3\nbuf[63] = 0; // 0 timeout\nbuf[64] = 0; // 1\nbuf[65] = 0; // 2\nbuf[66] = 0; // 3\nbuf[67] = 0; // 4\nbuf[68] = 0; // 5\nbuf[69] = 0; // 6\nbuf[70] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 0; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 4; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 620,
+        "x": 660,
         "y": 200,
         "wires": [
             [
-                "d5b078f3d5ede44c"
+                "4d79897b5485f473"
             ]
         ]
     },
     {
-        "id": "14526c748aa11158",
+        "id": "f28f2897e5d9aa99",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "HUMID TEDS D0 BIN",
-        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 0; // 14\nbuf[52] = 1; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // 0 tedsAccessCode\nbuf[56] = 0; // 1\nbuf[57] = 0; // 2\nbuf[58] = 0; // 3\nbuf[59] = 0; // 0 tedsOffset\nbuf[60] = 0; // 1\nbuf[61] = 0; // 2\nbuf[62] = 0; // 3\nbuf[63] = 0; // 0 timeout\nbuf[64] = 0; // 1\nbuf[65] = 0; // 2\nbuf[66] = 0; // 3\nbuf[67] = 0; // 4\nbuf[68] = 0; // 5\nbuf[69] = 0; // 6\nbuf[70] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 0; // 14\nbuf[52] = 1; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 4; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 620,
+        "x": 660,
         "y": 240,
         "wires": [
             [
-                "d5b078f3d5ede44c"
+                "4d79897b5485f473"
             ]
         ]
     },
     {
-        "id": "24e7d3a07e7a588a",
+        "id": "d542f8e0b35fddcc",
         "type": "debug",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -1924,9 +1937,9 @@
         "wires": []
     },
     {
-        "id": "170852253b72cfb7",
+        "id": "7a901a05159d97a0",
         "type": "debug",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -1941,9 +1954,9 @@
         "wires": []
     },
     {
-        "id": "be8fb119d7de7428",
+        "id": "30fd5a99a9e5d16e",
         "type": "debug",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -1958,9 +1971,9 @@
         "wires": []
     },
     {
-        "id": "f5c8a0149fceaceb",
+        "id": "3a84580609f34008",
         "type": "debug",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -1975,9 +1988,9 @@
         "wires": []
     },
     {
-        "id": "ad3707fef74a7238",
+        "id": "1e46a66b9925cc0d",
         "type": "debug",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -1992,9 +2005,9 @@
         "wires": []
     },
     {
-        "id": "6aa0c146d190cdb2",
+        "id": "adafa614399b6d2e",
         "type": "switch",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "property": "typeid",
         "propertyType": "msg",
@@ -2017,17 +2030,17 @@
         "y": 740,
         "wires": [
             [
-                "6ac888d050e4d6b9"
+                "121294256e32fb39"
             ],
             [
-                "ab9f593c672c2615"
+                "51b98906d9b214dd"
             ]
         ]
     },
     {
-        "id": "6ac888d050e4d6b9",
+        "id": "121294256e32fb39",
         "type": "template",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "sample",
         "field": "payload",
         "fieldType": "msg",
@@ -2039,14 +2052,14 @@
         "y": 720,
         "wires": [
             [
-                "d065e2af679caf59"
+                "2409118d90faf447"
             ]
         ]
     },
     {
-        "id": "ab9f593c672c2615",
+        "id": "51b98906d9b214dd",
         "type": "template",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "TEDS",
         "field": "payload",
         "fieldType": "msg",
@@ -2058,17 +2071,17 @@
         "y": 760,
         "wires": [
             [
-                "706f670557ca2462"
+                "db422cf5094a66ef"
             ]
         ]
     },
     {
-        "id": "706f670557ca2462",
+        "id": "db422cf5094a66ef",
         "type": "ui_text",
-        "z": "79d9c96a033c3d45",
-        "group": "21792d07.e6fa52",
-        "order": 9,
-        "width": "12",
+        "z": "a4c183a95164db51",
+        "group": "3a3f9853.90cc98",
+        "order": 6,
+        "width": "6",
         "height": "2",
         "name": "",
         "label": "D0 TEDS",
@@ -2080,9 +2093,9 @@
         "wires": []
     },
     {
-        "id": "1981f2b484413289",
+        "id": "611907424fd0e7cc",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "ArrayJoin",
         "func": "msg.payload = msg.payload.join()\nreturn msg;\n",
         "outputs": 1,
@@ -2093,14 +2106,14 @@
         "y": 80,
         "wires": [
             [
-                "680ba5f51fab73f1"
+                "b4b4fbcd349c97ec"
             ]
         ]
     },
     {
-        "id": "f2d4d89bef4001d9",
+        "id": "611ded86214b1bb3",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "ArrayJoin",
         "func": "msg.payload = msg.payload.join()\nreturn msg;\n",
         "outputs": 1,
@@ -2111,14 +2124,14 @@
         "y": 420,
         "wires": [
             [
-                "b58142dc7bbe6296"
+                "bf918d6a9f2f1804"
             ]
         ]
     },
     {
-        "id": "11981443984483f7",
+        "id": "f09eb6e12bda2bff",
         "type": "ui_slider",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
         "label": "D0 SERVO",
         "tooltip": "",
@@ -2138,14 +2151,14 @@
         "y": 120,
         "wires": [
             [
-                "d72c19a26330f404"
+                "92cdf83959118817"
             ]
         ]
     },
     {
-        "id": "d72c19a26330f404",
+        "id": "92cdf83959118817",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "SERVO D0 BIN",
         "func": "var buf = new Buffer(65); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 7;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 1; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = msg.payload;\nbuf[57] = 0 ; // TimeDuration\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
@@ -2157,14 +2170,14 @@
         "y": 120,
         "wires": [
             [
-                "d5b078f3d5ede44c"
+                "4d79897b5485f473"
             ]
         ]
     },
     {
-        "id": "abfe261b9fecd91b",
+        "id": "7dcf7aab1270427a",
         "type": "inject",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "SERVO-TEDS-D0",
         "props": [
             {
@@ -2182,17 +2195,17 @@
         "y": 280,
         "wires": [
             [
-                "1525c00c11c83afd"
+                "f80a154ce518e260"
             ]
         ]
     },
     {
-        "id": "1525c00c11c83afd",
+        "id": "f80a154ce518e260",
         "type": "ui_button",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "",
-        "group": "21792d07.e6fa52",
-        "order": 8,
+        "group": "3a3f9853.90cc98",
+        "order": 2,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2206,37 +2219,37 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 370,
+        "x": 410,
         "y": 280,
         "wires": [
             [
-                "7e1ee749c8c8b038"
+                "59c17793c04c0c67"
             ]
         ]
     },
     {
-        "id": "7e1ee749c8c8b038",
+        "id": "59c17793c04c0c67",
         "type": "function",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "SERVO TEDS D0 BIN",
-        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 1; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // 0 tedsAccessCode\nbuf[56] = 0; // 1\nbuf[57] = 0; // 2\nbuf[58] = 0; // 3\nbuf[59] = 0; // 0 tedsOffset\nbuf[60] = 0; // 1\nbuf[61] = 0; // 2\nbuf[62] = 0; // 3\nbuf[63] = 0; // 0 timeout\nbuf[64] = 0; // 1\nbuf[65] = 0; // 2\nbuf[66] = 0; // 3\nbuf[67] = 0; // 4\nbuf[68] = 0; // 5\nbuf[69] = 0; // 6\nbuf[70] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 1; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 4; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 620,
+        "x": 660,
         "y": 280,
         "wires": [
             [
-                "d5b078f3d5ede44c"
+                "4d79897b5485f473"
             ]
         ]
     },
     {
-        "id": "9988e3420e875d74",
+        "id": "a1d4162d14ea31a5",
         "type": "inject",
-        "z": "79d9c96a033c3d45",
+        "z": "a4c183a95164db51",
         "name": "SERVO-D0",
         "props": [
             {
@@ -2254,7 +2267,79 @@
         "y": 120,
         "wires": [
             [
-                "11981443984483f7"
+                "f09eb6e12bda2bff"
+            ]
+        ]
+    },
+    {
+        "id": "7d4a94c667a80419",
+        "type": "inject",
+        "z": "a4c183a95164db51",
+        "name": "SECURITY-TEDS-D0",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "dummy",
+        "payloadType": "str",
+        "x": 160,
+        "y": 320,
+        "wires": [
+            [
+                "b67efba2521a75b3"
+            ]
+        ]
+    },
+    {
+        "id": "b67efba2521a75b3",
+        "type": "ui_button",
+        "z": "a4c183a95164db51",
+        "name": "",
+        "group": "3a3f9853.90cc98",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "SECURITY-TEDS-D0-REQ",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "dummy",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 420,
+        "y": 320,
+        "wires": [
+            [
+                "6015d726eac01a03"
+            ]
+        ]
+    },
+    {
+        "id": "6015d726eac01a03",
+        "type": "function",
+        "z": "a4c183a95164db51",
+        "name": "SERVO TEDS D0 BIN",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 0;;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 0; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 0; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 0; // 13\nbuf[51] = 1; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 16; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 320,
+        "wires": [
+            [
+                "4d79897b5485f473"
             ]
         ]
     }
