@@ -435,7 +435,7 @@
         "gtype": "gage",
         "title": "HUMID-D0C",
         "label": "units",
-        "format": "{{value}}",
+        "format": "{{sample}}",
         "min": 0,
         "max": "80",
         "colors": [
@@ -445,25 +445,10 @@
         ],
         "seg1": "",
         "seg2": "",
+        "diff": false,
         "className": "",
-        "x": 1510,
-        "y": 680,
-        "wires": []
-    },
-    {
-        "id": "db025ff4dc431463",
-        "type": "debug",
-        "z": "0c7a731dc303bfda",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1510,
-        "y": 580,
+        "x": 1230,
+        "y": 720,
         "wires": []
     },
     {
@@ -499,7 +484,7 @@
         "gtype": "gage",
         "title": "TEMP-D0C",
         "label": "units",
-        "format": "{{value}}",
+        "format": "{{sample}}",
         "min": 0,
         "max": "40",
         "colors": [
@@ -509,9 +494,10 @@
         ],
         "seg1": "",
         "seg2": "",
+        "diff": false,
         "className": "",
-        "x": 1510,
-        "y": 640,
+        "x": 1230,
+        "y": 680,
         "wires": []
     },
     {
@@ -536,16 +522,14 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "x": 1170,
-        "y": 680,
+        "x": 830,
+        "y": 700,
         "wires": [
             [
-                "ccbb4021f26245f6",
-                "db025ff4dc431463"
+                "37725cd568c488dc"
             ],
             [
-                "aa8973059778364c",
-                "db025ff4dc431463"
+                "ffcaa2ef7d546ca5"
             ]
         ]
     },
@@ -590,7 +574,7 @@
         "id": "48eb6497066517cb",
         "type": "ui_toast",
         "z": "0c7a731dc303bfda",
-        "position": "top right",
+        "position": "bottom right",
         "displayTime": "3",
         "highlight": "",
         "sendall": true,
@@ -737,7 +721,7 @@
         "type": "debug",
         "z": "0c7a731dc303bfda",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -769,7 +753,7 @@
         "type": "function",
         "z": "0c7a731dc303bfda",
         "name": "Array2Str",
-        "func": "let pa = msg.payload.split(',');\nmsg.typeid = pa.slice(0, 3).join();\nmsg.timid = pa.slice(7, 8);\nmsg.sample = pa.slice(8, 9);\nmsg.teds = pa.slice(10);\nreturn msg;",
+        "func": "let pa = msg.payload.split(',');\nmsg.typeid = pa.slice(0, 3).join();\nmsg.timid = pa.slice(6, 7);\nmsg.sample = pa.slice(8, 9);\nmsg.teds = pa.slice(10);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -785,7 +769,8 @@
                 "a8a6354eb16b3655",
                 "1096085ef5376371",
                 "740823ac03c904f1",
-                "3b4fa548f6bba24c"
+                "3b4fa548f6bba24c",
+                "797be9366cb3cffc"
             ]
         ]
     },
@@ -879,12 +864,10 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "x": 790,
+        "x": 830,
         "y": 780,
         "wires": [
-            [
-                "37725cd568c488dc"
-            ],
+            [],
             [
                 "e95d97c4e58076c8"
             ]
@@ -901,11 +884,11 @@
         "syntax": "mustache",
         "template": "{{sample}}",
         "output": "str",
-        "x": 1000,
+        "x": 1020,
         "y": 680,
         "wires": [
             [
-                "797be9366cb3cffc"
+                "ccbb4021f26245f6"
             ]
         ]
     },
@@ -920,7 +903,7 @@
         "syntax": "mustache",
         "template": "{{teds}}",
         "output": "str",
-        "x": 990,
+        "x": 1010,
         "y": 800,
         "wires": [
             [
@@ -941,7 +924,7 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "TEDSTEXT",
-        "x": 1190,
+        "x": 1230,
         "y": 800,
         "wires": []
     },
@@ -1163,6 +1146,25 @@
         "wires": [
             [
                 "f4dc1efa4ddec667"
+            ]
+        ]
+    },
+    {
+        "id": "ffcaa2ef7d546ca5",
+        "type": "template",
+        "z": "0c7a731dc303bfda",
+        "name": "sample",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{sample}}",
+        "output": "str",
+        "x": 1020,
+        "y": 720,
+        "wires": [
+            [
+                "aa8973059778364c"
             ]
         ]
     },
