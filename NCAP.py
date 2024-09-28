@@ -384,7 +384,7 @@ def on_message(mqttc, obj, msg):
             pprint.pprint(mline)
             if mline['ncapId'] == buuid0:
                 print("tmid: ", mline['timId'])
-                sbp = bytearray([0x2, 0x1, 0x2, 0x0, 0x0, 0x0, 0x0])
+                sbp = bytearray([0x2, 0x1, 0x2, 0x0, 0x0, 0x0, 0x42])
                 chid = int.from_bytes(mline['channelId'], 'big')
                 print("chid(ml): ", mline['channelId'])
                 print('chid:',chid)
@@ -405,7 +405,7 @@ def on_message(mqttc, obj, msg):
             pprint.pprint(mline)
             if mline['ncapId'] == buuid0:
                 print("tmid: ", mline['timId'])
-                sbp = bytearray([0x2, 0x7, 0x2, 0x0, 0x0, 0x0, 0x0])
+                sbp = bytearray([0x2, 0x7, 0x2, 0x0, 0x0, 0x0, 0x38])
                 chid = int.from_bytes(mline['channelId'], 'big')
                 print("chid(ml): ", mline['channelId'])
                 print('chid:',chid)
@@ -432,12 +432,18 @@ def on_message(mqttc, obj, msg):
                 if mline['ncapId'] == buuid0:
                     sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
                     if mline['timId'] == buuid0:
+                        len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['TEMPBINTEDS'].encode()))
+                        sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
                         client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['TEMPBINTEDS'].encode()))
                         print("Read TEMP BINARY TEDS")
                     elif mline['timId'] == buuid1:
+                        len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['HUMIDBINTEDS'].encode()))
+                        sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
                         client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['HUMIDBINTEDS'].encode()))
                         print("Read HUMID BINARY TEDS")
                     elif mline['timId'] == buuid2:
+                        len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SERVOBINTEDS'].encode()))
+                        sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
                         client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SERVOBINTEDS'].encode()))
                         print("Read SERVO BINARY TEDS")
                     else:
@@ -447,7 +453,8 @@ def on_message(mqttc, obj, msg):
                     print(mline['ncapId'])
             elif mline['tedsAccessCode'] == 16:
                 if mline['ncapId'] == buuid0:
-                    sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
+                    len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SECURITYBINTEDS'].encode()))
+                    sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
                     client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SECURITYBINTEDS'].encode()))
                     print("Read SECURITY BINARY TEDS")
                 else:
