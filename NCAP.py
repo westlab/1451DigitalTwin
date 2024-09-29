@@ -226,6 +226,14 @@ bnull = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 # str -> byte .encode()
 # byte -> str .decode()
 
+def insert_length(binstr, position):
+    length = len(binstr)
+    length_bytes = length.to_bytes(4, byteorder='big')
+    if position < 0 or position + 4 > len(binstr):
+        raise ValueError("Invalid Location of Length")
+    binstr = binstr[:position] + length_bytes + binstr[position+4:]
+    return binstr
+
 def s16(value):
     return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
 
@@ -389,10 +397,14 @@ def on_message(mqttc, obj, msg):
                 print("chid(ml): ", mline['channelId'])
                 print('chid:',chid)
                 if mline['timId'] == buuid0:
-                    client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+(str(vtemp[chid]).encode()+bnull)[0:7]+bts)
+                    binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+(str(vtemp[chid]).encode()+bnull)[0:7]+bts
+                    binstr = insert_length(binstr, 3)
+                    client.publish(topicd0opres, binstr)
                     print("Read TEMP")
                 elif mline['timId'] == buuid1:
-                    client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+(str(vhumid[chid]).encode()+bnull)[0:7]+bts)
+                    binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+(str(vhumid[chid]).encode()+bnull)[0:7]+bts
+                    binstr = insert_length(binstr, 3)
+                    client.publish(topicd0opres, binstr)
                     print("Read HUMID")
                 else:
                     print("timId Error", mline['timId'])
@@ -415,7 +427,9 @@ def on_message(mqttc, obj, msg):
                         p.ChangeDutyCycle(int(mline['dataValue'])/25+2.4)
                         time.sleep(0.4)
                         p.ChangeDutyCycle(0.0)
-                        client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId']))
+                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])
+                        binstr = insert_length(binstr, 3)
+                        client.publish(topicd0opres, binstr)
                         print("Write Servo Response")
                     else:
                         print("++++++++++++ Pseudo Servo:", mline['dataValue']);
@@ -432,19 +446,19 @@ def on_message(mqttc, obj, msg):
                 if mline['ncapId'] == buuid0:
                     sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
                     if mline['timId'] == buuid0:
-                        len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['TEMPBINTEDS'].encode()))
-                        sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
-                        client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['TEMPBINTEDS'].encode()))
+                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['TEMPBINTEDS'].encode())
+                        binstr = insert_length(binstr, 3)
+                        client.publish(topicd0opres, binstr)
                         print("Read TEMP BINARY TEDS")
                     elif mline['timId'] == buuid1:
-                        len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['HUMIDBINTEDS'].encode()))
-                        sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
-                        client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['HUMIDBINTEDS'].encode()))
+                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['HUMIDBINTEDS'].encode())
+                        binstr = insert_length(binstr, 3)
+                        client.publish(topicd0opres, binstr)
                         print("Read HUMID BINARY TEDS")
                     elif mline['timId'] == buuid2:
-                        len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SERVOBINTEDS'].encode()))
-                        sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
-                        client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SERVOBINTEDS'].encode()))
+                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SERVOBINTEDS'].encode())
+                        binstr = insert_length(binstr, 3)
+                        client.publish(topicd0opres, binstr)
                         print("Read SERVO BINARY TEDS")
                     else:
                         print("timId Error", mline['timId'])
@@ -453,9 +467,10 @@ def on_message(mqttc, obj, msg):
                     print(mline['ncapId'])
             elif mline['tedsAccessCode'] == 16:
                 if mline['ncapId'] == buuid0:
-                    len = length(sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SECURITYBINTEDS'].encode()))
-                    sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, len])
-                    client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SECURITYBINTEDS'].encode()))
+                    sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
+                    binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+bytearray(confdata['SECURITYBINTEDS'].encode())
+                    binstr = insert_length(binstr, 3)
+                    client.publish(topicd0opres, binstr)
                     print("Read SECURITY BINARY TEDS")
                 else:
                     print("ncapId Error")
