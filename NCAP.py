@@ -402,7 +402,7 @@ def on_message(mqttc, obj, msg):
                             print('tedsOffset', mline[9])
                             chid = int(mline[7])
                             if mline[4] == uuid0:
-                                client.publish(topiccopres, '3,2,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+mline[7]+','+mline[8]+','+tedsmsg(confdata['SECURITYTEDS']))
+                                client.publish(topiccopres, '3,2,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+mline[7]+','+mline[8]+','+confdata['SECURITYTEDS'])
                                 print("Read QUERY TEDS")
                             else:
                                 print("ncapId Error:",mline[3])
