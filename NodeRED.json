@@ -1945,7 +1945,7 @@
         "type": "debug",
         "z": "a4c183a95164db51",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2037,26 +2037,7 @@
                 "2409118d90faf447"
             ],
             [
-                "51b98906d9b214dd"
-            ]
-        ]
-    },
-    {
-        "id": "51b98906d9b214dd",
-        "type": "template",
-        "z": "a4c183a95164db51",
-        "name": "TEDS",
-        "field": "payload",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "{{teds}}",
-        "output": "str",
-        "x": 890,
-        "y": 800,
-        "wires": [
-            [
-                "db422cf5094a66ef"
+                "e43c104db6933a01"
             ]
         ]
     },
@@ -2073,7 +2054,7 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "",
-        "x": 1080,
+        "x": 1260,
         "y": 800,
         "wires": []
     },
@@ -2363,6 +2344,44 @@
         "wires": [
             [
                 "4a76375d90ee0a70"
+            ]
+        ]
+    },
+    {
+        "id": "e43c104db6933a01",
+        "type": "function",
+        "z": "a4c183a95164db51",
+        "name": "byte2string",
+        "func": "const bytes = new Uint8Array(msg.teds);\nlet te = Array.from(bytes, byte => byte.toString(16).padStart(2, '0').toUpperCase()).join('');\nlet res = '';\nfor (let i = 0; i < te.length; i += 20){\n    res += te.substr(i, 20)+' ';\n}\nmsg.teds = res.trim();\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 800,
+        "wires": [
+            [
+                "4f84dd09a1e8ca24"
+            ]
+        ]
+    },
+    {
+        "id": "4f84dd09a1e8ca24",
+        "type": "template",
+        "z": "a4c183a95164db51",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{teds}}",
+        "output": "str",
+        "x": 1060,
+        "y": 800,
+        "wires": [
+            [
+                "db422cf5094a66ef"
             ]
         ]
     }
