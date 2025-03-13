@@ -1,4 +1,4 @@
-# IEEEP1451.1.6-2023
+# IEEEP1451.1.6 based Digital Twin
 
 ## Simple start:
 
