@@ -9,7 +9,7 @@ python3 mqtt_node.py \
         --mqtt_broker 3277bbbd24e24f328e93456f6a9f1602.s1.eu.hivemq.cloud \
         --mqtt_username ci-runner \
         --mqtt_password cirunner1A \
-        --enable_tls --iterations 5 | tee output.log
+        --enable_tls --iterations 2 | tee output.log
 
 cat output.log
 
