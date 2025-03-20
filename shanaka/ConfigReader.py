@@ -1,5 +1,5 @@
 """
-load_config.py
+ConfigReader.py
 
 This module provides functionality to read and validate a YAML configuration file. 
 It ensures that all required fields are present and assigns default values to optional fields if not provided.
@@ -8,7 +8,7 @@ Classes:
     - ConfigReader: Handles loading and validating the YAML configuration file.
 
 Usage:
-    from load_config import ConfigReader
+    from ConfigReader import ConfigReader
 
     config_reader = ConfigReader("path/to/config.yml")
     config = config_reader.load_config()
@@ -48,6 +48,7 @@ class ConfigReader:
         return self.config
 
     def validate_config(self):
+        # assign default values to optional fields
         required_fields = {
             "mqtthost": None, 
             "mqttport": None, 

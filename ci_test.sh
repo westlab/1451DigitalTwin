@@ -6,6 +6,9 @@ DEBIAN_FRONTEND=noninteractive
 PROGRAM_NAME="$(basename $0)"
 BASEDIR=$(dirname $(realpath "$0"))
 
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
+
 export PYTHONPATH=$BASEDIR:$PYTHONPATH
 
 unittests() {

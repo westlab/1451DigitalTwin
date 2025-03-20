@@ -1,6 +1,33 @@
 #!/usr/bin/python
 __author__ = "shanakaprageeth"
 
+"""
+MQTTClientHandler
+
+This class provides a handler for MQTT client operations, including connecting, subscribing, publishing, 
+and processing received messages. It supports custom message processing logic by allowing the user to 
+pass a custom `process_received_message` function during initialization.
+
+Usage Example:
+--------------
+from MQTTClientHandler import MQTTClientHandler
+import paho.mqtt.client as paho
+
+def custom_message_processor(message):
+    print(f"Custom processing for message: {message.payload.decode('utf-8')}")
+
+client_handler = MQTTClientHandler(process_received_message=custom_message_processor)
+client = paho.Client()
+
+client.on_connect = client_handler.on_connect
+client.on_disconnect = client_handler.on_disconnect
+client.on_message = client_handler.on_message
+
+client.connect("mqtt.eclipse.org", 1883, 60)
+client.subscribe("test/topic")
+client.loop_forever()
+"""
+
 import paho.mqtt.client as paho
 from paho import mqtt
 import argparse
