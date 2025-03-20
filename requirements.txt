@@ -1,3 +1,4 @@
 paho-mqtt
 dht11
 RPi.GPIO
+tox

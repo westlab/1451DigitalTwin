@@ -1,12 +1,15 @@
 #!/usr/bin/python
+__author__ = "shanakaprageeth"
+
 import paho.mqtt.client as paho
 from paho import mqtt
 import argparse
 from time import sleep
 import random
 import xml.etree.ElementTree as ET
-import sys  # Added for sys.exit
-import threading  # Added for thread-safe flag
+import sys
+import threading
+from shanaka.MQTTClientHandler import MQTTClientHandler
 
 parser = argparse.ArgumentParser(description="MQTT Subscriber")
 parser.add_argument("--mqtt_sub_topics", nargs='+', default=["OUCtest/yourID"], help="MQTT topics to subscribe to")
@@ -20,40 +23,26 @@ parser.add_argument("--enable_tls", action="store_true", default=False, help="En
 parser.add_argument("--iterations", type=str, default="inf", help="Number of iterations for the while loop. Use 'infinity' for an infinite loop.")
 args = parser.parse_args()
 
-def on_connect(client, userdata, flags, rc, properties=None):
-    # mqtt client call back for connect
-    print(f"Connected with result code {str(rc)}")
-
-def on_disconnect(client, userdata, rc, properties=None):
-    # mqtt client call back for disconnect
-    if rc != 0:
-        print("Unexpected disconnection.")
-
-def on_publish(client, userdata, mid, properties=None):
-    # mqtt client call back for publish
-    print(f"published: {mid}")
-
-def on_subscribe(client, userdata, mid, granted_qos, properties=None):
-    # mqtt client call back for subscribe
-    print(f"Subscribed: {str(mid)} {str(granted_qos)}")
-
-def on_message(client, userdata, message):
-    # mqtt client call back for message received
-    process_received_data(message)
-
-def process_received_data(message):
-    # Updated logic to process the received XML data
+def my_process_received_message(message):
     payload = str(message.payload.decode("utf-8"))
     print(f"Received topic {message.topic}")
     try:
-        # Check if the payload is valid XML
         ET.fromstring(payload)
-        client_id, sensor_id, msg_id, value = process_sensor_message(payload)  # Updated to unpack msg_id
+        client_id, sensor_id, msg_id, value = process_sensor_message(payload)
         print(f"Received Client {client_id} sensor {sensor_id} msg_id {msg_id} temperature {value}")
     except ET.ParseError:
         print(f"Invalid XML payload: {payload}")
     except Exception as e:
         print(f"Unexpected error while processing payload: {payload}. Error: {e}")
+
+def process_sensor_message(message):
+    # Process message in XML format
+    root = ET.fromstring(message)
+    client_id = root.find("client_id").text
+    sensor_id = root.find("sensor_id").text
+    msg_id = root.find("msg_id").text
+    value = root.find("value").text
+    return client_id, sensor_id, msg_id, value
 
 def read_dummy_temp_sensor(client, pub_topics, client_id):
     """Simulates a temperature sensor with a linearly increasing value between 10-30 with noise.
@@ -82,16 +71,7 @@ def prepare_sensor_message(client_id, sensor_id, msg_id, value):
     <sensor_id>{sensor_id}</sensor_id>
     <msg_id>{msg_id}</msg_id>
     <value>{value}</value>
-</message>"""  # Ensure the <message> tag is properly closed
-
-def process_sensor_message(message):
-    # Process message in XML format
-    root = ET.fromstring(message)
-    client_id = root.find("client_id").text
-    sensor_id = root.find("sensor_id").text
-    msg_id = root.find("msg_id").text
-    value = root.find("value").text
-    return client_id, sensor_id, msg_id, value
+</message>"""
 
 # Global flag to prevent multiple executions of mqtt_test_async
 mqtt_test_async_running = False
@@ -106,7 +86,8 @@ def mqtt_test(
     mqtt_password=None,
     client_id="client_1",
     enable_tls=False,
-    iterations="inf"
+    iterations="inf",
+    process_received_message=None
 ):
     # setup MQTT client
     print(f"Setting up MQTT client")
@@ -116,12 +97,14 @@ def mqtt_test(
     # Set username and password if provided
     if mqtt_username and mqtt_password:
         client.username_pw_set(mqtt_username, mqtt_password)
-    # setup MQTT test callbacks
-    client.on_connect = on_connect
-    client.on_disconnect = on_disconnect
-    client.on_publish = on_publish
-    client.on_message = on_message
-    client.on_subscribe = on_subscribe
+
+    handler = MQTTClientHandler(my_process_received_message)
+    client.on_connect = handler.on_connect
+    client.on_disconnect = handler.on_disconnect
+    client.on_publish = handler.on_publish
+    client.on_message = handler.on_message
+    client.on_subscribe = handler.on_subscribe
+
     print(f"Connecting to MQTT client {mqtt_broker}:{mqtt_port}")
     # setup the client
     client.connect(mqtt_broker, mqtt_port, 60)
