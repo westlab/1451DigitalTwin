@@ -3,3 +3,4 @@ dht11
 RPi.GPIO
 tox
 PyYAML
+temporenc

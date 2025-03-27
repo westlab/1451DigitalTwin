@@ -11,6 +11,19 @@ python3 -m pip install -r requirements.txt
 
 export PYTHONPATH=$BASEDIR:$PYTHONPATH
 
+install_dependencies(){
+    python3 -m pip install --upgrade pip
+    python3 -m pip install -r requirements.txt
+    sudo npm install --unsafe-perm node-red
+    sudo npm install -g --unsafe-perm node-red
+    sudo npm install node-red-dashboard
+}
+
+nodered(){
+    node-red --json NodeRED.json&
+    python3 NCAP.py -p
+}
+
 unittests() {
     echo "Executing tox tests"
     tox
@@ -26,8 +39,8 @@ systemtests(){
         exit 1
     else
         echo "Test Passed"
-        exit 0
     fi
+    exit 0
     echo "Running MQTT Node Test"
     # TODO move password to secret
     python3 mqtt_test_example.py \
@@ -62,13 +75,19 @@ case "$1" in
     systemtests)
         systemtests
         ;;
+    install_dependencies)
+        install_dependencies
+        ;;
+    nodered)
+        nodered
+        ;;
     all)
         unittests
         systemtests
         ;;
     *)
         echo "Invalid argument: $1"
-        echo "Usage: $PROGRAM_NAME {unittests|systemtests|all}"
+        echo "Usage: $PROGRAM_NAME {unittests|systemtests|install_dependencies|all|nodered}"
         exit 1
         ;;
 esac
