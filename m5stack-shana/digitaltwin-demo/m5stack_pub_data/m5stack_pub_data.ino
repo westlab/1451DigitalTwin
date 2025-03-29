@@ -19,7 +19,7 @@
 // loop delay
 const int loop_delay = 1000; // 1 seconds
 // device name
-const char* device_name = "core_2";
+const char* device_name = "core_1";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
@@ -215,7 +215,7 @@ bool publishDataMQTT(){
         Serial.print(mqtt_message);
         Serial.println();
         mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
-        mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON().c_str());
+        //mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON().c_str());
         return true;
     }
     return false;
