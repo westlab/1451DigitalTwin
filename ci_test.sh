@@ -6,21 +6,29 @@ DEBIAN_FRONTEND=noninteractive
 PROGRAM_NAME="$(basename $0)"
 BASEDIR=$(dirname $(realpath "$0"))
 
-python3 -m pip install --upgrade pip
-python3 -m pip install -r requirements.txt
-
 export PYTHONPATH=$BASEDIR:$PYTHONPATH
 
 install_dependencies(){
+    sudo apt-get install -y python3 python3-pip python3-venv npm
+    python3 -m venv .venv
+    source .venv/bin/activate
     python3 -m pip install --upgrade pip
     python3 -m pip install -r requirements.txt
     sudo npm install --unsafe-perm node-red
     sudo npm install -g --unsafe-perm node-red
     sudo npm install node-red-dashboard
+    sudo npm install -g node-red-dashboard
 }
 
 nodered(){
-    node-red --json NodeRED.json&
+    source .venv/bin/activate
+    if netstat -tulpn | grep ':1880' > /dev/null
+    then
+        echo "Node-RED is already running on port 1880."
+    else
+        echo "Node-RED is not running on port 1880. Starting a new instance..."
+        node-red -p 1880  --json NodeRED.json&
+    fi
     python3 NCAP.py -p
 }
 

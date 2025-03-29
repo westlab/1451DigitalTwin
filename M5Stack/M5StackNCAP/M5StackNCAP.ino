@@ -5,16 +5,16 @@
 #include <Wire.h>
 
 // Wi-Fi設定
-const char* ssid = "westexp-mobile";         // Wi-FiのSSIDを入力してください
-const char* password = "kyouryokunawestnohashi"; // Wi-Fiのパスワードを入力してください
+const char* ssid = "GL-AR750-310";         // Wi-FiのSSIDを入力してください
+const char* password = "goodlife"; // Wi-Fiのパスワードを入力してください
 
 // MQTTブローカー設定
-const char* mqtt_server = "broker.hivemq.com";
+const char* mqtt_server = "192.168.8.101";
 const int mqtt_port = 1883;
 
 // Device name
-const char* device_name = "Core2_1";
-//const char* device_name = "Core2_2";
+//const char* device_name = "Core2_1";
+const char* device_name = "Core2_2";
 
 String topic_name = (String)"_IECON_Plugfest/" + (String)device_name + (String)"/sample";
 
