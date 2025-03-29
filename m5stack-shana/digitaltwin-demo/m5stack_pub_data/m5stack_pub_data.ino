@@ -17,7 +17,7 @@
 
 // constants
 // device name
-const char* device_name = "core_2";
+const char* device_name = "core_1";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
@@ -156,11 +156,11 @@ String generateFormattedMessage(){
 String generateMQTTMessageJSON(){
     return "{ \"Device\":\"" +  String(device_name) +"\""+
         ",\"LocalTime\":\"" + getLocalTimeString() +"\""+
-        ",\"TempSHT\":" + String(sht4.cTemp) + 
+        ",\"TempSHT\":" + String(sht4.cTemp) +
+        ",\"TempBMP\":"+ String(bmp.cTemp) +
         ",\"Humidity\":" + String(sht4.humidity) +
         ",\"Pressure\":" + String(bmp.pressure) +
         ",\"Altitude\":" + String(bmp.altitude) +
-        ",\"TempBMP\":"+ String(bmp.cTemp) +
         "}";
 }
 
@@ -184,9 +184,9 @@ String generateMQTTMessageXML(){
     xml_message += "    <LocalTime>" + getLocalTimeString() + "</DeviceName>\n";
     xml_message += "    <TempSHT>" + String(sht4.cTemp) + "</TempSHT>\n";
     xml_message += "    <TempBMP>" + String(bmp.cTemp) + "</TempBMP>\n";
-    xml_message += "    <Altitude>" + String(bmp.altitude) + "</Altitude>\n";
-    xml_message += "    <Pressure>" + String(bmp.pressure) + "</Pressure>\n";
     xml_message += "    <Humidity>" + String(sht4.humidity) + "</Humidity>\n";
+    xml_message += "    <Pressure>" + String(bmp.pressure) + "</Pressure>\n";
+    xml_message += "    <Altitude>" + String(bmp.altitude) + "</Altitude>\n";
     xml_message += "  </DEBUG>\n";
     xml_message += "</TEDS>";
     return xml_message;
