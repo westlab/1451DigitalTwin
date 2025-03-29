@@ -16,6 +16,8 @@
 # include "time.h"
 
 // constants
+// loop delay
+const int loop_delay = 1000; // 1 seconds
 // device name
 const char* device_name = "core_1";
 // Wi-Fi settings
@@ -165,29 +167,30 @@ String generateMQTTMessageJSON(){
 }
 
 String generateMQTTMessageXML(){
-    String xml_message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    xml_message += "<TEDS ID=\"[v03]\">\n";
-    xml_message += "  <BasicTEDS>\n";
-    xml_message += "    <Manufacturer>Dewesoft</Manufacturer>\n";
-    xml_message += "    <Model>1</Model>\n";
-    xml_message += "    <VersionLetter>A</VersionLetter>\n";
-    xml_message += "    <VersionNumber>1</VersionNumber>\n";
-    xml_message += "    <SerialNumber>1</SerialNumber>\n";
-    xml_message += "  </BasicTEDS>\n";
-    xml_message += "  <TEDS-Code length=\"40\">6A4000200401000098D0421F00000000 00000012040000120400001204000000 C34800000000E000</TEDS-Code>\n";
-    xml_message += "  <Info-Section EditorVersion=\"Dewesoft TedsEditor V2.2.12\">\n";
-    xml_message += "    <InfoLine16>2023/05/22 0:25:06: Templates cleared by User.</InfoLine16>\n";
-    xml_message += "    <InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17>\n";
-    xml_message += "  </Info-Section>\n";
-    xml_message += "  <DEBUG>\n";
-    xml_message += "    <DeviceName>" + String(device_name) + "</DeviceName>\n";
-    xml_message += "    <LocalTime>" + getLocalTimeString() + "</DeviceName>\n";
-    xml_message += "    <TempSHT>" + String(sht4.cTemp) + "</TempSHT>\n";
-    xml_message += "    <TempBMP>" + String(bmp.cTemp) + "</TempBMP>\n";
-    xml_message += "    <Humidity>" + String(sht4.humidity) + "</Humidity>\n";
-    xml_message += "    <Pressure>" + String(bmp.pressure) + "</Pressure>\n";
-    xml_message += "    <Altitude>" + String(bmp.altitude) + "</Altitude>\n";
-    xml_message += "  </DEBUG>\n";
+  //when xml is too long publish fails
+    String xml_message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    xml_message += "<TEDS ID=\"[v03]\">";
+    //xml_message += "<BasicTEDS>";
+    //xml_message += "<Manufacturer>Dewesoft</Manufacturer>";
+    //xml_message += "<Model>1</Model>";
+    //xml_message += "<VersionLetter>A</VersionLetter>";
+    //xml_message += "<VersionNumber>1</VersionNumber>";
+    //xml_message += "<SerialNumber>1</SerialNumber>";
+    //xml_message += "</BasicTEDS>";
+    //xml_message += "<TEDS-Code length=\"40\">6A4000200401000098D0421F00000000 00000012040000120400001204000000 C34800000000E000</TEDS-Code>";
+    //xml_message += "<Info-Section EditorVersion=\"Dewesoft TedsEditor V2.2.12\">";
+    //xml_message += "<InfoLine16>2023/05/22 0:25:06: Templates cleared by User.</InfoLine16>";
+    //xml_message += "<InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17>";
+    //xml_message += "</Info-Section>";
+    xml_message += "<DEBUG>";
+    xml_message += "<DeviceName>" + String(device_name) + "</DeviceName>";
+    //xml_message += "<LocalTime>" + getLocalTimeString() + "</LocalTime>";
+    xml_message += "<TempSHT>" + String(sht4.cTemp) + "</TempSHT>";
+    xml_message += "<TempBMP>" + String(bmp.cTemp) + "</TempBMP>";
+    xml_message += "<Humidity>" + String(sht4.humidity) + "</Humidity>";
+    xml_message += "<Pressure>" + String(bmp.pressure) + "</Pressure>";
+    //xml_message += "<Altitude>" + String(bmp.altitude) + "</Altitude>";
+    xml_message += "</DEBUG>";
     xml_message += "</TEDS>";
     return xml_message;
 }
@@ -208,6 +211,10 @@ bool publishDataDisplay(){
 
 bool publishDataMQTT(){
     if (mqttclient.connected()) {
+        const char* mqtt_message = generateMQTTMessageXML().c_str();
+        Serial.print(mqtt_message);
+        Serial.println();
+        mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
         mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON().c_str());
         return true;
     }
@@ -241,5 +248,5 @@ void loop() {
         Serial.println("Failed to read sensor data");
         mqtt_publish_status = false;
     }
-    delay(1000);
+    delay(loop_delay);
 }

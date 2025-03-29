@@ -55,7 +55,8 @@
                 "default": "#0094CE",
                 "baseColor": "#0094CE",
                 "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": false
+                "edited": true,
+                "reset": false
             },
             "darkTheme": {
                 "default": "#097479",
@@ -157,20 +158,21 @@
         "id": "9ba9cf9898ae1b98",
         "type": "mqtt in",
         "z": "49317004d5317078",
-        "name": "TempSHT",
-        "topic": "_1451DT/core_2/sensor/data",
-        "qos": "2",
+        "name": "core_1_mqtt_in",
+        "topic": "_1451DT/core_1/sensor/data",
+        "qos": "0",
         "datatype": "auto-detect",
         "broker": "bdea7a73f727af35",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 120,
+        "x": 140,
         "y": 180,
         "wires": [
             [
-                "dffe1cab2486297c"
+                "fffe9296d958f159",
+                "3035d037b0a79e07"
             ]
         ]
     },
@@ -184,7 +186,7 @@
         "width": 0,
         "height": 0,
         "gtype": "gage",
-        "title": "gauge",
+        "title": "core_1_temp",
         "label": "units",
         "format": "{{value}}",
         "min": 0,
@@ -198,8 +200,94 @@
         "seg2": "",
         "diff": false,
         "className": "",
+        "x": 730,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "fffe9296d958f159",
+        "type": "json",
+        "z": "49317004d5317078",
+        "name": "core_1_json_parse",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
         "x": 350,
         "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3035d037b0a79e07",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "core_1_xml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 350,
+        "y": 260,
+        "wires": [
+            [
+                "ce4a8c74274d0c40"
+            ]
+        ]
+    },
+    {
+        "id": "3874fe7dda0c8bad",
+        "type": "status",
+        "z": "49317004d5317078",
+        "name": "",
+        "scope": [
+            "fffe9296d958f159"
+        ],
+        "x": 440,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ce4a8c74274d0c40",
+        "type": "function",
+        "z": "49317004d5317078",
+        "name": "Output",
+        "func": "if (msg.topic == \"core_1_json_parse\") {\n    if( msg.payload == true ){\n        let arr = msg.payload;\n        var msg1 = { payload: arr[0]};\n        var msg2 = { payload: msg.payload.TempBMP };\n        var msg3 = { payload: msg.payload.Humidity };\n        var msg4 = { payload: msg.payload.Altitude };\n        var msg5 = { payload: msg.payload.Pressure };\n    }    \n}\n\nif (msg.topic == \"core_1_xml_parse\") {\n    let msg1 = {\n        payload: \"test\"\n    };\n    var msg2 = {\n        payload: msg.payload.TEDS.DEBUG.TempBMP,\n    };\n    var msg3 = {\n        payload: msg.payload.TEDS.DEBUG.Humidity,\n    };\n    var msg4 = {\n        payload: msg.payload.TEDS.DEBUG.Altitude,\n    };\n    var msg5 = {\n        payload: msg.payload.TEDS.DEBUG.Pressure,\n    };\n\n}\nreturn [msg1, msg2, msg3, msg4, msg5];",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 220,
+        "wires": [
+            [
+                "dffe1cab2486297c",
+                "0798d142ee7a79d2"
+            ],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "0798d142ee7a79d2",
+        "type": "debug",
+        "z": "49317004d5317078",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 100,
         "wires": []
     }
 ]
