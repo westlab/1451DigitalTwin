@@ -32,6 +32,15 @@ nodered(){
     python3 NCAP.py -p
 }
 
+setup_local_server(){
+    install_dependencies
+    sudo apt-get install -y mosquitto mosquitto-clients git build-essential terminator screen curl net-tools
+    sudo cp $BASEDIR/mosquitto.conf /etc/mosquitto/conf.d/
+    sudo systemctl enable mosquitto
+    sudo systemctl start mosquitto
+    sudo systemctl status mosquitto
+}
+
 unittests() {
     echo "Executing tox tests"
     tox
@@ -99,3 +108,8 @@ case "$1" in
         exit 1
         ;;
 esac
+
+
+# useful commands
+# mosquitto_sub -h 127.0.0.1 -p 1883 -t _1451DT/sensor/data
+# mosquitto_pub -h 127.0.0.1 -p 1883 -t _1451DT/sensor/data -m helloworld

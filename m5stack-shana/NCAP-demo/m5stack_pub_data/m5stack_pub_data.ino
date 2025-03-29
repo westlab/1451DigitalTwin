@@ -23,7 +23,8 @@ const char* password = "goodlife";
 // mqtt settings
 const char* mqtt_server = "192.168.8.101";
 const int mqtt_port = 1883;
-String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
+//String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
+String mqtt_topic_name = "_1451DT/sensor/data";
 
 // global variables
 // handle sensor
@@ -98,6 +99,7 @@ void setup() {
     setupSensor();
     setupWifi();
     mqttclient.setServer(mqtt_server, mqtt_port);
+    mqttclient.connect(ip_address.c_str());
     setupDisplay();
 }
 
@@ -134,6 +136,18 @@ String generateFormattedMessage(){
         "\n  Altitude:  " + String(bmp.altitude) +
         "\n  TempBMP:   "+ String(bmp.cTemp);
 }
+
+String generateMQTTMessage(){
+    return "{ \"Device\":\"" +  String(device_name) +"\""+
+        ",\"TempSHT\":" + String(sht4.cTemp) + 
+        ",\"Humidity\":" + String(sht4.humidity) +
+        ",\"Pressure\":" + String(bmp.pressure) +
+        ",\"Altitude\":" + String(bmp.altitude) +
+        ",\"TempBMP\":"+ String(bmp.cTemp) +
+        "}";
+}
+
+
 bool publishDataSerial(){
     Serial.println(generateFormattedMessage());
     return true;
@@ -150,8 +164,7 @@ bool publishDataDisplay(){
 
 bool publishDataMQTT(){
     if (mqttclient.connected()) {
-        String message = "{\"device\":\"" + String(device_name) + "\",\"temperature\":" + String(sht4.cTemp) + ",\"humidity\":" + String(sht4.humidity) + "}";
-        mqttclient.publish(mqtt_topic_name.c_str(), message.c_str());
+        mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessage().c_str());
         return true;
     }
     return false;
@@ -166,13 +179,15 @@ void loop() {
         }
         if (!mqttclient.connected()) {
             mqtt_publish_status = false;
-            mqttclient.connect(device_name);
+            mqttclient.connect(ip_address.c_str());
         }
         publishDataSerial();
         publishDataDisplay();
+        mqtt_publish_status = false;
     }
     else{
         Serial.println("Failed to read sensor data");
+        mqtt_publish_status = false;
     }
     delay(1000);
 }
