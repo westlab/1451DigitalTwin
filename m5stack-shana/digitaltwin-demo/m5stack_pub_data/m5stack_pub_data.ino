@@ -17,7 +17,15 @@
 
 // constants
 // loop delay
-const int loop_delay = 1000; // 1 seconds
+#define LOW_POWER_MODE true
+#if LOW_POWER_MODE
+const int loop_delay = 5000; // 5 seconds
+const bool low_power_mode = true; // low power mode
+#else
+const int loop_delay = 1000; // 5 seconds
+const bool low_power_mode = false; // low power mode
+#endif
+
 // device name
 const char* device_name = "core_1";
 // Wi-Fi settings
@@ -109,7 +117,13 @@ void setup() {
     setupWifi();
     mqttclient.setServer(mqtt_server, mqtt_port);
     mqttclient.connect(ip_address.c_str());
-    setupDisplay();
+    if (low_power_mode){
+        M5.Lcd.writecommand(ILI9341_DISPOFF);
+        M5.Lcd.setBrightness(0);
+    }
+    else{
+        setupDisplay();
+    }  
 }
 
 // Function to read sensor data
@@ -234,14 +248,16 @@ void loop() {
             mqtt_publish_status = false;
             mqttclient.connect(ip_address.c_str());
         }
-        publishDataSerial();
-
         // Update display only if 1 minute has passed
-        if (current_time - last_display_update >= 60000) {
-            publishDataDisplay();
-            last_display_update = current_time;
+        if (low_power_mode){
         }
-
+        else{
+            publishDataSerial();
+            if (current_time - last_display_update >= 60000) {
+                publishDataDisplay();
+                last_display_update = current_time;
+            }
+        }
         mqtt_publish_status = false;
     }
     else {
