@@ -9,7 +9,7 @@
 * @sensor: SHT4X series sensor
 **/
 
-#include <M5Core2.h>
+#include <M5Stack.h>
 #include <M5UnitENV.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
@@ -23,6 +23,7 @@ const char* password = "goodlife";
 // mqtt settings
 const char* mqtt_server = "192.168.8.101";
 const int mqtt_port = 1883;
+String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
 
 // global variables
 // handle sensor
@@ -31,10 +32,11 @@ BMP280 bmp;
 // network
 String ip_address;
 //mqtt
-WiFiClient espClient;
-PubSubClient mqttclient(espClient);
+WiFiClient esp_client;
+PubSubClient mqttclient(esp_client);
 // to write formatted messages
-String formattedMessage = "";
+String formatted_mqtt_msg = "";
+bool mqtt_publish_status = false;
 
 void setupWifi(){
     Serial.println("starting wifi setup");
@@ -44,8 +46,8 @@ void setupWifi(){
         Serial.print(".");
     }
     ip_address = WiFi.localIP().toString();
-    formattedMessage = "\ncompleted wifi setup\nSSID: " + String(ssid) + "\nLocal IP: " + ip_address;
-    Serial.println(formattedMessage);
+    String formatted_serial_msg = "\ncompleted wifi setup\nSSID: " + String(ssid) + "\nLocal IP: " + ip_address;
+    Serial.println(formatted_serial_msg);
 }
 
 void setupSensor(){
@@ -73,15 +75,25 @@ void setupSensor(){
 }
 
 void setupDisplay(){
-    M5.begin();
-    M5.Lcd.setTextColor(WHITE, BLACK);
-    M5.Lcd.setTextSize(2);
+    M5.Lcd.fillScreen(WHITE);
+    delay(500);
+    M5.Lcd.fillScreen(RED);
+    delay(500);
+    M5.Lcd.fillScreen(GREEN);
+    delay(500);
+    M5.Lcd.fillScreen(BLUE);
+    delay(500);
+    M5.Lcd.fillScreen(BLACK);
+    delay(500);
     M5.Lcd.setCursor(10, 10);
+    M5.Lcd.setTextColor(WHITE);
+    M5.Lcd.setTextSize(2);
     M5.Lcd.printf("Device: %s \n  ssid: %s\n  IP:%s", device_name, ssid, ip_address.c_str());
-    M5.Lcd.setTextSize(1);
 }
 
 void setup() {
+    M5.begin();
+    M5.Power.begin();
     Serial.begin(115200);
     setupSensor();
     setupWifi();
@@ -108,23 +120,56 @@ bool readSensor(){
     return status;
 }
 
-bool publishData(){
+String generateFormattedMessage(){
+    return "Device:     " +  String(device_name) +
+        "\n  SSID:      " + String(ssid) +
+        "\n  IP:        " + String(ip_address) + 
+        "\n  MQTT:      " + String(mqtt_server) + ":"+ String(mqtt_port) +
+        "\n  MQTT TOPIC: " + String(mqtt_topic_name) +
+        "\n  MQTT CONN: " + String(mqttclient.connected()) +
+        "\n  MQTT PUB:  " + String(mqtt_publish_status) +
+        "\n  TempSHT:   " + String(sht4.cTemp) + 
+        "\n  Humidity:  " + String(sht4.humidity) +
+        "\n  Pressure:  " + String(bmp.pressure) +
+        "\n  Altitude:  " + String(bmp.altitude) +
+        "\n  TempBMP:   "+ String(bmp.cTemp);
+}
+bool publishDataSerial(){
+    Serial.println(generateFormattedMessage());
+    return true;
+}
+
+bool publishDataDisplay(){
+    M5.Lcd.setTextSize(1.8);
+    M5.Lcd.setCursor(10, 10);
+    M5.Lcd.setTextColor(WHITE);
+    M5.Lcd.fillRect(10, 10, 300, 100, BLACK);
+    M5.Lcd.printf(generateFormattedMessage().c_str());
+    return true;
+}
+
+bool publishDataMQTT(){
     if (mqttclient.connected()) {
         String message = "{\"device\":\"" + String(device_name) + "\",\"temperature\":" + String(sht4.cTemp) + ",\"humidity\":" + String(sht4.humidity) + "}";
-        mqttclient.publish("sensor/data", message.c_str());
+        mqttclient.publish(mqtt_topic_name.c_str(), message.c_str());
         return true;
     }
     return false;
 }
+
 void loop() {
     if (readSensor()) {
-        formattedMessage = String("\nSensor Read complete") +
-                           "\n  TempC:       " + String(sht4.cTemp) + 
-                           "\n  Humidity:    " + String(sht4.humidity) +
-                           "\n  Pressure:    " + String(bmp.pressure) +
-                           "\n  Altitude:    " + String(bmp.altitude) +
-                           "\n  Temperature: " + String(bmp.cTemp);
-        Serial.println(formattedMessage);
+        if (publishDataMQTT()) {
+            mqtt_publish_status = true;
+        } else {
+            mqtt_publish_status = false;
+        }
+        if (!mqttclient.connected()) {
+            mqtt_publish_status = false;
+            mqttclient.connect(device_name);
+        }
+        publishDataSerial();
+        publishDataDisplay();
     }
     else{
         Serial.println("Failed to read sensor data");
