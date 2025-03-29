@@ -226,8 +226,6 @@ bool publishDataDisplay(){
 bool publishDataMQTT(){
     if (mqttclient.connected()) {
         const char* mqtt_message = generateMQTTMessageXML().c_str();
-        Serial.print(mqtt_message);
-        Serial.println();
         mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
         //mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON().c_str());
         return true;
