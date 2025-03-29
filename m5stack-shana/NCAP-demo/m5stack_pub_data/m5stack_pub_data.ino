@@ -13,10 +13,11 @@
 #include <M5UnitENV.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+# include "time.h"
 
 // constants
 // device name
-const char* device_name = "Core_1";
+const char* device_name = "Core_2";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
@@ -25,8 +26,13 @@ const char* mqtt_server = "192.168.8.101";
 const int mqtt_port = 1883;
 //String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
 String mqtt_topic_name = "_1451DT/sensor/data";
+// setup ntp and timezone
+const char* ntpServer = "ntp.nict.jp";
+const long  gmtOffset_sec = 3600 * 9;
+const int   daylightOffset_sec = 0;
 
 // global variables
+struct tm timeinfo;
 // handle sensor
 SHT4X sht4;
 BMP280 bmp;
@@ -96,6 +102,7 @@ void setup() {
     M5.begin();
     M5.Power.begin();
     Serial.begin(115200);
+    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
     setupSensor();
     setupWifi();
     mqttclient.setServer(mqtt_server, mqtt_port);
@@ -130,6 +137,8 @@ String generateFormattedMessage(){
         "\n  MQTT TOPIC: " + String(mqtt_topic_name) +
         "\n  MQTT CONN: " + String(mqttclient.connected()) +
         "\n  MQTT PUB:  " + String(mqtt_publish_status) +
+        "\n  LocalTime: " + String(timeinfo.tm_year + 1900) + "-" + String(timeinfo.tm_mon + 1) + "-" + String(timeinfo.tm_mday) +
+        " " + String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + ":" + String(timeinfo.tm_sec) +
         "\n  TempSHT:   " + String(sht4.cTemp) + 
         "\n  Humidity:  " + String(sht4.humidity) +
         "\n  Pressure:  " + String(bmp.pressure) +
@@ -139,6 +148,8 @@ String generateFormattedMessage(){
 
 String generateMQTTMessage(){
     return "{ \"Device\":\"" +  String(device_name) +"\""+
+        ",\"LocalTime\":\"" + String(timeinfo.tm_year + 1900) + "-" + String(timeinfo.tm_mon + 1) + "-" + String(timeinfo.tm_mday) +
+        String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + ":" + String(timeinfo.tm_sec) + +"\""+
         ",\"TempSHT\":" + String(sht4.cTemp) + 
         ",\"Humidity\":" + String(sht4.humidity) +
         ",\"Pressure\":" + String(bmp.pressure) +
@@ -171,6 +182,9 @@ bool publishDataMQTT(){
 }
 
 void loop() {
+    static unsigned long last_display_update = 0; // Track the last display update time
+    unsigned long current_time = millis();
+    getLocalTime(&timeinfo);
     if (readSensor()) {
         if (publishDataMQTT()) {
             mqtt_publish_status = true;
@@ -182,10 +196,16 @@ void loop() {
             mqttclient.connect(ip_address.c_str());
         }
         publishDataSerial();
-        publishDataDisplay();
+
+        // Update display only if 1 minute has passed
+        if (current_time - last_display_update >= 60000) {
+            publishDataDisplay();
+            last_display_update = current_time;
+        }
+
         mqtt_publish_status = false;
     }
-    else{
+    else {
         Serial.println("Failed to read sensor data");
         mqtt_publish_status = false;
     }
