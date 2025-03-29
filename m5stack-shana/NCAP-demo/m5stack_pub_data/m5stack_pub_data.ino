@@ -17,7 +17,7 @@
 
 // constants
 // device name
-const char* device_name = "Core_2";
+const char* device_name = "Core_1";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
@@ -146,7 +146,7 @@ String generateFormattedMessage(){
         "\n  TempBMP:   "+ String(bmp.cTemp);
 }
 
-String generateMQTTMessage(){
+String generateMQTTMessageJSON(){
     return "{ \"Device\":\"" +  String(device_name) +"\""+
         ",\"LocalTime\":\"" + String(timeinfo.tm_year + 1900) + "-" + String(timeinfo.tm_mon + 1) + "-" + String(timeinfo.tm_mday) +
         String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + ":" + String(timeinfo.tm_sec) + +"\""+
@@ -158,6 +158,31 @@ String generateMQTTMessage(){
         "}";
 }
 
+String generateMQTTMessageXML(){
+    String xml_message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    xml_message += "<TEDS ID=\"[v03]\">\n";
+    xml_message += "  <BasicTEDS>\n";
+    xml_message += "    <Manufacturer>Dewesoft</Manufacturer>\n";
+    xml_message += "    <Model>1</Model>\n";
+    xml_message += "    <VersionLetter>A</VersionLetter>\n";
+    xml_message += "    <VersionNumber>1</VersionNumber>\n";
+    xml_message += "    <SerialNumber>1</SerialNumber>\n";
+    xml_message += "  </BasicTEDS>\n";
+    xml_message += "  <TEDS-Code length=\"40\">6A4000200401000098D0421F00000000 00000012040000120400001204000000 C34800000000E000</TEDS-Code>\n";
+    xml_message += "  <Info-Section EditorVersion=\"Dewesoft TedsEditor V2.2.12\">\n";
+    xml_message += "    <InfoLine16>2023/05/22 0:25:06: Templates cleared by User.</InfoLine16>\n";
+    xml_message += "    <InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17>\n";
+    xml_message += "  </Info-Section>\n";
+    xml_message += "  <DEBUG>\n";
+    xml_message += "    <TempSHT>" + String(sht4.cTemp) + "</TempSHT>\n";
+    xml_message += "    <TempBMP>" + String(bmp.cTemp) + "</TempBMP>\n";
+    xml_message += "    <Altitude>" + String(bmp.altitude) + "</Altitude>\n";
+    xml_message += "    <Pressure>" + String(bmp.pressure) + "</Pressure>\n";
+    xml_message += "    <Humidity>" + String(sht4.humidity) + "</Humidity>\n";
+    xml_message += "  </DEBUG>\n";
+    xml_message += "</TEDS>";
+    return xml_message;
+}
 
 bool publishDataSerial(){
     Serial.println(generateFormattedMessage());
@@ -175,7 +200,7 @@ bool publishDataDisplay(){
 
 bool publishDataMQTT(){
     if (mqttclient.connected()) {
-        mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessage().c_str());
+        mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON().c_str());
         return true;
     }
     return false;
