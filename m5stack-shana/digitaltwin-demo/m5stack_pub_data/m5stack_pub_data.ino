@@ -17,7 +17,7 @@
 
 // constants
 // device name
-const char* device_name = "Core_1";
+const char* device_name = "core_2";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
@@ -25,7 +25,7 @@ const char* password = "goodlife";
 const char* mqtt_server = "192.168.8.101";
 const int mqtt_port = 1883;
 //String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
-String mqtt_topic_name = "_1451DT/sensor/data";
+String mqtt_topic_name = "_1451DT/" + (String)device_name + "/sensor/data";
 // setup ntp and timezone
 const char* ntpServer = "ntp.nict.jp";
 const long  gmtOffset_sec = 3600 * 9;
@@ -129,27 +129,33 @@ bool readSensor(){
     return status;
 }
 
-String generateFormattedMessage(){
-    return "Device:     " +  String(device_name) +
-        "\n  SSID:      " + String(ssid) +
-        "\n  IP:        " + String(ip_address) + 
-        "\n  MQTT:      " + String(mqtt_server) + ":"+ String(mqtt_port) +
-        "\n  MQTT TOPIC: " + String(mqtt_topic_name) +
-        "\n  MQTT CONN: " + String(mqttclient.connected()) +
-        "\n  MQTT PUB:  " + String(mqtt_publish_status) +
-        "\n  LocalTime: " + String(timeinfo.tm_year + 1900) + "-" + String(timeinfo.tm_mon + 1) + "-" + String(timeinfo.tm_mday) +
-        " " + String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + ":" + String(timeinfo.tm_sec) +
-        "\n  TempSHT:   " + String(sht4.cTemp) + 
-        "\n  Humidity:  " + String(sht4.humidity) +
-        "\n  Pressure:  " + String(bmp.pressure) +
-        "\n  Altitude:  " + String(bmp.altitude) +
-        "\n  TempBMP:   "+ String(bmp.cTemp);
+String getLocalTimeString(){
+    getLocalTime(&timeinfo);
+    return String(timeinfo.tm_year + 1900) + "-" + String(timeinfo.tm_mon + 1) +
+    "-" + String(timeinfo.tm_mday + 1) + "_" +
+     String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + 
+     ":" + String(timeinfo.tm_sec);
 }
+
+String generateFormattedMessage(){
+    return "Device: " +  String(device_name) +
+        "\n SSID:   " + String(ssid) +
+        "\n IP:     " + String(ip_address) + 
+        "\n MQTT:   " + String(mqtt_server) + ":"+ String(mqtt_port) +
+        "\n  TOPIC: " + String(mqtt_topic_name) +
+        "\n  CONN:  " + String(mqttclient.connected()) +
+        "\n LocalTime:" + getLocalTimeString() +
+        "\n TempSHT: " + String(sht4.cTemp) + 
+        "\n Humidity:" + String(sht4.humidity) +
+        "\n Pressure:" + String(bmp.pressure) +
+        "\n Altitude:" + String(bmp.altitude) +
+        "\n TempBMP: "+ String(bmp.cTemp);
+}
+
 
 String generateMQTTMessageJSON(){
     return "{ \"Device\":\"" +  String(device_name) +"\""+
-        ",\"LocalTime\":\"" + String(timeinfo.tm_year + 1900) + "-" + String(timeinfo.tm_mon + 1) + "-" + String(timeinfo.tm_mday) +
-        String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + ":" + String(timeinfo.tm_sec) + +"\""+
+        ",\"LocalTime\":\"" + getLocalTimeString() +"\""+
         ",\"TempSHT\":" + String(sht4.cTemp) + 
         ",\"Humidity\":" + String(sht4.humidity) +
         ",\"Pressure\":" + String(bmp.pressure) +
@@ -174,6 +180,8 @@ String generateMQTTMessageXML(){
     xml_message += "    <InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17>\n";
     xml_message += "  </Info-Section>\n";
     xml_message += "  <DEBUG>\n";
+    xml_message += "    <DeviceName>" + String(device_name) + "</DeviceName>\n";
+    xml_message += "    <LocalTime>" + getLocalTimeString() + "</DeviceName>\n";
     xml_message += "    <TempSHT>" + String(sht4.cTemp) + "</TempSHT>\n";
     xml_message += "    <TempBMP>" + String(bmp.cTemp) + "</TempBMP>\n";
     xml_message += "    <Altitude>" + String(bmp.altitude) + "</Altitude>\n";
@@ -193,7 +201,7 @@ bool publishDataDisplay(){
     M5.Lcd.setTextSize(2.0);
     M5.Lcd.setCursor(10, 10);
     M5.Lcd.setTextColor(WHITE);
-    M5.Lcd.fillRect(10, 10, 300, 100, BLACK);
+    M5.Lcd.fillScreen(BLACK);
     M5.Lcd.printf(generateFormattedMessage().c_str());
     return true;
 }
@@ -209,7 +217,6 @@ bool publishDataMQTT(){
 void loop() {
     static unsigned long last_display_update = 0; // Track the last display update time
     unsigned long current_time = millis();
-    getLocalTime(&timeinfo);
     if (readSensor()) {
         if (publishDataMQTT()) {
             mqtt_publish_status = true;
