@@ -19,7 +19,7 @@
 // loop delay
 const int loop_delay = 1000; // 1 seconds
 // device name
-const char* device_name = "core_1";
+const char* device_name = "core_2";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
