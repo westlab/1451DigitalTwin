@@ -165,7 +165,7 @@ bool publishDataSerial(){
 }
 
 bool publishDataDisplay(){
-    M5.Lcd.setTextSize(1.8);
+    M5.Lcd.setTextSize(2.0);
     M5.Lcd.setCursor(10, 10);
     M5.Lcd.setTextColor(WHITE);
     M5.Lcd.fillRect(10, 10, 300, 100, BLACK);
