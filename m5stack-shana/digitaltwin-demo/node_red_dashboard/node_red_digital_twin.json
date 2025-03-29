@@ -211,11 +211,13 @@
         "name": "core_1_json_parse",
         "property": "payload",
         "action": "",
-        "pretty": false,
+        "pretty": true,
         "x": 350,
         "y": 180,
         "wires": [
-            []
+            [
+                "ce4a8c74274d0c40"
+            ]
         ]
     },
     {
@@ -235,25 +237,11 @@
         ]
     },
     {
-        "id": "3874fe7dda0c8bad",
-        "type": "status",
-        "z": "49317004d5317078",
-        "name": "",
-        "scope": [
-            "fffe9296d958f159"
-        ],
-        "x": 440,
-        "y": 360,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "ce4a8c74274d0c40",
         "type": "function",
         "z": "49317004d5317078",
         "name": "Output",
-        "func": "if (msg.topic == \"core_1_json_parse\") {\n    if( msg.payload == true ){\n        let arr = msg.payload;\n        var msg1 = { payload: arr[0]};\n        var msg2 = { payload: msg.payload.TempBMP };\n        var msg3 = { payload: msg.payload.Humidity };\n        var msg4 = { payload: msg.payload.Altitude };\n        var msg5 = { payload: msg.payload.Pressure };\n    }    \n}\n\nif (msg.topic == \"core_1_xml_parse\") {\n    let msg1 = {\n        payload: \"test\"\n    };\n    var msg2 = {\n        payload: msg.payload.TEDS.DEBUG.TempBMP,\n    };\n    var msg3 = {\n        payload: msg.payload.TEDS.DEBUG.Humidity,\n    };\n    var msg4 = {\n        payload: msg.payload.TEDS.DEBUG.Altitude,\n    };\n    var msg5 = {\n        payload: msg.payload.TEDS.DEBUG.Pressure,\n    };\n\n}\nreturn [msg1, msg2, msg3, msg4, msg5];",
+        "func": "if (msg.payload && msg.payload.TEDS){\n    let msg1 = {\n        payload: msg.payload.TEDS.DEBUG[0].TempSHT\n    };\n    let msg2 = {\n        payload: msg.payload.TEDS.DEBUG[0].TempBMP,\n    };\n    let msg3 = {\n        payload: msg.payload.TEDS.DEBUG[0].Humidity,\n    };\n    let msg4 = {\n        payload: msg.payload.TEDS.DEBUG[0].Altitude,\n    };\n    let msg5 = {\n        payload: msg.payload.TEDS.DEBUG[0].Pressure,\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\n\nelse{\n    let msg1 = { payload: msg.payload};\n    let msg2 = { payload: msg.payload.TempBMP };\n    let msg3 = { payload: msg.payload.Humidity };\n    let msg4 = { payload: msg.payload.Altitude };\n    let msg5 = { payload: msg.payload.Pressure };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\n\n",
         "outputs": 5,
         "timeout": 0,
         "noerr": 0,
