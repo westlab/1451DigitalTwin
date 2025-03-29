@@ -182,10 +182,10 @@
         "name": "",
         "group": "52560e4898df94f5",
         "order": 0,
-        "width": 0,
-        "height": 0,
+        "width": "3",
+        "height": "3",
         "gtype": "gage",
-        "title": "core_1_temp",
+        "title": "core_1_tempSHT",
         "label": "units",
         "format": "{{value}}",
         "min": 0,
@@ -199,8 +199,8 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 790,
-        "y": 160,
+        "x": 710,
+        "y": 180,
         "wires": []
     },
     {
@@ -232,35 +232,23 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 550,
+        "x": 510,
         "y": 240,
         "wires": [
             [
-                "dffe1cab2486297c",
-                "0798d142ee7a79d2"
+                "dffe1cab2486297c"
+            ],
+            [
+                "f1dca1a64a18c9ea"
+            ],
+            [
+                "b614847e5062d360"
             ],
             [],
-            [],
-            [],
-            []
+            [
+                "8c4ef166d059a206"
+            ]
         ]
-    },
-    {
-        "id": "0798d142ee7a79d2",
-        "type": "debug",
-        "z": "49317004d5317078",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 630,
-        "y": 100,
-        "wires": []
     },
     {
         "id": "f018808b21e0aabe",
@@ -270,12 +258,292 @@
         "property": "payload",
         "attr": "",
         "chr": "",
-        "x": 420,
+        "x": 300,
         "y": 300,
         "wires": [
             [
                 "ce4a8c74274d0c40"
             ]
         ]
+    },
+    {
+        "id": "f1dca1a64a18c9ea",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "core_1_tempBMP",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "b614847e5062d360",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "core_1_Humidity",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "8c4ef166d059a206",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "core_1_Pressure",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "f47d7d9856c1399a",
+        "type": "mqtt in",
+        "z": "49317004d5317078",
+        "name": "core_2_mqtt_in",
+        "topic": "_1451DT/core_2/sensor/data",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "bdea7a73f727af35",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 420,
+        "wires": [
+            [
+                "125ef743930c777d"
+            ]
+        ]
+    },
+    {
+        "id": "f582f9888aabdf2b",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "core_2_tempSHT",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "125ef743930c777d",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "core_2_xml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 290,
+        "y": 420,
+        "wires": [
+            [
+                "b97524d2103da84f",
+                "d24342e71396c5c9"
+            ]
+        ]
+    },
+    {
+        "id": "b97524d2103da84f",
+        "type": "function",
+        "z": "49317004d5317078",
+        "name": "Output",
+        "func": "if (msg.payload && msg.payload.TEDS){\n    let msg1 = {\n        payload: msg.payload.TEDS.DEBUG[0].TempSHT\n    };\n    let msg2 = {\n        payload: msg.payload.TEDS.DEBUG[0].TempBMP,\n    };\n    let msg3 = {\n        payload: msg.payload.TEDS.DEBUG[0].Humidity,\n    };\n    let msg4 = {\n        payload: msg.payload.TEDS.DEBUG[0].Altitude,\n    };\n    let msg5 = {\n        payload: msg.payload.TEDS.DEBUG[0].Pressure,\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && msg.payload.root){\n    let msg1 = {\n        payload: msg.payload.root.TempSHT,\n    };\n    let msg2 = {\n        payload: msg.payload.root.TempBMP,\n    };\n    let msg3 = {\n        payload: msg.payload.root.Humidity,\n    };\n    let msg4 = {\n        payload: msg.payload.root.Altitude,\n    };\n    let msg5 = {\n        payload: msg.payload.root.Pressure,\n    };\n    return [msg1, msg2, msg3, msg4, msg5];\n}\nelse if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the properties exist in msg.payload\n    let msg1 = { payload: msg.payload.TempSHT || 'N/A' };\n    let msg2 = { payload: msg.payload.TempBMP || 'N/A' };\n    let msg3 = { payload: msg.payload.Humidity || 'N/A' };\n    let msg4 = { payload: msg.payload.Altitude || 'N/A' };\n    let msg5 = { payload: msg.payload.Pressure || 'N/A' };\n\n    return [msg1, msg2, msg3, msg4, msg5];\n} else {\n    // Handle case where msg.payload is not in the expected format\n    //let msg1 = { payload: msg.payload }\n    //return [msg1, msg1, msg1, msg1, msg1];\n}",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 420,
+        "wires": [
+            [
+                "f582f9888aabdf2b"
+            ],
+            [
+                "1862df877838d618"
+            ],
+            [
+                "0395f2f5a7e5bb9b"
+            ],
+            [],
+            [
+                "26918fe17e626657"
+            ]
+        ]
+    },
+    {
+        "id": "d24342e71396c5c9",
+        "type": "xml",
+        "z": "49317004d5317078",
+        "name": "core_2_jsonxml_parse",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 300,
+        "y": 480,
+        "wires": [
+            [
+                "b97524d2103da84f"
+            ]
+        ]
+    },
+    {
+        "id": "1862df877838d618",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "core_2_tempBMP",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "0395f2f5a7e5bb9b",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "core_2_Humidity",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "26918fe17e626657",
+        "type": "ui_gauge",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "core_2_Pressure",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 480,
+        "wires": []
     }
 ]
