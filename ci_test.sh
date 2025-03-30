@@ -115,3 +115,6 @@ esac
 # mosquitto_pub -h 127.0.0.1 -p 1883 -t _1451DT/core_1/sensor/data -m helloworld
 # mosquitto_sub -h 127.0.0.1 -p 1883 -t _1451DT/core_2/sensor/data
 # mosquitto_pub -h 127.0.0.1 -p 1883 -t _1451DT/core_2/sensor/data -m helloworld
+# node-red -p 1880 --json node_red_digital_twin.json
+# deploy automatically
+# curl -X POST http://localhost:1880/flows -H "Content-Type: application/json" --data "@node_red_digital_twin.json"
