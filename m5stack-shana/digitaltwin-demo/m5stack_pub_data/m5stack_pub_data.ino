@@ -19,15 +19,15 @@
 // loop delay
 #define LOW_POWER_MODE true
 #if LOW_POWER_MODE
-const int loop_delay = 5000; // 5 seconds
+const int loop_delay = 20000; // 20 seconds
 const bool low_power_mode = true; // low power mode
 #else
-const int loop_delay = 1000; // 5 seconds
+const int loop_delay = 1000; // 1 seconds
 const bool low_power_mode = false; // low power mode
 #endif
 
 // device name
-const char* device_name = "core_1";
+const char* device_name = "core_2";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
