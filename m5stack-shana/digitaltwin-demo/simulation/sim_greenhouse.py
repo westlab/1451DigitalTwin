@@ -11,6 +11,8 @@ import sys
 import threading
 import json
 from shanaka.MQTTClientHandler import MQTTClientHandler
+import csv
+from datetime import datetime
 
 parser = argparse.ArgumentParser(description="MQTT Subscriber")
 parser.add_argument("--mqtt_sub_topics", nargs='+', default=["_1451DT/#"], help="MQTT topics to subscribe to")
@@ -34,7 +36,18 @@ def my_process_received_message(message):
         else:  # Assume XML format
             ET.fromstring(payload)
             device_name, tempSHT, tempBMP, humidity, pressure = process_xml_sensor_message(payload)
+            altitude = "N/A"  # Default value if altitude is not provided in XML
             print(f"Received Device {device_name} TempSHT {tempSHT} TempBMP {tempBMP} Humidity {humidity} Pressure {pressure}")
+        
+        # Save data to CSV
+        csv_file_name = f"{device_name}.csv"
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        csv_data = [current_time, tempSHT, tempBMP, humidity, pressure, altitude]
+        with open(csv_file_name, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            if file.tell() == 0:  # Write header if file is empty
+                writer.writerow(["Time", "TempSHT", "TempBMP", "Humidity", "Pressure", "Altitude"])
+            writer.writerow(csv_data)
     except (ET.ParseError, ValueError) as e:
         print(f"Invalid payload: {payload}. Error: {e}")
     except Exception as e:
@@ -171,12 +184,15 @@ def mqtt_test(
 
     iterations = float('inf') if "inf" in args.iterations.lower() else int(args.iterations)
     i = 0
+    while True:
+        pass
+    '''
     while i < iterations:
         i += 1
         print(f"Execution iteration {i}/{iterations}", flush=True)
         read_dummy_temp_sensor(client, pub_topics, client_id)
         sleep(5)
-
+    '''
     print("Stopping MQTT client loop", flush=True)
     client.loop_stop()
     client.disconnect()

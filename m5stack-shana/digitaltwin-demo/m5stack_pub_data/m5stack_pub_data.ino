@@ -19,7 +19,7 @@
 // loop delay
 #define LOW_POWER_MODE true
 #if LOW_POWER_MODE
-const int loop_delay = 20000; // 20 seconds
+const int loop_delay = 60000; // 60 seconds
 const bool low_power_mode = true; // low power mode
 #else
 const int loop_delay = 1000; // 1 seconds
@@ -237,14 +237,14 @@ void loop() {
     static unsigned long last_display_update = 0; // Track the last display update time
     unsigned long current_time = millis();
     if (readSensor()) {
+        if (!mqttclient.connected()) {
+            mqtt_publish_status = false;
+            mqttclient.connect(ip_address.c_str());
+        }
         if (publishDataMQTT()) {
             mqtt_publish_status = true;
         } else {
             mqtt_publish_status = false;
-        }
-        if (!mqttclient.connected()) {
-            mqtt_publish_status = false;
-            mqttclient.connect(ip_address.c_str());
         }
         // Update display only if 1 minute has passed
         if (low_power_mode){
