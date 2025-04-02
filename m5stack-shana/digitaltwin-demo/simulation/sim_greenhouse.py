@@ -152,7 +152,9 @@ def digital_twin_sim(
         i += 1
         print(f"Execution iteration {i}/{iterations}", flush=True)
         if i%60*20 == 0:
-            greenhouse.outside_temperature = get_current_temperature("Kawasaki")
+            new_outside_temperature = get_current_temperature("Kawasaki")
+            if new_outside_temperature is not None:
+                greenhouse.outside_temperature = new_outside_temperature
             print(f"Outside temperature: {greenhouse.outside_temperature}")
         greenhouse_temperature = greenhouse.publish_virtual_sensor()
         sleep(1)
@@ -168,6 +170,10 @@ class Greenhouse:
         self.target_pressure = 100000
         self.city = city
         self.outside_temperature = get_current_temperature(self.city)
+        if self.outside_temperature is None:
+            print(f"Error fetching outside temperature for {self.city}")
+            assert inside_temperature is not None, "Inside temperature must be provided if outside temperature cannot be fetched."
+            self.outside_temperature = inside_temperature
         self.aircon_on = aircon_on
         self.heater_on = heater_on
         self.inside_temperatureSHT = inside_temperature if inside_temperature is not None else self.outside_temperature
