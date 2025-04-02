@@ -26,32 +26,42 @@ parser.add_argument("--enable_tls", action="store_false", default=False, help="E
 parser.add_argument("--iterations", type=str, default="inf", help="Number of iterations for the while loop. Use 'infinity' for an infinite loop.")
 args = parser.parse_args()
 
-def my_process_received_message(message):
+def process_received_message(message):
     payload = str(message.payload.decode("utf-8"))
     print(f"Received topic {message.topic}")
-    try:
-        if payload.strip().startswith("{"):  # Assume JSON format
-            device_name, tempSHT, tempBMP, humidity, pressure, altitude = process_json_sensor_message(payload)
-            print(f"Received Device {device_name} TempSHT {tempSHT} TempBMP {tempBMP} Humidity {humidity} Pressure {pressure} Altitude {altitude}")
-        else:  # Assume XML format
-            ET.fromstring(payload)
-            device_name, tempSHT, tempBMP, humidity, pressure = process_xml_sensor_message(payload)
-            altitude = "N/A"  # Default value if altitude is not provided in XML
-            print(f"Received Device {device_name} TempSHT {tempSHT} TempBMP {tempBMP} Humidity {humidity} Pressure {pressure}")
-        
-        # Save data to CSV
-        csv_file_name = f"{device_name}.csv"
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        csv_data = [current_time, tempSHT, tempBMP, humidity, pressure, altitude]
-        with open(csv_file_name, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            if file.tell() == 0:  # Write header if file is empty
-                writer.writerow(["Time", "TempSHT", "TempBMP", "Humidity", "Pressure", "Altitude"])
-            writer.writerow(csv_data)
-    except (ET.ParseError, ValueError) as e:
-        print(f"Invalid payload: {payload}. Error: {e}")
-    except Exception as e:
-        print(f"Unexpected error while processing payload: {payload}. Error: {e}")
+    if message.topic == "_1451DT/core_1/sensor/data" or message.topic == "_1451DT/core_1/sensor/data" or 
+        message.topic == "_1451DT/sim/sensor/data":
+        try:
+            if payload.strip().startswith("{"):  # Assume JSON format
+                device_name, tempSHT, tempBMP, humidity, pressure, altitude = process_json_sensor_message(payload)
+                print(f"Received Device {device_name} TempSHT {tempSHT} TempBMP {tempBMP} Humidity {humidity} Pressure {pressure} Altitude {altitude}")
+            else:  # Assume XML format
+                ET.fromstring(payload)
+                device_name, tempSHT, tempBMP, humidity, pressure = process_xml_sensor_message(payload)
+                altitude = "N/A"  # Default value if altitude is not provided in XML
+                print(f"Received Device {device_name} TempSHT {tempSHT} TempBMP {tempBMP} Humidity {humidity} Pressure {pressure}")
+            # TODO error correction for digital twin
+            if store_data_csv:
+                csv_file_name = f"{device_name}.csv"
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                csv_data = [current_time, tempSHT, tempBMP, humidity, pressure, altitude]
+                with open(csv_file_name, mode='a', newline='') as file:
+                    writer = csv.writer(file)
+                    if file.tell() == 0:  # Write header if file is empty
+                        writer.writerow(["Time", "TempSHT", "TempBMP", "Humidity", "Pressure", "Altitude"])
+                    writer.writerow(csv_data)
+        except (ET.ParseError, ValueError) as e:
+            print(f"Invalid payload: {payload}. Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error while processing payload: {payload}. Error: {e}")
+    elif message.topic == "_1451DT/twin/control/input":
+        print(f"Received control input: {payload}")
+        # TODO process control input
+        # TODO calculate current digital twin greenhouse temperature
+        # TODO calculate difference between current and target temperature
+        # TODO send aircon on/off or heater on/off state on digital twin model
+        # TODO send the control input to real actuator with mqtt
+
 
 def process_json_sensor_message(message):
     """Process message in JSON format."""
@@ -97,7 +107,7 @@ def read_dummy_temp_sensor(client, pub_topics, client_id):
     msg_id = read_dummy_temp_sensor.msg_id
     for topic in pub_topics:
         # TODO replace dummy values
-        pub_message = prepare_sensor_message(device_name='sim_1', tempSHT=20, tempBMP=20, humidity=50, pressure=10000, altitude=-10)
+        pub_message = prepare_sensor_message(device_name='twin', tempSHT=20, tempBMP=20, humidity=50, pressure=10000, altitude=-10)
         client.publish(topic, f"{pub_message}")
     read_dummy_temp_sensor.msg_id += 1
 
@@ -161,7 +171,7 @@ def mqtt_test(
     if mqtt_username and mqtt_password:
         client.username_pw_set(mqtt_username, mqtt_password)
 
-    handler = MQTTClientHandler(my_process_received_message)
+    handler = MQTTClientHandler(process_received_message)
     client.on_connect = handler.on_connect
     client.on_disconnect = handler.on_disconnect
     client.on_publish = handler.on_publish
@@ -196,6 +206,48 @@ def mqtt_test(
     print("Stopping MQTT client loop", flush=True)
     client.loop_stop()
     client.disconnect()
+
+from time import time  # Add this import for real-time tracking
+
+class Greenhouse:
+    def __init__(self, target_temperature, outside_temperature, aircon_on, heater_on=False, inside_temperature=None):
+        self.target_temperature = target_temperature
+        self.outside_temperature = outside_temperature
+        self.aircon_on = aircon_on
+        self.heater_on = heater_on
+        self.inside_temperature = inside_temperature if inside_temperature is not None else outside_temperature
+        self.k = 0.5  # Gain of the system
+        self.tau = 10  # Time constant of the system
+        self.time_step = 1  # Time step for simulation
+        self.last_update_time = time()  # Track the last update time
+
+    def predict_temperature(self):
+        """Predict the next inside temperature based on the FOPTD model."""
+        current_time = time()
+        elapsed_time = current_time - self.last_update_time
+        self.last_update_time = current_time
+
+        aircon_effect = -5 if self.aircon_on else 0
+        heater_effect = 5 if self.heater_on else 0
+        delta_temp = (self.k * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperature) +
+                      (self.outside_temperature - self.inside_temperature) / self.tau) * elapsed_time
+        self.inside_temperature += delta_temp
+        return self.inside_temperature
+
+    def update_model(self, actual_inside_temperature):
+        """Update the model parameters to correct the error."""
+        error = actual_inside_temperature - self.inside_temperature
+        self.k += 0.01 * error  # Adjust gain slightly based on error
+        self.tau = max(1, self.tau - 0.1 * error)  # Adjust time constant, ensuring it stays positive
+        self.inside_temperature = actual_inside_temperature  # Correct the predicted temperature
+
+    def set_aircon_state(self, aircon_on):
+        """Set the aircon state (on/off) during the simulation."""
+        self.aircon_on = aircon_on
+
+    def set_heater_state(self, heater_on):
+        """Set the heater state (on/off) during the simulation."""
+        self.heater_on = heater_on
 
 if __name__ == '__main__':
     mqtt_test(
