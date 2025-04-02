@@ -145,13 +145,15 @@ def digital_twin_sim(
         client.subscribe(topic)
     print(f"Starting client loop")
     client.loop_start()
-    outside_temperature = get_current_temperature("Kawasaki")
     iterations = float('inf') if "inf" in args.iterations.lower() else int(args.iterations)
     i = 0
     
     while i < iterations:
         i += 1
         print(f"Execution iteration {i}/{iterations}", flush=True)
+        if i%60*20 == 0:
+            greenhouse.outside_temperature = get_current_temperature("Kawasaki")
+            print(f"Outside temperature: {outside_temperature}")
         greenhouse_temperature = greenhouse.publish_virtual_sensor()
         sleep(1)
     print("Stopping MQTT client loop", flush=True)
@@ -184,7 +186,6 @@ class Greenhouse:
     def predict_system(self):
         """Predict the next inside conditions based on the FOPTD model."""
         current_time = time()
-        self.outside_temperature = get_current_temperature(self.city)
         elapsed_time = current_time - self.last_update_time
         self.last_update_time = current_time
 
@@ -329,9 +330,13 @@ def get_current_temperature(city):
         response = requests.get(url)
         response.raise_for_status()  # Raise an error for HTTP issues
         data = response.json()
-        temperature = data["current_weather"]["temperature"]
-        print(f"Current temperature in {city}: {temperature}°C")
-        return temperature
+        temperature = data["current_weather"].get("temperature")
+        if isinstance(temperature, (int, float)):  # Ensure the temperature is a valid float or int
+            print(f"Current temperature in {city}: {temperature}°C")
+            return float(temperature)
+        else:
+            print(f"Invalid temperature data for {city}")
+            return None
     except requests.RequestException as e:
         print(f"Error fetching temperature for {city}: {e}")
         return None
