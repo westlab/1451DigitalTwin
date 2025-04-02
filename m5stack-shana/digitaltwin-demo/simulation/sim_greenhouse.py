@@ -153,7 +153,7 @@ def digital_twin_sim(
         print(f"Execution iteration {i}/{iterations}", flush=True)
         if i%60*20 == 0:
             greenhouse.outside_temperature = get_current_temperature("Kawasaki")
-            print(f"Outside temperature: {outside_temperature}")
+            print(f"Outside temperature: {greenhouse.outside_temperature}")
         greenhouse_temperature = greenhouse.publish_virtual_sensor()
         sleep(1)
     print("Stopping MQTT client loop", flush=True)
