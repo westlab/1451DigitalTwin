@@ -187,7 +187,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_1_tempSHT",
-        "label": "units",
+        "label": "C",
         "format": "{{value}}",
         "min": 0,
         "max": "50",
@@ -238,18 +238,20 @@
         "wires": [
             [
                 "dffe1cab2486297c",
-                "56a8c6e9338c804a",
-                "1c496b601d0d8f7f"
+                "56a8c6e9338c804a"
             ],
             [
-                "f1dca1a64a18c9ea"
+                "f1dca1a64a18c9ea",
+                "aad09f65d54bec7f"
             ],
             [
-                "b614847e5062d360"
+                "b614847e5062d360",
+                "346b82343c90220a"
             ],
             [],
             [
-                "8c4ef166d059a206"
+                "8c4ef166d059a206",
+                "08cf3202d5c3e627"
             ]
         ]
     },
@@ -280,7 +282,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_1_tempBMP",
-        "label": "units",
+        "label": "C",
         "format": "{{value}}",
         "min": 0,
         "max": "50",
@@ -308,7 +310,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_1_Humidity",
-        "label": "units",
+        "label": "%",
         "format": "{{value}}",
         "min": 0,
         "max": "100",
@@ -336,7 +338,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_1_Pressure",
-        "label": "units",
+        "label": "Pa",
         "format": "{{value}}",
         "min": 0,
         "max": "200000",
@@ -385,7 +387,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_2_tempSHT",
-        "label": "units",
+        "label": "C",
         "format": "{{value}}",
         "min": 0,
         "max": "50",
@@ -442,11 +444,13 @@
                 "1862df877838d618"
             ],
             [
-                "0395f2f5a7e5bb9b"
+                "0395f2f5a7e5bb9b",
+                "346b82343c90220a"
             ],
             [],
             [
-                "26918fe17e626657"
+                "26918fe17e626657",
+                "08cf3202d5c3e627"
             ]
         ]
     },
@@ -477,7 +481,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_2_tempBMP",
-        "label": "units",
+        "label": "C",
         "format": "{{value}}",
         "min": 0,
         "max": "50",
@@ -505,7 +509,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_2_Humidity",
-        "label": "units",
+        "label": "%",
         "format": "{{value}}",
         "min": 0,
         "max": "100",
@@ -533,7 +537,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "sensor_2_Pressure",
-        "label": "units",
+        "label": "Pa",
         "format": "{{value}}",
         "min": 0,
         "max": "200000",
@@ -624,14 +628,17 @@
                 "56a8c6e9338c804a"
             ],
             [
-                "2ca34b9a80cde87b"
+                "2ca34b9a80cde87b",
+                "aad09f65d54bec7f"
             ],
             [
-                "536a57d541592eaf"
+                "536a57d541592eaf",
+                "346b82343c90220a"
             ],
             [],
             [
-                "fdc29c530ab9cab9"
+                "fdc29c530ab9cab9",
+                "08cf3202d5c3e627"
             ]
         ]
     },
@@ -646,7 +653,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "digitaltwin_tempSHT",
-        "label": "units",
+        "label": "C",
         "format": "{{value}}",
         "min": 0,
         "max": "50",
@@ -674,7 +681,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "digitaltwin_tempBMP",
-        "label": "units",
+        "label": "C",
         "format": "{{value}}",
         "min": 0,
         "max": "50",
@@ -702,7 +709,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "digitaltwin_Humidity",
-        "label": "units",
+        "label": "%",
         "format": "{{value}}",
         "min": 0,
         "max": "100",
@@ -730,7 +737,7 @@
         "height": "3",
         "gtype": "gage",
         "title": "digitaltwin_Pressure",
-        "label": "units",
+        "label": "Pa",
         "format": "{{value}}",
         "min": 0,
         "max": "200000",
@@ -995,13 +1002,13 @@
         "order": 15,
         "width": "0",
         "height": "0",
-        "label": "temperature",
+        "label": "Temperature(C)",
         "chartType": "line",
         "legend": "true",
         "xformat": "HH:mm:ss",
         "interpolate": "linear",
         "nodata": "",
-        "dot": true,
+        "dot": false,
         "ymin": "10",
         "ymax": "",
         "removeOlder": 1,
@@ -1024,26 +1031,142 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 910,
-        "y": 100,
+        "x": 720,
+        "y": 80,
         "wires": [
             []
         ]
     },
     {
-        "id": "1c496b601d0d8f7f",
-        "type": "debug",
+        "id": "aad09f65d54bec7f",
+        "type": "ui_chart",
         "z": "49317004d5317078",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1000,
-        "y": 340,
-        "wires": []
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 15,
+        "width": "0",
+        "height": "0",
+        "label": "Temperature(C)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "10",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "100",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 940,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "346b82343c90220a",
+        "type": "ui_chart",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 15,
+        "width": "0",
+        "height": "0",
+        "label": "Humidity(%)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "24",
+        "removeOlderPoints": "10000",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1170,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "08cf3202d5c3e627",
+        "type": "ui_chart",
+        "z": "49317004d5317078",
+        "name": "",
+        "group": "52560e4898df94f5",
+        "order": 15,
+        "width": "0",
+        "height": "0",
+        "label": "Pressure(Pa)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "90000",
+        "ymax": "120000",
+        "removeOlder": "24",
+        "removeOlderPoints": "10000",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1410,
+        "y": 80,
+        "wires": [
+            []
+        ]
     }
 ]
