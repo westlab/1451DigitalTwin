@@ -1001,7 +1001,7 @@
         "xformat": "HH:mm:ss",
         "interpolate": "linear",
         "nodata": "",
-        "dot": true,
+        "dot": false,
         "ymin": "10",
         "ymax": "",
         "removeOlder": 1,
