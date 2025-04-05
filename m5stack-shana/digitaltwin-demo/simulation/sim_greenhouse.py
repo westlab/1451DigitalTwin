@@ -251,10 +251,10 @@ class Greenhouse:
         self.inside_pressure = actual_pressure
         print(f"Updated inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}")
         print(f"Updated Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
-        
 
     def set_aircon_state(self, aircon_on):
         """Set the aircon state (on/off) during the simulation."""
+        # TODO send the signal to actual actuator
         self.aircon_on = aircon_on
 
     def set_heater_state(self, heater_on):
