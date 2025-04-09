@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 import sys
 import threading
 import json
-from shanaka.MQTTClientHandler import MQTTClientHandler
+from py_lib_digitaltwin.MQTTClientHandler import MQTTClientHandler
 import csv
 from datetime import datetime
 import requests  # Add this import for making HTTP requests
@@ -51,13 +51,12 @@ def process_xml_sensor_message(message):
     debug = root.find("DEBUG")
     if debug is None:
         raise ValueError("DEBUG section not found in the XML payload")
-    
     device_name = debug.find("DeviceName").text if debug.find("DeviceName") is not None else "unknown"
     tempSHT = debug.find("TempSHT").text if debug.find("TempSHT") is not None else "unknown"
     tempBMP = debug.find("TempBMP").text if debug.find("TempBMP") is not None else "unknown"
     humidity = debug.find("Humidity").text if debug.find("Humidity") is not None else "unknown"
     pressure = debug.find("Pressure").text if debug.find("Pressure") is not None else "unknown"
-    altitude = debug.find("Altitude").text if debug.find("Altitude") is not None else "N/A"  # Optional field
+    altitude = debug.find("Altitude").text if debug.find("Altitude") is not None else "unknwon"  # Optional field
     return device_name, tempSHT, tempBMP, humidity, pressure, altitude
 
 def get_json_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude):
@@ -122,8 +121,8 @@ def digital_twin_sim(
         mqtt_client=client,
         target_temperature=25,
         city="Kawasaki",
-        aircon_on=False,
-        heater_on=False,
+        aircon_state=False,
+        heater_state=False,
         vrt_sensor_topic=f"_1451DT/digitaltwin/sensor/data",
     )
 
@@ -150,20 +149,21 @@ def digital_twin_sim(
     
     while i < iterations:
         i += 1
-        print(f"Execution iteration {i}/{iterations}", flush=True)
+        #print(f"Execution iteration {i}/{iterations}", flush=True)
         if i%60*20 == 0:
             new_outside_temperature = get_current_temperature("Kawasaki")
             if new_outside_temperature is not None:
                 greenhouse.outside_temperature = new_outside_temperature
             print(f"Outside temperature: {greenhouse.outside_temperature}")
-        greenhouse_temperature = greenhouse.publish_virtual_sensor()
-        sleep(1)
+        greenhouse.predict_system()
+        greenhouse.publish_digital_twin()
+        sleep(10)
     print("Stopping MQTT client loop", flush=True)
     client.loop_stop()
     client.disconnect()
 
 class Greenhouse:
-    def __init__(self, mqtt_client, target_temperature, city, aircon_on, heater_on=False, inside_temperature=None, vrt_sensor_topic="_1451DT/digitaltwin/sensor/data"):
+    def __init__(self, mqtt_client, target_temperature, city, aircon_state=False, heater_state=False, inside_temperature=None, vrt_sensor_topic="_1451DT/digitaltwin/sensor/data", actuator_topic="_1451DT/digitaltwin/heater/status"):
         self.client = mqtt_client
         self.target_temperature = target_temperature
         self.target_humidity = 50
@@ -174,8 +174,8 @@ class Greenhouse:
             print(f"Error fetching outside temperature for {self.city}")
             assert inside_temperature is not None, "Inside temperature must be provided if outside temperature cannot be fetched."
             self.outside_temperature = inside_temperature
-        self.aircon_on = aircon_on
-        self.heater_on = heater_on
+        self.aircon_state = aircon_state
+        self.heater_state = heater_state
         self.inside_temperatureSHT = inside_temperature if inside_temperature is not None else self.outside_temperature
         self.inside_temperatureBMP = self.inside_temperatureSHT
         self.inside_pressure = 100000
@@ -188,6 +188,7 @@ class Greenhouse:
         self.time_step = 1  # Time step for simulation
         self.last_update_time = time()  # Track the last update time
         self.vrt_sensor_topic = vrt_sensor_topic
+        self.actuator_topic = actuator_topic
 
     def predict_system(self):
         """Predict the next inside conditions based on the FOPTD model."""
@@ -195,17 +196,16 @@ class Greenhouse:
         elapsed_time = current_time - self.last_update_time
         self.last_update_time = current_time
 
-        aircon_effect = -5 if self.aircon_on else 0
-        heater_effect = 5 if self.heater_on else 0
-
         # Predict inside_temperatureSHT
-        delta_temp_SHT = (self.kSHT * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureSHT) +
-                          (self.outside_temperature - self.inside_temperatureSHT) / self.tau) * elapsed_time
+        delta_temp_SHT = (self.kSHT * (self.target_temperature - self.inside_temperatureSHT)
+                          ) * elapsed_time
         self.inside_temperatureSHT += delta_temp_SHT
+        print(delta_temp_SHT)
 
         # Predict inside_temperatureBMP
-        delta_temp_BMP = (self.kBMP * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureBMP) +
-                          (self.outside_temperature - self.inside_temperatureBMP) / self.tau) * elapsed_time
+        #delta_temp_BMP = (self.kBMP * (self.target_temperature - self.inside_temperatureBMP) +
+        #                  (self.outside_temperature - self.inside_temperatureBMP) / self.tau) * elapsed_time
+        delta_temp_BMP = (self.kBMP * (self.target_temperature - self.inside_temperatureBMP) ) * elapsed_time
         self.inside_temperatureBMP += delta_temp_BMP
 
         # Predict inside_humidity
@@ -219,25 +219,38 @@ class Greenhouse:
         # Correct predictions with actual data
         self.inside_humidity = max(0, min(100, self.inside_humidity))  # Ensure humidity stays within 0-100%
         self.inside_pressure = max(9000, min(200000, self.inside_pressure))  # Ensure pressure stays within realistic bounds
-        print(f"Predicted inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}")
+        print(f"Predicted conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f}, ")
         print(f"Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
+        print(f"Target temperature {self.target_temperature} inside temperature {self.inside_temperatureSHT}")
+        if self.target_temperature > self.inside_temperatureSHT:
+            self.set_heater_state(True)
+            self.set_aircon_state(False)
+        elif self.target_temperature == self.inside_temperatureBMP:
+            self.set_heater_state(False)
+            self.set_aircon_state(False)
+        elif self.target_temperature < self.inside_temperatureSHT:
+            self.set_heater_state(False)
+            self.set_aircon_state(True)
         return self.inside_temperatureSHT, self.inside_temperatureBMP, self.inside_humidity, self.inside_pressure
 
-    def update_model(self, actual_inside_temperatureSHT, actual_inside_temperatureBMP, actual_humidity, actual_pressure):
+    def update_model(self, actual_inside_temperatureSHT, actual_inside_temperatureBMP, actual_humidity):
         """Update the model parameters to correct the error."""
         # TODO no control for pressure and humidity set current value
-        self.target_pressure = actual_pressure
         self.target_humidity = actual_humidity
 
         # Update for inside_temperatureSHT
         error_SHT = actual_inside_temperatureSHT - self.inside_temperatureSHT
-        self.kSHT += 0.01 * error_SHT  # Adjust gain slightly based on error
+        self.kSHT += min(1,0.01 * error_SHT)  # Adjust gain slightly based on error
+        self.kSHT = min(1, self.kSHT) # Ensure gain stays within a reasonable range
+        self.kSHT = max(-1, self.kSHT)
         self.tau = max(1, self.tau - 0.1 * error_SHT)  # Adjust time constant, ensuring it stays positive
         self.inside_temperatureSHT = actual_inside_temperatureSHT  # Correct the predicted temperature
 
         # Update for inside_temperatureBMP
         error_BMP = actual_inside_temperatureBMP - self.inside_temperatureBMP
-        self.kBMP += 0.01 * error_BMP
+        self.kBMP += min(1,0.01 * error_BMP)  # Adjust gain slightly based on error
+        self.kBMP = min(1, self.kBMP)  # Ensure gain stays within a reasonable range
+        self.kBMP = max(-1, self.kBMP)
         self.inside_temperatureBMP = actual_inside_temperatureBMP
 
         # Update for inside_humidity
@@ -245,27 +258,36 @@ class Greenhouse:
         self.kHumidity += 0.01 * error_humidity
         self.inside_humidity = actual_humidity
 
-        # Update for inside_pressure
-        error_pressure = actual_pressure - self.inside_pressure
-        self.kPressure += 0.01 * error_pressure
-        self.inside_pressure = actual_pressure
-        print(f"Updated inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}")
+        print(f"Updated inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f},")
         print(f"Updated Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
 
-    def set_aircon_state(self, aircon_on):
+    def set_aircon_state(self, aircon_state):
         """Set the aircon state (on/off) during the simulation."""
-        # TODO send the signal to actual actuator
-        self.aircon_on = aircon_on
+        if self.aircon_state != aircon_state:
+            self.aircon_state = aircon_state
+            # TODO send signal to aircon
 
-    def set_heater_state(self, heater_on):
+    def set_heater_state(self, heater_state):
         """Set the heater state (on/off) during the simulation."""
-        self.heater_on = heater_on
+        if self.heater_state != heater_state:
+            self.heater_state = heater_state
+            if self.heater_state == True:
+                payload = "on"
+            else:
+                payload = "off"
+            self.client.publish("_1451DT/room/heater/control", payload)
+            print(f"Set heater state to {payload}")
 
-    def publish_virtual_sensor(self):
+
+    def publish_digital_twin(self):
         """Publish the current inside temperature to the specified MQTT topic."""
-        self.predict_system()
         sensor_msg = prepare_sensor_message("digitaltwin", self.inside_temperatureSHT, self.inside_temperatureBMP, self.inside_humidity, self.inside_pressure)
         self.client.publish(self.vrt_sensor_topic, sensor_msg)
+        if self.heater_state == True:
+            payload = "on"
+        else:
+            payload = "off"
+        self.client.publish("_1451DT/digitaltwin/heater/state", payload)
         print(f"Published temperature message to {self.vrt_sensor_topic}")
     
     def process_received_message(self, message):
@@ -280,7 +302,7 @@ class Greenhouse:
                     ET.fromstring(payload)
                     device_name, tempSHT, tempBMP, humidity, pressure, altitude = process_xml_sensor_message(payload)
                     print(f"Received Device {device_name} TempSHT {tempSHT} TempBMP {tempBMP} Humidity {humidity} Pressure {pressure}")
-                self.update_model(float(tempSHT), float(tempBMP), float(humidity), float(pressure))
+                self.update_model(float(tempSHT), float(tempBMP), float(humidity))
                 if store_data_csv:
                     csv_file_name = f"{device_name}.csv"
                     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -296,11 +318,14 @@ class Greenhouse:
                 print(f"Unexpected error while processing payload: {payload}. Error: {e}")
         elif message.topic == "_1451DT/twin/control/input":
             print(f"Received control input: {payload}")
-            # TODO process control input
-            # TODO calculate current digital twin greenhouse temperature
-            # TODO calculate difference between current and target temperature
-            # TODO send aircon on/off or heater on/off state on digital twin model
-            # TODO send the control input to real actuator with mqtt
+            self.target_temperature = float(payload)
+            print(f"Set target temperature : {self.target_temperature }")
+        elif message.topic == "_1451DT/room/heater/state":
+            print(f"Received heater status: {payload}")
+            if "on" in payload:
+                self.heater_state = True
+            elif "off" in payload:
+                self.heater_state = False
 
 def get_coordinates(city):
     """
