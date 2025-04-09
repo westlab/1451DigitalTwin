@@ -46,7 +46,7 @@ class MQTTClientHandler:
 
     def on_disconnect(self, client, userdata, rc, properties=None):
         if rc != 0:
-            print("Unexpected disconnection.")
+            print(f"Unexpected disconnection. {str(rc)}")
 
     def on_publish(self, client, userdata, mid, properties=None):
         print(f"published: {mid}")

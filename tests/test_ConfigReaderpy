@@ -1,7 +1,7 @@
 import os
 import pytest
 import yaml
-from shanaka.ConfigReader import ConfigReader
+from py_lib_digitaltwin.ConfigReader import ConfigReader
 
 @pytest.fixture
 def valid_config_file(tmp_path):

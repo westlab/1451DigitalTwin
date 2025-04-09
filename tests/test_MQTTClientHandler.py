@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import Mock
 
 # Direct import assuming 'shanaka' is a package in the project structure
-from shanaka.MQTTClientHandler import MQTTClientHandler
+from py_lib_digitaltwin.MQTTClientHandler import MQTTClientHandler
 
 def test_on_connect():
     handler = MQTTClientHandler()

@@ -111,6 +111,7 @@ esac
 
 
 # useful commands
+# export PYTHONPATH=$(pwd):$PYTHONPATH
 # mosquitto_sub -h 127.0.0.1 -p 1883 -t _1451DT/#
 # mosquitto_sub -h 127.0.0.1 -p 1883 -t _1451DT/core_1/sensor/data
 # mosquitto_pub -h 127.0.0.1 -p 1883 -t _1451DT/core_1/sensor/data -m helloworld

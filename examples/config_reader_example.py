@@ -5,7 +5,7 @@ import yaml
 import argparse
 import os
 import logging
-from shanaka.ConfigReader import ConfigReader
+from py_lib_digitaltwin.ConfigReader import ConfigReader
 
 def config_reader_main():
     # pylint: disable=missing-function-docstring

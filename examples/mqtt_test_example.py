@@ -9,7 +9,7 @@ import random
 import xml.etree.ElementTree as ET
 import sys
 import threading
-from shanaka.MQTTClientHandler import MQTTClientHandler
+from py_lib_digitaltwin.MQTTClientHandler import MQTTClientHandler
 
 parser = argparse.ArgumentParser(description="MQTT Subscriber")
 parser.add_argument("--mqtt_sub_topics", nargs='+', default=["OUCtest/yourID"], help="MQTT topics to subscribe to")
