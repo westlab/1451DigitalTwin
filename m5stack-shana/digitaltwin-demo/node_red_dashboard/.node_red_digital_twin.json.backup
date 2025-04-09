@@ -763,7 +763,7 @@
         "type": "mqtt in",
         "z": "49317004d5317078",
         "name": "sys_control_mqtt_in",
-        "topic": "_1451DT/digitaltwin/actuator/#",
+        "topic": "_1451DT/room/heater/state",
         "qos": "0",
         "datatype": "auto-detect",
         "broker": "bdea7a73f727af35",
@@ -771,60 +771,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 90,
-        "y": 560,
-        "wires": [
-            [
-                "fb6924eed99f2606"
-            ]
-        ]
-    },
-    {
-        "id": "fb6924eed99f2606",
-        "type": "xml",
-        "z": "49317004d5317078",
-        "name": "sys_control_xml_parse",
-        "property": "payload",
-        "attr": "",
-        "chr": "",
-        "x": 360,
-        "y": 560,
-        "wires": [
-            [
-                "43dfa5cb06dc76b4",
-                "285b193e84c369a2"
-            ]
-        ]
-    },
-    {
-        "id": "285b193e84c369a2",
-        "type": "xml",
-        "z": "49317004d5317078",
-        "name": "sys_control_jsonxml_parse",
-        "property": "payload",
-        "attr": "",
-        "chr": "",
-        "x": 380,
-        "y": 620,
-        "wires": [
-            [
-                "43dfa5cb06dc76b4"
-            ]
-        ]
-    },
-    {
-        "id": "43dfa5cb06dc76b4",
-        "type": "function",
-        "z": "49317004d5317078",
-        "name": "Output",
-        "func": "if (msg.payload && msg.payload.TEDS){\n    let msg1 = {\n        payload: msg.payload.TEDS.DEBUG[0].Heater,\n    };\n    return msg1\n}\nelse if (msg.payload && msg.payload.root){\n    let msg1 = {\n        payload: msg.payload.root.Heater\n    };\n    return msg1;\n}\nelse if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the properties exist in msg.payload\n    let msg1 = { payload: msg.payload.Heater || 'N/A' };\n    return msg1;\n} else {\n    // Handle case where msg.payload is not in the expected format\n    //let msg1 = { payload: msg.payload }\n    //return [msg1, msg1, msg1, msg1, msg1];\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
+        "x": 110,
         "y": 560,
         "wires": [
             [
@@ -841,7 +788,7 @@
         "width": 0,
         "height": 0,
         "name": "",
-        "label": "sys_control",
+        "label": "room_heater",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "",
@@ -849,7 +796,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 730,
+        "x": 530,
         "y": 560,
         "wires": []
     },
@@ -858,7 +805,7 @@
         "type": "mqtt in",
         "z": "49317004d5317078",
         "name": "sys_control_mqtt_in",
-        "topic": "_1451DT/twin/actuator/#",
+        "topic": "_1451DT/digitaltwin/heater/state",
         "qos": "0",
         "datatype": "auto-detect",
         "broker": "bdea7a73f727af35",
@@ -866,60 +813,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 950,
-        "y": 560,
-        "wires": [
-            [
-                "cf784972b786b3ba"
-            ]
-        ]
-    },
-    {
-        "id": "cf784972b786b3ba",
-        "type": "xml",
-        "z": "49317004d5317078",
-        "name": "twin_control_xml_parse",
-        "property": "payload",
-        "attr": "",
-        "chr": "",
-        "x": 1230,
-        "y": 560,
-        "wires": [
-            [
-                "358ff4f7778372f7",
-                "f75766e9a8ab075c"
-            ]
-        ]
-    },
-    {
-        "id": "f75766e9a8ab075c",
-        "type": "xml",
-        "z": "49317004d5317078",
-        "name": "twin_control_jsonxml_parse",
-        "property": "payload",
-        "attr": "",
-        "chr": "",
-        "x": 1240,
-        "y": 620,
-        "wires": [
-            [
-                "358ff4f7778372f7"
-            ]
-        ]
-    },
-    {
-        "id": "358ff4f7778372f7",
-        "type": "function",
-        "z": "49317004d5317078",
-        "name": "Output",
-        "func": "if (msg.payload && msg.payload.TEDS){\n    let msg1 = {\n        payload: msg.payload.TEDS.DEBUG[0].Heater,\n    };\n    return msg1\n}\nelse if (msg.payload && msg.payload.root){\n    let msg1 = {\n        payload: msg.payload.root.Heater\n    };\n    return msg1;\n}\nelse if (msg.payload && typeof msg.payload === 'object') {\n    // Handle the case where msg.payload is a JSON object\n    console.log(\"msg.payload (JSON):\", msg.payload);\n\n    // Ensure the properties exist in msg.payload\n    let msg1 = { payload: msg.payload.Heater || 'N/A' };\n    return msg1;\n} else {\n    // Handle case where msg.payload is not in the expected format\n    //let msg1 = { payload: msg.payload }\n    //return [msg1, msg1, msg1, msg1, msg1];\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1430,
+        "x": 1130,
         "y": 560,
         "wires": [
             [
@@ -936,7 +830,7 @@
         "width": 0,
         "height": 0,
         "name": "",
-        "label": "twin_control",
+        "label": "digitaltwin_heater",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "",
@@ -944,7 +838,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 1590,
+        "x": 1610,
         "y": 560,
         "wires": []
     },

@@ -905,7 +905,7 @@
         "nodata": "",
         "dot": false,
         "ymin": "10",
-        "ymax": "",
+        "ymax": "40",
         "removeOlder": "24",
         "removeOlderPoints": "10000",
         "removeOlderUnit": "3600",
