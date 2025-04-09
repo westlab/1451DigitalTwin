@@ -147,10 +147,10 @@ bool readSensor(){
 
 String getLocalTimeString(){
     getLocalTime(&timeinfo);
-    return String(timeinfo.tm_year + 1900) + "-" + String(timeinfo.tm_mon + 1) +
-    "-" + String(timeinfo.tm_mday + 1) + "_" +
-     String(timeinfo.tm_hour) + ":" + String(timeinfo.tm_min) + 
-     ":" + String(timeinfo.tm_sec);
+    return String(timeinfo.tm_year + 1900) + "_" + String(timeinfo.tm_mon + 1) +
+    "_" + String(timeinfo.tm_mday + 1) + "_" +
+     String(timeinfo.tm_hour) + "_" + String(timeinfo.tm_min) + 
+     "_" + String(timeinfo.tm_sec);
 }
 
 String generateFormattedMessage(){
@@ -198,11 +198,11 @@ String generateMQTTMessageXML(){
     //xml_message += "</Info-Section>";
     xml_message += "<DEBUG>";
     xml_message += "<DeviceName>" + String(device_name) + "</DeviceName>";
-    //xml_message += "<LocalTime>" + getLocalTimeString() + "</LocalTime>";
+    xml_message += "<LocalTime>" + String(getLocalTimeString()) + "</LocalTime>";
     xml_message += "<TempSHT>" + String(sht4.cTemp) + "</TempSHT>";
     xml_message += "<TempBMP>" + String(bmp.cTemp) + "</TempBMP>";
     xml_message += "<Humidity>" + String(sht4.humidity) + "</Humidity>";
-    xml_message += "<Pressure>" + String(bmp.pressure) + "</Pressure>";
+    //xml_message += "<Pressure>" + String(bmp.pressure) + "</Pressure>";
     //xml_message += "<Altitude>" + String(bmp.altitude) + "</Altitude>";
     xml_message += "</DEBUG>";
     xml_message += "</TEDS>";
@@ -226,6 +226,7 @@ bool publishDataDisplay(){
 bool publishDataMQTT(){
     if (mqttclient.connected()) {
         const char* mqtt_message = generateMQTTMessageXML().c_str();
+        Serial.print(mqtt_message);
         mqttclient.publish(mqtt_topic_name.c_str(), mqtt_message);
         //mqttclient.publish(mqtt_topic_name.c_str(), generateMQTTMessageJSON().c_str());
         return true;
