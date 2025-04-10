@@ -80,7 +80,16 @@ cd REPO_DIR
 cd REPO_DIR
 ./ci_tests.sh setup_sim
 ```
+## Notes
 
-[Greenhouse Diagram](greenhouse.drawio)
-[Greenhouse Simulation Diagram](sim_greenhouse.drawio)
-[Actuator control Diagram](heater.drawio)
+### Greenhouse class
+
+![Greenhouse Diagram](greenhouse.png)
+
+### Digitaltwin simulator
+
+![Greenhouse Simulation Diagram](sim_greenhouse.png)
+
+### Heater Controller 
+
+![Actuator control Diagram](heater.png)
