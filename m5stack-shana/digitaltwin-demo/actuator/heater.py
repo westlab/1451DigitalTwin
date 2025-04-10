@@ -16,24 +16,30 @@ from py_lib_digitaltwin.MQTTClientHandler import MQTTClientHandler
 import csv
 from datetime import datetime
 import requests  # Add this import for making HTTP requests
+import yaml
 
-token =''
-secret = ''
-
-#TODO make and arg
-store_data_csv=False
-
-
-parser = argparse.ArgumentParser(description="MQTT Subscriber")
-parser.add_argument("--mqtt_sub_topics", nargs='+', default=["_1451DT/room/heater/#"], help="MQTT topics to subscribe to")
-parser.add_argument("--mqtt_broker", default="192.168.8.101", help="MQTT broker address")
-parser.add_argument("--mqtt_port", type=int, default=1883, help="MQTT broker port")
-parser.add_argument("--mqtt_username", help="MQTT username for authentication")
-parser.add_argument("--mqtt_password", help="MQTT password for authentication")
-parser.add_argument("--client_id", default="room_heater", help="Client ID for the MQTT connection")
-parser.add_argument("--enable_tls", action="store_false", default=False, help="Enable TLS for MQTT connection")
-parser.add_argument("--iterations", type=str, default="inf", help="Number of iterations for the while loop. Use 'infinity' for an infinite loop.")
+parser = argparse.ArgumentParser(description="Heater Controller")
+parser.add_argument("--config", help="Config file path", default="../config.yaml")
 args = parser.parse_args()
+
+with open(args.config, "r") as config_file:
+    config = yaml.safe_load(config_file)
+
+# MQTT Configuration
+MQTT_BROKER = config["mqtthost"]
+MQTT_PORT = config["mqttport"]
+MQTT_USERNAME = config.get("mqttusername",None)
+MQTT_PASSWORD = config.get("mqttpassword",None)
+MQTT_TLS = config.get("mqtt_tls", False)
+SIM_ITERATIONS = config.get("iterations", "inf")
+
+# MQTT Topics
+TOPIC_ALL_DATA = config["mqtt_topics"]["all_data"]
+TOPIC_HEATER_CONTROL = config["mqtt_topics"]["room_heater_control"]
+TOPIC_HEATER_STATE = config["mqtt_topics"]["room_heater_state"]
+
+token = config["switchbot"]["token"]
+secret = config["switchbot"]["secret"]
 
 def turn_on_heater():
     switchbot = SwitchBot(token=token, secret=secret)
@@ -58,7 +64,7 @@ def turn_off_heater():
 def my_process_received_message(message):
     payload = str(message.payload.decode("utf-8"))
     print(f"Received topic {message.topic} {payload}")
-    if message.topic == "_1451DT/room/heater/control":
+    if message.topic == TOPIC_HEATER_CONTROL:
         if "on" in payload:
             turn_on_heater()
         elif "off" in payload:
@@ -74,15 +80,15 @@ def get_local_time_string():
 mqtt_test_async_running = False
 mqtt_test_async_lock = threading.Lock()  # Lock to prevent race conditions
 
-def digital_twin_sim(
-    mqtt_sub_topics=["_1451DT/#"],
-    mqtt_broker="192.168.8.101",
-    mqtt_port=1883,
-    mqtt_username=None,
-    mqtt_password=None,
+def heater_controller(
+    mqtt_sub_topics=[TOPIC_HEATER_CONTROL],
+    mqtt_broker=MQTT_BROKER,
+    mqtt_port=MQTT_PORT,
+    mqtt_username=MQTT_USERNAME,
+    mqtt_password=MQTT_PASSWORD,
     client_id="room_heater",
-    enable_tls=False,
-    iterations="inf",
+    enable_tls=MQTT_TLS,
+    iterations=SIM_ITERATIONS,
 ):
     turn_off_heater()
     sleep(20)
@@ -95,7 +101,6 @@ def digital_twin_sim(
     # Set username and password if provided
     if mqtt_username and mqtt_password:
         client.username_pw_set(mqtt_username, mqtt_password)
-    
 
     handler = MQTTClientHandler(my_process_received_message)
     client.on_connect = handler.on_connect
@@ -115,7 +120,7 @@ def digital_twin_sim(
         client.subscribe(topic)
     print(f"Starting client loop")
     client.loop_start()
-    iterations = float('inf') if "inf" in args.iterations.lower() else int(args.iterations)
+    iterations = float('inf') if "inf" in iterations.lower() else int(iterations)
     i = 0
     while i < iterations:
         i += 1
@@ -123,7 +128,7 @@ def digital_twin_sim(
         try:
             switchbot = SwitchBot(token=token, secret=secret)
             plug = switchbot.device(id='34B7DAD4C62E')
-            client.publish("_1451DT/room/heater/state", str(plug.status()['power']), qos=1)
+            client.publish(TOPIC_HEATER_STATE, str(plug.status()['power']), qos=1)
         except Exception as e:
             print(f"Error: {e}", flush=True)
         sleep(5)
@@ -131,16 +136,15 @@ def digital_twin_sim(
     client.loop_stop()
     client.disconnect()
 
-
 if __name__ == '__main__':
-    digital_twin_sim(
-        mqtt_sub_topics=args.mqtt_sub_topics,
-        mqtt_broker=args.mqtt_broker,
-        mqtt_port=args.mqtt_port,
-        mqtt_username=args.mqtt_username,
-        mqtt_password=args.mqtt_password,
-        client_id=args.client_id,
-        enable_tls=args.enable_tls,
-        iterations=args.iterations
+    heater_controller(
+        mqtt_sub_topics=[TOPIC_HEATER_CONTROL],
+        mqtt_broker=MQTT_BROKER,
+        mqtt_port=MQTT_PORT,
+        mqtt_username=MQTT_USERNAME,
+        mqtt_password=MQTT_PASSWORD,
+        client_id="room_heater",
+        enable_tls=MQTT_TLS,
+        iterations=SIM_ITERATIONS,
     )
 

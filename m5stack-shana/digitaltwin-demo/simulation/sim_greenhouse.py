@@ -14,22 +14,37 @@ from py_lib_digitaltwin.MQTTClientHandler import MQTTClientHandler
 import csv
 from datetime import datetime
 import requests  # Add this import for making HTTP requests
+import yaml
 
 #TODO make and arg
 store_data_csv=False
 
 
-parser = argparse.ArgumentParser(description="MQTT Subscriber")
-parser.add_argument("--mqtt_sub_topics", nargs='+', default=["_1451DT/#"], help="MQTT topics to subscribe to")
-parser.add_argument("--mqtt_broker", default="192.168.8.101", help="MQTT broker address")
-parser.add_argument("--mqtt_port", type=int, default=1883, help="MQTT broker port")
-parser.add_argument("--mqtt_username", help="MQTT username for authentication")
-parser.add_argument("--mqtt_password", help="MQTT password for authentication")
-parser.add_argument("--client_id", default="digitaltwin", help="Client ID for the MQTT connection")
-parser.add_argument("--enable_tls", action="store_false", default=False, help="Enable TLS for MQTT connection")
-parser.add_argument("--iterations", type=str, default="inf", help="Number of iterations for the while loop. Use 'infinity' for an infinite loop.")
+parser = argparse.ArgumentParser(description="Greenhouse simulator")
+parser.add_argument("--config", help="Config file path", default="../config.yaml")
 args = parser.parse_args()
 
+with open(args.config, "r") as config_file:
+    config = yaml.safe_load(config_file)
+
+# MQTT Configuration
+MQTT_BROKER = config["mqtthost"]
+MQTT_PORT = config["mqttport"]
+MQTT_USERNAME = config.get("mqttusername",None)
+MQTT_PASSWORD = config.get("mqttpassword",None)
+MQTT_TLS = config.get("mqtt_tls", False)
+SIM_ITERATIONS = config.get("iterations", "inf")
+SIM_CITY = config.get("city", "Kawasaki")
+
+# MQTT Topics
+TOPIC_ALL_DATA = config["mqtt_topics"]["all_data"]
+TOPIC_DT_CONTROL = config["mqtt_topics"]["digital_twin_control"]
+TOPIC_DT_SENSOR_DATA = config["mqtt_topics"]["digital_twin_sensor_data"]
+TOPIC_DT_HEATER_STATE = config["mqtt_topics"]["digital_twin_heater_state"]
+TOPIC_HEATER_CONTROL = config["mqtt_topics"]["room_heater_control"]
+TOPIC_HEATER_STATE = config["mqtt_topics"]["room_heater_state"]
+TOPIC_CORE1_SENSOR_DATA = config["mqtt_topics"]["sensor_data_core_1"]
+TOPIC_CORE2_SENSOR_DATA = config["mqtt_topics"]["sensor_data_core_2"]
 
 def process_json_sensor_message(message):
     """Process message in JSON format."""
@@ -81,6 +96,7 @@ def get_xml_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure):
 <TEDS>
     <DEBUG>
         <DeviceName>{device_name}</DeviceName>
+        <LocalTime>"{get_local_time_string()}"</LocalTime>
         <TempSHT>{tempSHT:.2f}</TempSHT>
         <TempBMP>{tempBMP:.2f}</TempBMP>
         <Humidity>{humidity:.2f}</Humidity>
@@ -99,14 +115,14 @@ mqtt_test_async_running = False
 mqtt_test_async_lock = threading.Lock()  # Lock to prevent race conditions
 
 def digital_twin_sim(
-    mqtt_sub_topics=["_1451DT/#"],
-    mqtt_broker="192.168.8.101",
-    mqtt_port=1883,
-    mqtt_username=None,
-    mqtt_password=None,
+    mqtt_sub_topics=[TOPIC_ALL_DATA],
+    mqtt_broker=MQTT_BROKER,
+    mqtt_port=MQTT_PORT,
+    mqtt_username=MQTT_USERNAME,
+    mqtt_password=MQTT_PASSWORD,
     client_id="digitaltwin",
-    enable_tls=False,
-    iterations="inf",
+    enable_tls=MQTT_TLS,
+    iterations=SIM_ITERATIONS,
 ):
     # setup MQTT client
     print(f"Setting up MQTT client")
@@ -120,10 +136,9 @@ def digital_twin_sim(
     greenhouse = Greenhouse(
         mqtt_client=client,
         target_temperature=25,
-        city="Kawasaki",
+        city=SIM_CITY,
         aircon_state=False,
         heater_state=False,
-        vrt_sensor_topic=f"_1451DT/digitaltwin/sensor/data",
     )
 
     handler = MQTTClientHandler(greenhouse.process_received_message)
@@ -144,14 +159,14 @@ def digital_twin_sim(
         client.subscribe(topic)
     print(f"Starting client loop")
     client.loop_start()
-    iterations = float('inf') if "inf" in args.iterations.lower() else int(args.iterations)
+    iterations = float('inf') if "inf" in iterations.lower() else int(iterations)
     i = 0
     
     while i < iterations:
         i += 1
         #print(f"Execution iteration {i}/{iterations}", flush=True)
         if i%60*20 == 0:
-            new_outside_temperature = get_current_temperature("Kawasaki")
+            new_outside_temperature = get_current_temperature(greenhouse.city)
             if new_outside_temperature is not None:
                 greenhouse.outside_temperature = new_outside_temperature
             print(f"Outside temperature: {greenhouse.outside_temperature}")
@@ -163,7 +178,7 @@ def digital_twin_sim(
     client.disconnect()
 
 class Greenhouse:
-    def __init__(self, mqtt_client, target_temperature, city, aircon_state=False, heater_state=False, inside_temperature=None, vrt_sensor_topic="_1451DT/digitaltwin/sensor/data", actuator_topic="_1451DT/digitaltwin/heater/status"):
+    def __init__(self, mqtt_client, target_temperature, city, aircon_state=False, heater_state=False, inside_temperature=None, dt_sensor_topic=TOPIC_DT_SENSOR_DATA, dt_actuator_topic=TOPIC_DT_HEATER_STATE, actuator_control_topic=TOPIC_HEATER_CONTROL):
         self.client = mqtt_client
         self.target_temperature = target_temperature
         self.target_humidity = 50
@@ -187,8 +202,9 @@ class Greenhouse:
         self.tau = 10  # Time constant of the system
         self.time_step = 1  # Time step for simulation
         self.last_update_time = time()  # Track the last update time
-        self.vrt_sensor_topic = vrt_sensor_topic
-        self.actuator_topic = actuator_topic
+        self.dt_sensor_topic = dt_sensor_topic
+        self.dt_actuator_topic = dt_actuator_topic
+        self.actuator_control_topic = actuator_control_topic
         self.update_iteration = 0
         self.prediction_iteration = 0
         self.activate_control = False
@@ -284,25 +300,25 @@ class Greenhouse:
                 payload = "on"
             else:
                 payload = "off"
-            self.client.publish("_1451DT/room/heater/control", payload)
+            self.client.publish(self.actuator_control_topic, payload)
             print(f"Set heater state to {payload}")
 
 
     def publish_digital_twin(self):
         """Publish the current inside temperature to the specified MQTT topic."""
         sensor_msg = prepare_sensor_message("digitaltwin", self.inside_temperatureSHT, self.inside_temperatureBMP, self.inside_humidity, self.inside_pressure)
-        self.client.publish(self.vrt_sensor_topic, sensor_msg)
+        self.client.publish(self.dt_sensor_topic, sensor_msg)
         if self.heater_state == True:
             payload = "on"
         else:
             payload = "off"
-        self.client.publish("_1451DT/digitaltwin/heater/state", payload)
-        print(f"Published temperature message to {self.vrt_sensor_topic}")
+        self.client.publish(self.dt_actuator_topic, payload)
+        print(f"Published temperature message to {self.dt_sensor_topic}")
     
     def process_received_message(self, message):
         payload = str(message.payload.decode("utf-8"))
         print(f"Received topic {message.topic}")
-        if message.topic == "_1451DT/core_1/sensor/data" or message.topic == "_1451DT/core_2/sensor/data" :
+        if message.topic == TOPIC_CORE1_SENSOR_DATA or message.topic == TOPIC_CORE2_SENSOR_DATA :
             try:
                 if payload.strip().startswith("{"):
                     device_name, tempSHT, tempBMP, humidity, pressure, altitude = process_json_sensor_message(payload)
@@ -325,11 +341,11 @@ class Greenhouse:
                 print(f"Invalid xml payload: {payload}. Error: {e}")
             except Exception as e:
                 print(f"Unexpected error while processing payload: {payload}. Error: {e}")
-        elif message.topic == "_1451DT/twin/control/input":
+        elif message.topic == TOPIC_DT_CONTROL:
             print(f"Received control input: {payload}")
             self.target_temperature = float(payload)
             print(f"Set target temperature : {self.target_temperature }")
-        elif message.topic == "_1451DT/room/heater/state":
+        elif message.topic == TOPIC_HEATER_STATE:
             print(f"Received heater status: {payload}")
             if "on" in payload:
                 self.heater_state = True
@@ -386,12 +402,12 @@ def get_current_temperature(city):
 
 if __name__ == '__main__':
     digital_twin_sim(
-        mqtt_sub_topics=args.mqtt_sub_topics,
-        mqtt_broker=args.mqtt_broker,
-        mqtt_port=args.mqtt_port,
-        mqtt_username=args.mqtt_username,
-        mqtt_password=args.mqtt_password,
-        client_id=args.client_id,
-        enable_tls=args.enable_tls,
-        iterations=args.iterations
+        mqtt_sub_topics=[TOPIC_ALL_DATA],
+        mqtt_broker=MQTT_BROKER,
+        mqtt_port=MQTT_PORT,
+        mqtt_username=MQTT_USERNAME,
+        mqtt_password=MQTT_PASSWORD,
+        client_id="digitaltwin",
+        enable_tls=MQTT_TLS,
+        iterations=SIM_ITERATIONS,
     )
