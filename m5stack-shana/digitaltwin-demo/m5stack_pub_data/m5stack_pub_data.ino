@@ -22,7 +22,7 @@
 const int loop_delay = 60000; // 60 seconds
 const bool low_power_mode = true; // low power mode
 #else
-const int loop_delay = 100000; // 10 seconds
+const int loop_delay = 20000; // 10 seconds
 const bool low_power_mode = false; // low power mode
 #endif
 

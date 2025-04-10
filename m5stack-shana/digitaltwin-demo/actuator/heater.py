@@ -16,6 +16,7 @@ from py_lib_digitaltwin.MQTTClientHandler import MQTTClientHandler
 import csv
 from datetime import datetime
 import requests  # Add this import for making HTTP requests
+
 token =''
 secret = ''
 
@@ -125,7 +126,7 @@ def digital_twin_sim(
             client.publish("_1451DT/room/heater/state", str(plug.status()['power']), qos=1)
         except Exception as e:
             print(f"Error: {e}", flush=True)
-        sleep(60)
+        sleep(5)
     print("Stopping MQTT client loop", flush=True)
     client.loop_stop()
     client.disconnect()

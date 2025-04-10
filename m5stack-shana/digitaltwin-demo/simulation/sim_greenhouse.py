@@ -157,7 +157,7 @@ def digital_twin_sim(
             print(f"Outside temperature: {greenhouse.outside_temperature}")
         greenhouse.predict_system()
         greenhouse.publish_digital_twin()
-        sleep(10)
+        sleep(1)
     print("Stopping MQTT client loop", flush=True)
     client.loop_stop()
     client.disconnect()
@@ -189,6 +189,9 @@ class Greenhouse:
         self.last_update_time = time()  # Track the last update time
         self.vrt_sensor_topic = vrt_sensor_topic
         self.actuator_topic = actuator_topic
+        self.update_iteration = 0
+        self.prediction_iteration = 0
+        self.activate_control = False
 
     def predict_system(self):
         """Predict the next inside conditions based on the FOPTD model."""
@@ -196,16 +199,17 @@ class Greenhouse:
         elapsed_time = current_time - self.last_update_time
         self.last_update_time = current_time
 
+        aircon_effect = -5 if self.aircon_state else 0
+        heater_effect = 5 if self.heater_state else 0
+
         # Predict inside_temperatureSHT
-        delta_temp_SHT = (self.kSHT * (self.target_temperature - self.inside_temperatureSHT)
-                          ) * elapsed_time
+        delta_temp_SHT = (self.kSHT * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureSHT) +
+                          (self.outside_temperature - self.inside_temperatureSHT) / self.tau) * elapsed_time
         self.inside_temperatureSHT += delta_temp_SHT
-        print(delta_temp_SHT)
 
         # Predict inside_temperatureBMP
-        #delta_temp_BMP = (self.kBMP * (self.target_temperature - self.inside_temperatureBMP) +
-        #                  (self.outside_temperature - self.inside_temperatureBMP) / self.tau) * elapsed_time
-        delta_temp_BMP = (self.kBMP * (self.target_temperature - self.inside_temperatureBMP) ) * elapsed_time
+        delta_temp_BMP = (self.kBMP * (self.target_temperature + aircon_effect + heater_effect - self.inside_temperatureBMP) +
+                          (self.outside_temperature - self.inside_temperatureBMP) / self.tau) * elapsed_time
         self.inside_temperatureBMP += delta_temp_BMP
 
         # Predict inside_humidity
@@ -219,18 +223,20 @@ class Greenhouse:
         # Correct predictions with actual data
         self.inside_humidity = max(0, min(100, self.inside_humidity))  # Ensure humidity stays within 0-100%
         self.inside_pressure = max(9000, min(200000, self.inside_pressure))  # Ensure pressure stays within realistic bounds
-        print(f"Predicted conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f}, ")
+        print(f"Predicted conditions {self.prediction_iteration} {self.activate_control}: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f}, ")
         print(f"Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
         print(f"Target temperature {self.target_temperature} inside temperature {self.inside_temperatureSHT}")
-        if self.target_temperature > self.inside_temperatureSHT:
-            self.set_heater_state(True)
-            self.set_aircon_state(False)
-        elif self.target_temperature == self.inside_temperatureBMP:
-            self.set_heater_state(False)
-            self.set_aircon_state(False)
-        elif self.target_temperature < self.inside_temperatureSHT:
-            self.set_heater_state(False)
-            self.set_aircon_state(True)
+        if self.activate_control and self.prediction_iteration % 10:
+            if self.target_temperature > self.inside_temperatureSHT:
+                self.set_heater_state(True)
+                self.set_aircon_state(False)
+            elif self.target_temperature == self.inside_temperatureBMP:
+                self.set_heater_state(False)
+                self.set_aircon_state(False)
+            elif self.target_temperature < self.inside_temperatureSHT:
+                self.set_heater_state(False)
+                self.set_aircon_state(True)
+        self.prediction_iteration += 1
         return self.inside_temperatureSHT, self.inside_temperatureBMP, self.inside_humidity, self.inside_pressure
 
     def update_model(self, actual_inside_temperatureSHT, actual_inside_temperatureBMP, actual_humidity):
@@ -240,17 +246,17 @@ class Greenhouse:
 
         # Update for inside_temperatureSHT
         error_SHT = actual_inside_temperatureSHT - self.inside_temperatureSHT
-        self.kSHT += min(1,0.01 * error_SHT)  # Adjust gain slightly based on error
-        self.kSHT = min(1, self.kSHT) # Ensure gain stays within a reasonable range
-        self.kSHT = max(-1, self.kSHT)
+        self.kSHT += 0.01 * error_SHT  # Adjust gain slightly based on error
+        self.kSHT = min(5, self.kSHT) # Ensure gain stays within a reasonable range
+        self.kSHT = max(-5, self.kSHT)
         self.tau = max(1, self.tau - 0.1 * error_SHT)  # Adjust time constant, ensuring it stays positive
         self.inside_temperatureSHT = actual_inside_temperatureSHT  # Correct the predicted temperature
 
         # Update for inside_temperatureBMP
         error_BMP = actual_inside_temperatureBMP - self.inside_temperatureBMP
-        self.kBMP += min(1,0.01 * error_BMP)  # Adjust gain slightly based on error
-        self.kBMP = min(1, self.kBMP)  # Ensure gain stays within a reasonable range
-        self.kBMP = max(-1, self.kBMP)
+        self.kBMP += 0.01 * error_BMP  # Adjust gain slightly based on error
+        self.kBMP = min(5, self.kBMP)  # Ensure gain stays within a reasonable range
+        self.kBMP = max(-5, self.kBMP)
         self.inside_temperatureBMP = actual_inside_temperatureBMP
 
         # Update for inside_humidity
@@ -260,6 +266,9 @@ class Greenhouse:
 
         print(f"Updated inside conditions: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f},")
         print(f"Updated Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
+        self.update_iteration += 1
+        if self.update_iteration > 20:
+            self.activate_control = True
 
     def set_aircon_state(self, aircon_state):
         """Set the aircon state (on/off) during the simulation."""
