@@ -25,11 +25,24 @@ nodered(){
     if netstat -tulpn | grep ':1880' > /dev/null
     then
         echo "Node-RED is already running on port 1880."
+        cd m5stack-shana/digitaltwin-demo/node_red_dashboard/
+        curl -X POST http://localhost:1880/flows -H "Content-Type: application/json" --data "@node_red_digital_twin.json"
     else
         echo "Node-RED is not running on port 1880. Starting a new instance..."
-        node-red -p 1880  --json NodeRED.json&
+        node-red -p 1880  --json $BASEDIR/m5stack-shana/digitaltwin-demo/node_red_dashboard/node_red_digital_twin.json
+        cd $BASEDIR/m5stack-shana/digitaltwin-demo/node_red_dashboard/
+        curl -X POST http://localhost:1880/flows -H "Content-Type: application/json" --data "@node_red_digital_twin.json"
     fi
-    python3 NCAP.py -p
+}
+
+setup_heater_control(){
+    cd $BASEDIR/m5stack-shana/digitaltwin-demo/actuator
+    python3 heater.py --config $BASEDIR/m5stack-shana/digitaltwin-demo/config.yml
+}
+
+setup_sim(){
+    cd $BASEDIR/m5stack-shana/digitaltwin-demo/simulation
+    python3 sim_greenhouse.py --config $BASEDIR/m5stack-shana/digitaltwin-demo/config.yml
 }
 
 setup_local_server(){
@@ -97,6 +110,15 @@ case "$1" in
         ;;
     nodered)
         nodered
+        ;;
+    setup_local_server)
+        setup_local_server
+        ;;
+    setup_heater_control)
+        setup_heater_control
+        ;;
+    setup_sim)
+        setup_sim
         ;;
     all)
         unittests

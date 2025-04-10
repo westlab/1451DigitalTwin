@@ -40,11 +40,13 @@ TOPIC_HEATER_STATE = config["mqtt_topics"]["room_heater_state"]
 
 token = config["switchbot"]["token"]
 secret = config["switchbot"]["secret"]
+bot_id = config["switchbot"]["bot_id"]
+plug_id = config["switchbot"]["plug_id"]
 
 def turn_on_heater():
     switchbot = SwitchBot(token=token, secret=secret)
-    bot = switchbot.device(id='C9690A9783EC')
-    plug = switchbot.device(id='34B7DAD4C62E')
+    bot = switchbot.device(id=bot_id)
+    plug = switchbot.device(id=plug_id)
     plug.command('turn_off')
     sleep(1)
     plug.command('turn_on')
@@ -54,8 +56,8 @@ def turn_on_heater():
 
 def turn_off_heater():
     switchbot = SwitchBot(token=token, secret=secret)
-    bot = switchbot.device(id='C9690A9783EC')
-    plug = switchbot.device(id='34B7DAD4C62E')
+    bot = switchbot.device(id=bot_id)
+    plug = switchbot.device(id=plug_id)
     bot.press()
     sleep(1)
     plug.command('turn_off')
@@ -127,7 +129,7 @@ def heater_controller(
         print(f"Execution iteration {i}/{iterations}", flush=True)
         try:
             switchbot = SwitchBot(token=token, secret=secret)
-            plug = switchbot.device(id='34B7DAD4C62E')
+            plug = switchbot.device(id=plug_id)
             client.publish(TOPIC_HEATER_STATE, str(plug.status()['power']), qos=1)
         except Exception as e:
             print(f"Error: {e}", flush=True)

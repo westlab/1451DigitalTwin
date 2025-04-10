@@ -12,6 +12,8 @@ city : 'Kawasaki'
 switchbot:
   token: ''
   secret: ''
+  plug_id: '34B7DAD4C62E'
+  bot_id: 'C9690A9783EC'
 
 ### MQTT Topics
 mqtt_topics:
