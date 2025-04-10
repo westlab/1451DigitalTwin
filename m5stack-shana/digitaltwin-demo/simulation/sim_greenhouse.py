@@ -226,7 +226,7 @@ class Greenhouse:
         print(f"Predicted conditions {self.prediction_iteration} {self.activate_control}: TempSHT: {self.inside_temperatureSHT:.2f}, TempBMP: {self.inside_temperatureBMP:.2f}, Humidity: {self.inside_humidity:.2f}, Pressure: {self.inside_pressure:.2f}, outside: {self.outside_temperature:.2f}, ")
         print(f"Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
         print(f"Target temperature {self.target_temperature} inside temperature {self.inside_temperatureSHT}")
-        if self.activate_control and self.prediction_iteration % 10:
+        if self.activate_control and (self.prediction_iteration % 60) == 0:
             if self.target_temperature > self.inside_temperatureSHT:
                 self.set_heater_state(True)
                 self.set_aircon_state(False)
