@@ -47,27 +47,40 @@ Update m5stack-shana/digitaltwin-demo/config.yml with your configuration
 ### Linux PC
 
 1. Install dependencies
+
 ```
 cd REPO_DIR
 ./ci_tests.sh install_dependencies
 ```
+
 2. Setup mosquitto MQTT server
+
 ```
 cd REPO_DIR
 ./ci_tests.sh setup_local_server
 ```
+
 3. Setup nodered
+
 ```
 cd REPO_DIR
 ./ci_tests.sh nodered
 ```
+
 4. Setup heater control
+
 ```
 cd REPO_DIR
 ./ci_tests.sh setup_heater_control
 ```
+
 4. Setup sim control
+
 ```
 cd REPO_DIR
 ./ci_tests.sh setup_sim
 ```
+
+[Greenhouse Diagram](greenhouse.drawio)
+[Greenhouse Simulation Diagram](sim_greenhouse.drawio)
+[Actuator control Diagram](heater.drawio)
