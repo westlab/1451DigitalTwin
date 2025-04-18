@@ -43,6 +43,8 @@ secret = config["switchbot"]["secret"]
 bot_id = config["switchbot"]["bot_id"]
 plug_id = config["switchbot"]["plug_id"]
 
+client = None
+
 def turn_on_heater():
     switchbot = SwitchBot(token=token, secret=secret)
     bot = switchbot.device(id=bot_id)
@@ -69,14 +71,24 @@ def my_process_received_message(message):
     if message.topic == TOPIC_HEATER_CONTROL:
         if "on" in payload:
             turn_on_heater()
+            state = "on"
         elif "off" in payload:
             turn_off_heater()
+            state = "off"
+        client.publish(TOPIC_HEATER_STATE, get_json_actuator_message(state), qos=1)
 
 def get_local_time_string():
     """Returns the current local time as a string."""
     from datetime import datetime
     return datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
+def get_json_actuator_message(state):
+    """Constructs a JSON string with sensor data."""
+    return f"""{{
+        "Type": "REPLY",
+        "LocalTime": "{get_local_time_string()}",
+        "State": {state},
+    }}"""
 
 # Global flag to prevent multiple executions of mqtt_test_async
 mqtt_test_async_running = False
@@ -130,7 +142,7 @@ def heater_controller(
         try:
             switchbot = SwitchBot(token=token, secret=secret)
             plug = switchbot.device(id=plug_id)
-            client.publish(TOPIC_HEATER_STATE, str(plug.status()['power']), qos=1)
+            client.publish(TOPIC_HEATER_STATE, get_json_actuator_message(str(plug.status()['power'])), qos=1)
         except Exception as e:
             print(f"Error: {e}", flush=True)
         sleep(5)

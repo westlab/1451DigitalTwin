@@ -104,6 +104,15 @@ def get_xml_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure):
     </DEBUG>
 </TEDS>"""
 
+def get_json_actuator_message(state):
+    """Constructs a JSON string with sensor data."""
+    return f"""{{
+        "Type": "CMD",
+        "LocalTime": "{get_local_time_string()}",
+        "State": {state},
+    }}"""
+
+
 def prepare_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude=-10):
     # Prepare message in proper XML format with header
     #sensor_msg = get_json_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude)
@@ -243,15 +252,16 @@ class Greenhouse:
         print(f"Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
         print(f"Target temperature {self.target_temperature} inside temperature {self.inside_temperatureSHT}")
         if self.activate_control and (self.prediction_iteration % 60) == 0:
-            if self.target_temperature > self.inside_temperatureSHT:
+            DEADBAND = 0.5
+            if self.target_temperature - DEADBAND > self.inside_temperatureSHT:
                 self.set_heater_state(True)
                 self.set_aircon_state(False)
-            elif self.target_temperature == self.inside_temperatureBMP:
-                self.set_heater_state(False)
-                self.set_aircon_state(False)
-            elif self.target_temperature < self.inside_temperatureSHT:
+            elif self.target_temperature + DEADBAND < self.inside_temperatureSHT:
                 self.set_heater_state(False)
                 self.set_aircon_state(True)
+            #else:
+            #    self.set_heater_state(False)
+            #    self.set_aircon_state(False)
         self.prediction_iteration += 1
         return self.inside_temperatureSHT, self.inside_temperatureBMP, self.inside_humidity, self.inside_pressure
 
@@ -297,9 +307,9 @@ class Greenhouse:
         if self.heater_state != heater_state:
             self.heater_state = heater_state
             if self.heater_state == True:
-                payload = "on"
+                payload = get_json_actuator_message("on")
             else:
-                payload = "off"
+                payload = get_json_actuator_message("off")
             self.client.publish(self.actuator_control_topic, payload)
             print(f"Set heater state to {payload}")
 

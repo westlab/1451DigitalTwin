@@ -27,7 +27,7 @@ const bool low_power_mode = false; // low power mode
 #endif
 
 // device name
-const char* device_name = "core_1";
+const char* device_name = "core_2";
 // Wi-Fi settings
 const char* ssid = "GL-AR750-310";
 const char* password = "goodlife"; 
@@ -116,7 +116,12 @@ void setup() {
     setupSensor();
     setupWifi();
     mqttclient.setServer(mqtt_server, mqtt_port);
-    mqttclient.connect(ip_address.c_str());
+    mqttclient.setCallback(mqttCallback);
+    if (mqttclient.connect(ip_address.c_str())) {
+        mqttclient.subscribe(mqtt_topic_name.c_str());
+        Serial.print("Subscribed to topic: ");
+        Serial.println(mqtt_topic_name);
+    }
     if (low_power_mode){
         M5.Lcd.writecommand(ILI9341_DISPOFF);
         M5.Lcd.setBrightness(0);
@@ -234,9 +239,36 @@ bool publishDataMQTT(){
     return false;
 }
 
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+    String message;
+    for (unsigned int i = 0; i < length; i++) {
+        message += (char)payload[i];
+    }
+    Serial.print("Message received on topic: ");
+    Serial.println(topic);
+    Serial.print("Message: ");
+    Serial.println(message);
+
+    // Check if the message contains "CMD"
+    if (message.indexOf("REQ_DATA") != -1) {
+        Serial.println("REQ_DATA detected, publishing data...");
+        readSensor();
+        publishDataMQTT();
+    }
+}
+
+
 void loop() {
     static unsigned long last_display_update = 0; // Track the last display update time
     unsigned long current_time = millis();
+    if (!mqttclient.connected()) {
+        mqtt_publish_status = false;
+        if (mqttclient.connect(ip_address.c_str())) {
+            mqttclient.subscribe(mqtt_topic_name.c_str()); // Re-subscribe if disconnected
+        }
+    }
+    mqttclient.loop(); // Process incoming MQTT messages
+
     if (readSensor()) {
         if (!mqttclient.connected()) {
             mqtt_publish_status = false;
