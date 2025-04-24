@@ -19,7 +19,7 @@ import requests  # Add this import for making HTTP requests
 import yaml
 
 parser = argparse.ArgumentParser(description="Heater Controller")
-parser.add_argument("--config", help="Config file path", default="../config.yaml")
+parser.add_argument("--config", help="Config file path", default="../config.yml")
 args = parser.parse_args()
 
 with open(args.config, "r") as config_file:
@@ -89,6 +89,8 @@ def get_json_actuator_message(state):
         "LocalTime": "{get_local_time_string()}",
         "State": {state},
     }}"""
+
+
 
 # Global flag to prevent multiple executions of mqtt_test_async
 mqtt_test_async_running = False

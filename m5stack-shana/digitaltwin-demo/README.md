@@ -82,6 +82,8 @@ cd REPO_DIR
 ```
 ## Notes
 
+Important Note: As this is a FOPTD There is a risk of transient behavior due to gain values. Therefore, only execute the actuators once model is stable. If your gain values are too unstable. Conver the FOPTD model to PID based model.
+
 ### Greenhouse class
 
 ![Greenhouse Diagram](greenhouse.png)

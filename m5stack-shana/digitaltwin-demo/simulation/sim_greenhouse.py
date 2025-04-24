@@ -21,7 +21,7 @@ store_data_csv=False
 
 
 parser = argparse.ArgumentParser(description="Greenhouse simulator")
-parser.add_argument("--config", help="Config file path", default="../config.yaml")
+parser.add_argument("--config", help="Config file path", default="../config.yml")
 args = parser.parse_args()
 
 with open(args.config, "r") as config_file:
@@ -38,13 +38,16 @@ SIM_CITY = config.get("city", "Kawasaki")
 
 # MQTT Topics
 TOPIC_ALL_DATA = config["mqtt_topics"]["all_data"]
-TOPIC_DT_CONTROL = config["mqtt_topics"]["digital_twin_control"]
+TOPIC_DT_CONTROL = config["mqtt_topics"]["digital_twin_control_input"]
 TOPIC_DT_SENSOR_DATA = config["mqtt_topics"]["digital_twin_sensor_data"]
 TOPIC_DT_HEATER_STATE = config["mqtt_topics"]["digital_twin_heater_state"]
 TOPIC_HEATER_CONTROL = config["mqtt_topics"]["room_heater_control"]
 TOPIC_HEATER_STATE = config["mqtt_topics"]["room_heater_state"]
 TOPIC_CORE1_SENSOR_DATA = config["mqtt_topics"]["sensor_data_core_1"]
 TOPIC_CORE2_SENSOR_DATA = config["mqtt_topics"]["sensor_data_core_2"]
+
+TARGET_TEMPERATURE = config.get("target_temp",23)
+DEADBAND = config.get("deadband",2)
 
 def process_json_sensor_message(message):
     """Process message in JSON format."""
@@ -112,6 +115,12 @@ def get_json_actuator_message(state):
         "State": {state},
     }}"""
 
+def request_sensor_data_message():
+    data_request = f"""{{
+        "Type": "REQ_DATA",
+        "LocalTime": "{get_local_time_string()}",
+    }}"""
+    
 
 def prepare_sensor_message(device_name, tempSHT, tempBMP, humidity, pressure, altitude=-10):
     # Prepare message in proper XML format with header
@@ -144,7 +153,7 @@ def digital_twin_sim(
     
     greenhouse = Greenhouse(
         mqtt_client=client,
-        target_temperature=25,
+        target_temperature=TARGET_TEMPERATURE,
         city=SIM_CITY,
         aircon_state=False,
         heater_state=False,
@@ -170,15 +179,20 @@ def digital_twin_sim(
     client.loop_start()
     iterations = float('inf') if "inf" in iterations.lower() else int(iterations)
     i = 0
-    
+    last_sensor_data_iteration = 0
     while i < iterations:
         i += 1
         #print(f"Execution iteration {i}/{iterations}", flush=True)
-        if i%60*20 == 0:
+        if i%(60*20) == 0:
             new_outside_temperature = get_current_temperature(greenhouse.city)
             if new_outside_temperature is not None:
                 greenhouse.outside_temperature = new_outside_temperature
             print(f"Outside temperature: {greenhouse.outside_temperature}")
+        if i % 60 == 0:
+            if last_sensor_data_iteration == greenhouse.update_iteration:
+                print(f"Sensor data not received for {i} iterations. Requesting sensor data.")
+                greenhouse.request_sensor_data()
+            last_sensor_data_iteration = greenhouse.update_iteration
         greenhouse.predict_system()
         greenhouse.publish_digital_twin()
         sleep(1)
@@ -218,6 +232,11 @@ class Greenhouse:
         self.prediction_iteration = 0
         self.activate_control = False
 
+    def initial_setup(self):
+        """Initial setup for the greenhouse simulator."""
+        self.set_heater_state(False)
+        self.set_aircon_state(False)
+
     def predict_system(self):
         """Predict the next inside conditions based on the FOPTD model."""
         current_time = time()
@@ -252,11 +271,10 @@ class Greenhouse:
         print(f"Gain values: kSHT: {self.kSHT:.2f}, kBMP: {self.kBMP:.2f}, kHumidity: {self.kHumidity:.2f}, kPressure: {self.kPressure:.2f}")
         print(f"Target temperature {self.target_temperature} inside temperature {self.inside_temperatureSHT}")
         if self.activate_control and (self.prediction_iteration % 60) == 0:
-            DEADBAND = 0.5
-            if self.target_temperature - DEADBAND > self.inside_temperatureSHT:
+            if self.inside_temperatureSHT < self.target_temperature - DEADBAND:
                 self.set_heater_state(True)
                 self.set_aircon_state(False)
-            elif self.target_temperature + DEADBAND < self.inside_temperatureSHT:
+            elif self.inside_temperatureSHT > self.target_temperature + DEADBAND:
                 self.set_heater_state(False)
                 self.set_aircon_state(True)
             #else:
@@ -295,6 +313,11 @@ class Greenhouse:
         self.update_iteration += 1
         if self.update_iteration > 20:
             self.activate_control = True
+
+    def request_sensor_data(self):
+        payload = request_sensor_data_message()
+        self.client.publish(TOPIC_CORE1_SENSOR_DATA, payload)
+        self.client.publish(TOPIC_CORE2_SENSOR_DATA, payload)
 
     def set_aircon_state(self, aircon_state):
         """Set the aircon state (on/off) during the simulation."""

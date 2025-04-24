@@ -15,6 +15,11 @@ switchbot:
   plug_id: '34B7DAD4C62E'
   bot_id: 'C9690A9783EC'
 
+# 21-23-25
+# defaults
+target_temp: 23
+deadband: 2
+
 ### MQTT Topics
 mqtt_topics:
   all_data: "_1451DT/#"
