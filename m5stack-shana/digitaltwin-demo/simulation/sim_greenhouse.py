@@ -316,6 +316,7 @@ class Greenhouse:
 
     def request_sensor_data(self):
         payload = request_sensor_data_message()
+        print(f"Requesting sensor data: {TOPIC_CORE1_SENSOR_DATA} {TOPIC_CORE2_SENSOR_DATA}  {payload}")
         self.client.publish(TOPIC_CORE1_SENSOR_DATA, payload)
         self.client.publish(TOPIC_CORE2_SENSOR_DATA, payload)
 
@@ -333,6 +334,7 @@ class Greenhouse:
                 payload = get_json_actuator_message("on")
             else:
                 payload = get_json_actuator_message("off")
+            #print(f"Publishing: {self.actuator_control_topic} {payload}")
             self.client.publish(self.actuator_control_topic, payload)
             print(f"Set heater state to {payload}")
 
@@ -340,13 +342,15 @@ class Greenhouse:
     def publish_digital_twin(self):
         """Publish the current inside temperature to the specified MQTT topic."""
         sensor_msg = prepare_sensor_message("digitaltwin", self.inside_temperatureSHT, self.inside_temperatureBMP, self.inside_humidity, self.inside_pressure)
+        ##print(f"Publishing:  {self.dt_sensor_topic} {sensor_msg}")
         self.client.publish(self.dt_sensor_topic, sensor_msg)
         if self.heater_state == True:
-            payload = "on"
+            payload = get_json_actuator_message("on")
         else:
-            payload = "off"
+            payload = get_json_actuator_message("off")
+        #print(f"Publishing:  {self.dt_actuator_topic} {payload}")
         self.client.publish(self.dt_actuator_topic, payload)
-        print(f"Published temperature message to {self.dt_sensor_topic}")
+        #print(f"Published temperature message to {self.dt_sensor_topic}")
     
     def process_received_message(self, message):
         payload = str(message.payload.decode("utf-8"))
