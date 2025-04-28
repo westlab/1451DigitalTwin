@@ -122,6 +122,102 @@ pprint.pprint([topiccopres, topicd0opres])
 vhumid = {}
 vtemp = {}
 
+#binblk_anno = {
+#    'netSvcType'        : {'offset': 0, 'type': '<B'}, #1
+#    'netSvcId'          : {'offset': 1, 'type': '<B'}, #1
+#    'msgType'           : {'offset': 2, 'type': '<B'}, #3
+#    'msgLength'         : {'offset': 3, 'type': '<H'},
+#    'ncapId'            : {'offset': 5, 'type': '<16s'},
+#    'ncapName'          : {'offset': 21, 'type': '<16s'},
+#    'addressType'       : {'offset': 37, 'type': '<B'}, #1 IPv4
+#    'ncapAddress'       : {'offset': 38, 'type': '<4B'},
+#}
+
+#binblk_tim_announcement = {
+#    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #2
+#    'msgType'           : {'offset' : 2, 'type': '<B'}, #3
+#    'msgLength'         : {'offset' : 3, 'type': '<H'},
+#    'ncapId'            : {'offset' : 5, 'type': '<16s'},
+#    'timId'             : {'offset' : 21, 'type': '<16s'},
+#    'timName'           : {'offset' : 37, 'type': '<16s'},
+#}
+
+#binblk_tim_transducer_announcement = {
+#    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+#    'netSvcID'          : {'offset' : 1, 'type': '<B'}, #3
+#    'msgType'           : {'offset' : 2, 'type': '<B'}, #3
+#    'msgLength'         : {'offset' : 3, 'type': '<H'},
+#    'ncapId'            : {'offset' : 5, 'type': '<16s'},
+#    'timId'             : {'offset' : 21, 'type': '<16s'},
+#    'transducerChannelId'   : {'offset' : 37, 'type': '<16s'},
+#    'transducerChannelName' : {'offset' : 53, 'type': '<16s'},
+#}
+
+binblk_discovery_cmd = {
+    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #4
+    'msgType'           : {'offset' : 2, 'type': '<B'}, #1
+    'msgLength'         : {'offset' : 3, 'type': '<H'},
+    'appId'             : {'offset' : 5, 'type': '<16s'},
+    'timeout'           : {'offset' : 21, 'type': '<Q'},
+}
+
+#binblk_discovery_rep = {
+#    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #4
+#    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
+#    'msgLength'         : {'offset' : 3, 'type': '<H'},
+#    'errorCode'         : {'offset' : 5, 'type': '<H'},
+#    'appId'             : {'offset' : 7, 'type': '<16s'},
+#    'ncapId'            : {'offset' : 23, 'type': '<16s'},
+#    'ncapName'          : {'offset' : 39, 'type': '<16s'},
+#    'addressType'       : {'offset' : 55, 'type': '<B'}, #1 IPv4
+#    'ncapAddress'       : {'offset' : 56, 'type': '<4B'},
+#}
+
+binblk_tim_discovery_cmd = {
+    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #5
+    'msgType'           : {'offset' : 2, 'type': '<B'}, #1
+    'msgLength'         : {'offset' : 3, 'type': '<H'},
+    'ncapId'            : {'offset' : 5, 'type': '<16s'},
+    'timeout'           : {'offset' : 21, 'type': '<Q'},
+}
+
+#binblk_tim_discovery_rep = {
+#    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #5
+#    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
+#    'msgLength'         : {'offset' : 3, 'type': '<H'},
+#    'errorCode'         : {'offset' : 5, 'type': '<H'},
+#    'numOfTims'         : {'offset' : 7, 'type': '<2s'}, #num = 3
+#    'timIds'            : {'offset' : 9, 'type': '<48s'}, #array x 3
+#    'timNames'          : {'offset' : 57, 'type': '<48s'}, #array x 3
+#}
+
+binblk_tim_transducer_discovery_cmd = {
+    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #6
+    'msgType'           : {'offset' : 2, 'type': '<B'}, #1
+    'msgLength'         : {'offset' : 3, 'type': '<H'},
+    'ncapId'            : {'offset' : 5, 'type': '<16s'},
+    'timId'             : {'offset' : 21, 'type': '<16s'},
+    'timeout'           : {'offset' : 37, 'type': '<Q'},
+}
+
+#binblk_tim_transducer_discovery_rep = {
+#    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
+#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #6
+#    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
+#    'msgLength'         : {'offset' : 3, 'type': '<H'},
+#    'errorCode'         : {'offset' : 5, 'type': '<H'},
+#    'numOfTransducerChannels'   : {'offset' : 7, 'type': '<2s'}, #num
+#    'transducerChannelIds'      : {'offset' : 9, 'type': '<16s'}, #array
+#    'transducerChannelNames'    : {'offset' : 25, 'type': '<16s'}, #array
+#
+#}
+
 binblk_read = {
     'netSvcType'        : {'offset': 0,  'type': '<B'},
     'netSvcID'          : {'offset': 1,  'type': '<B'},
@@ -232,6 +328,12 @@ bnull = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 
 def s16(value):
     return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
+
+def string_to_16byte_array(a: str) -> bytearray:
+    # encode strings to bytearray (supposed to be input simple ASCII/latin-1 (UTF-8 character will be more than 1 byte)
+    encoded = a.encode('utf-8')[:16]  # limit less than 16 bytes
+    padded = encoded.ljust(16, b'\x00')  # zero padding upto 16 bytes
+    return bytearray(padded)
 
 def on_connect(client, userdata, flags, rc):
     print('[CONNECTED {}]'.format(rc))
@@ -357,7 +459,38 @@ def on_message(mqttc, obj, msg):
     elif stopic[1]+'/' == confdata['tomd0op']:
         print("D0")
         mline = {}
-        if msg[0:3].encode() == b'\x02\x01\x01':
+        if msg[0:3].encode() == b'\x01\x04\x01':
+            print("Receive Discover")
+            for k, v in binblk_discoverty_cmd.items():
+                t_offset = v['offset']
+                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            pprint.pprint(mline)
+            print("appId: ", mline['appId'])
+            sbp = bytearray([0x1, 0x4, 0x2, 0x0, 0x0, 0x0, 0x0])
+            mline['ncapId'] = buuid0
+            client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+string_to_16byte_array(confdata['loc'])+bytearray([0x1, 10, 1, 1, 1]))
+        elif msg[0:3].encode() == b'\x01\x05\x01':
+            print("Receive TIM Discover")
+            for k, v in binblk_tim_discoverty_cmd.items():
+                t_offset = v['offset']
+                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            pprint.pprint(mline)
+            print("appId: ", mline['appId'])
+            sbp = bytearray([0x1, 0x5, 0x2, 0x0, 0x0, 0x0, 0x0, 0x3])
+            mline['ncapId'] = buuid0
+            client.publish(topicd0opres, sbp+uuid0+uuid1+uuid2+string_to_16byte_array('Temp')+string_to_16byte_array('Humid')+string_to_16byte_array('Servo'))
+        elif msg[0:3].encode() == b'\x01\x06\x01':
+            print("Receive XDCR_CH Discover")
+            for k, v in binblk_tim_transducer_discoverty_cmd.items():
+                t_offset = v['offset']
+                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            pprint.pprint(mline)
+            print("appId: ", mline['appId'])
+            sbp = bytearray([0x1, 0x6, 0x2, 0x0, 0x0, 0x0, 0x0, 0x1])
+            mline['ncapId'] = buuid0
+            client.publish(topicd0opres, sbp+uuid0+string_to_16byte_array('CH0'))
+        elif msg[0:3].encode() == b'\x02\x01\x01':
+            print("Receive Sync Read")
             for k, v in binblk_read.items():
                 t_offset = v['offset']
                 mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
@@ -379,6 +512,7 @@ def on_message(mqttc, obj, msg):
             else:
                 print("ncapId Error")
         elif msg[0:3].encode() == b'\x02\x07\x01':
+            print("Receive Sync Write")
             for k, v in binblk_write.items():
                 t_offset = v['offset']
                 mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
@@ -404,6 +538,7 @@ def on_message(mqttc, obj, msg):
             else:
                 print("ncapId Error")
         elif msg[0:3].encode() == b'\x03\x02\x01':
+            print("Receive TEDS")
             for k, v in binblk_teds.items():
                 t_offset = v['offset']
                 mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
