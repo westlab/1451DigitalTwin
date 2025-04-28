@@ -49,6 +49,10 @@ parser.add_argument('-d', '--ddisable',
     action = 'store_true',
     help = 'D disable (disable D messages)',
     default = False)
+parser.add_argument('-a', '--announce',
+    action = 'store_true',
+    help = 'Announcement Msg (create and send Announcement Message)',
+    default = False)
 
 args = parser.parse_args()
 vflag = False
@@ -64,6 +68,9 @@ if args.pseudo:
 dflag = True
 if args.ddisable:
     dflag = False
+aflag = False
+if args.announce:
+    aflag = True
 
 f = open(args.config, "r+")
 confdata = yaml.safe_load(f)
@@ -705,3 +712,8 @@ if __name__ == '__main__':
                 GPIO.cleanup()
             else:
                 sys.exit(0)
+        
+        if aflag == True:
+            sbp = bytearray([0x1, 0x1, 0x3, 0x0, 0x0])
+            mline['ncapId'] = buuid0
+            client.publish(topicd0opres, sbp+uuid0+string_to_16byte_array(confdata['loc'])+bytearray([0x1, 10, 1, 1, 1]))
