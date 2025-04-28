@@ -714,6 +714,7 @@ if __name__ == '__main__':
                 sys.exit(0)
         
         if aflag == True:
+            print("Announce")
             sbp = bytearray([0x1, 0x1, 0x3, 0x0, 0x0])
             mline['ncapId'] = buuid0
             client.publish(topicd0opres, sbp+uuid0+string_to_16byte_array(confdata['loc'])+bytearray([0x1, 10, 1, 1, 1]))
