@@ -17,7 +17,6 @@ import temporenc
 import RPi.GPIO as GPIO
 import dht11
 import time
-import datetime
 import random
 
 parser = argparse.ArgumentParser(
@@ -46,6 +45,10 @@ parser.add_argument('-c', '--config',
     help = 'specify YAML config file',
     default = './config.yml',
     type = str)
+parser.add_argument('-d', '--ddisable',
+    action = 'store_true',
+    help = 'D disable (disable D messages)',
+    default = False)
 
 args = parser.parse_args()
 vflag = False
@@ -58,6 +61,9 @@ sqflag = False
 pflag = False
 if args.pseudo:
     pflag = True
+dflag = True
+if args.ddisable:
+    dflag = False
 
 f = open(args.config, "r+")
 confdata = yaml.safe_load(f)
@@ -86,12 +92,15 @@ if not confdata.get('loc'):
     confdata['loc'] = 'LOC-NCAP-SERVER'
 if not confdata.get('locclient'):
     confdata['locclient'] = 'LOC-NCAP-CLIENT'
-topicdop = confdata['spfx']+confdata['tomdop']+confdata['loc']+'/' # publish
-topicdop = confdata['spfx']+confdata['tomdop']+confdata['loc']+'/' # publish
-topiccop = confdata['spfx']+confdata['tomcop']+confdata['loc'] # subscribe
-topiccopres = confdata['spfx']+confdata['tomcop']+confdata['locclient'] # publish
-topicd0op = confdata['spfx']+confdata['tomd0op']+confdata['loc'] # subscribe
-topicd0opres = confdata['spfx']+confdata['tomd0op']+confdata['locclient'] # publish
+topicdanno = confdata['spfx']+confdata['tomdop']+'.A/'+confdata['ncapname'] # publish
+topicdannorecv = confdata['spfx']+confdata['tomdop']+'.A/#' # subscribe
+topiccanno = confdata['spfx']+confdata['tomcop']+'.A/'+confdata['ncapname'] # publish
+topiccannorecv = confdata['spfx']+confdata['tomcop']+'.A/#' # subscribe
+topicdop = confdata['spfx']+confdata['tomdop']+confdata['loc']+'/'+confdata['ncapname'] # publish
+topiccop = confdata['spfx']+confdata['tomcop']+confdata['loc']+'/'+confdata['ncapname'] # subscribe
+topiccopres = confdata['spfx']+confdata['tomcop']+confdata['locclient']+'/'+confdata['appname'] # publish
+topicd0op = confdata['spfx']+confdata['tomd0op']+confdata['loc']+'/'+confdata['ncapname'] # subscribe
+topicd0opres = confdata['spfx']+confdata['tomd0op']+confdata['locclient']+'/'+confdata['ncapname'] # publish
 if not confdata.get('TEMPTEDS'):
     confdata['TEMPTEDS'] = 'TEMPTEDS';
 if not confdata.get('HUMIDTEDS'):
@@ -226,7 +235,7 @@ def s16(value):
 
 def on_connect(client, userdata, flags, rc):
     print('[CONNECTED {}]'.format(rc))
-    mqtt_sub_topics = [(topiccop, 0), (topicd0op, 0)]
+    mqtt_sub_topics = [(topiccop, 0), (topicd0op, 0), (topicdannorecv, 0), (topiccannorecv, 0)]
     pprint.pprint(mqtt_sub_topics)
     client.subscribe(mqtt_sub_topics)
 
@@ -454,12 +463,13 @@ if __name__ == '__main__':
                     if result.is_valid():
                         vtemp[0] = result.temperature
                         vhumid[0] = result.humidity
-                        print("Last valid input: " + str(datetime.datetime.now()))
-                        print("Temperature: %-3.1f C" % vtemp[0])
-                        print("Humidity: %-3.1f %%" % vhumid[0])
-                        client.publish(topicdop+str(0)+'/TIME', str(datetime.datetime.now()))
-                        client.publish(topicdop+str(0)+'/TEMP', vtemp[0])
-                        client.publish(topicdop+str(0)+'/HUMID', vhumid[0])
+                        if dflag == True:
+                            print("Last valid input: " + str(datetime.datetime.now()))
+                            print("Temperature: %-3.1f C" % vtemp[0])
+                            print("Humidity: %-3.1f %%" % vhumid[0])
+                            client.publish(topicdop+str(0)+'/TIME', str(datetime.datetime.now()))
+                            client.publish(topicdop+str(0)+'/TEMP', vtemp[0])
+                            client.publish(topicdop+str(0)+'/HUMID', vhumid[0])
                 else:
                     vtemp[0] = random.randrange(100,300)/10
                     vhumid[0] = random.randrange(200,700)/10
