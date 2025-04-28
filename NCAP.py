@@ -705,16 +705,14 @@ if __name__ == '__main__':
                     client.publish(topicdop+str(0)+'/TIME', str(datetime.datetime.now()))
                     client.publish(topicdop+str(0)+'/TEMP', vtemp[0])
                     client.publish(topicdop+str(0)+'/HUMID', vhumid[0])
-                    time.sleep(1)
+                time.sleep(1)
+                if aflag == True:
+                    print("Announce")
+                    sbp = bytearray([0x1, 0x1, 0x3, 0x0, 0x0])
+                    client.publish(topicd0opres, sbp+buuid0+string_to_16byte_array(confdata['loc'])+bytearray([0x1, 10, 1, 1, 1]))
         except KeyboardInterrupt:
             print("Cleanup")
             if pflag == False:
                 GPIO.cleanup()
             else:
                 sys.exit(0)
-        
-        if aflag == True:
-            print("Announce")
-            sbp = bytearray([0x1, 0x1, 0x3, 0x0, 0x0])
-            mline['ncapId'] = buuid0
-            client.publish(topicd0opres, sbp+uuid0+string_to_16byte_array(confdata['loc'])+bytearray([0x1, 10, 1, 1, 1]))
