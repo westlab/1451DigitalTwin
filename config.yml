@@ -11,15 +11,18 @@ mqttport: 1883
 spfx: _1451.1.6/
 tomdop: D/
 tomcop: C/
+tomcaop: C.A
 tomd0op: D0/
+tomd0aop: D0.A
 # Does not need / in the end
 #loc: OUC-LEC/2023/west/ncap0
 #locclient: OUC-LEC/2023/west/application0
 ncapname: ncap0
-appname: application0
+#appname: appl0
+appname: ncap0
 # do not include last / it is concatinated with ncap or appname with '/'
-loc: 99BINDTEST/west
-locclient: 99BINDTEST/west
+loc: 99BINDTEST
+locclient: 99BINDTEST
 # TEDS
 TEMPTEDS: '<?xml version="1.0" encoding="UTF-8"?> <TEDS ID="[v03]"> <BasicTEDS> <Manufacturer>Dewesoft</Manufacturer> <Model>1</Model> <VersionLetter>A</VersionLetter> <VersionNumber>1</VersionNumber> <SerialNumber>1</SerialNumber> </BasicTEDS> <TEDS-Code length="40">6A4000200401000098D0421F00000000 00000012040000120400001204000000 C34800000000E000</TEDS-Code> <Info-Section EditorVersion="Dewesoft TedsEditor V2.2.12"> <InfoLine16>2023/05/22 0:25:06: Templates cleared by User.</InfoLine16> <InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17> </EditorActivity> <DEBUG>TEMP</DEBUG> </Info-Section> </TEDS>'
 HUMIDTEDS: '<?xml version="1.0" encoding="UTF-8"?> <TEDS ID="[v03]"> <BasicTEDS> <Manufacturer>UnknownID(109)</Manufacturer> <Model>1</Model> <VersionLetter>A</VersionLetter> <VersionNumber>1</VersionNumber> <SerialNumber>2</SerialNumber> </BasicTEDS> <TEDS-Code length="31">6D4000200402000080A0000000000000 C8420000000000869100000000C001</TEDS-Code> <Info-Section EditorVersion="Dewesoft TedsEditor V2.2.12"> </EditorActivity> <DEBUG>HUMID</DEBUG> </Info-Section> </TEDS>'

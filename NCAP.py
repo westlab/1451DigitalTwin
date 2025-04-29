@@ -93,21 +93,23 @@ if not confdata.get('tomdop'):
     confdata['tomdop'] = 'D/'
 if not confdata.get('tomcop'):
     confdata['tomcop'] = 'C/'
+if not confdata.get('tomcaop'):
+    confdata['tomcaop'] = 'C.A/'
 if not confdata.get('tomd0op'):
     confdata['tomd0op'] = 'D0/'
+if not confdata.get('tomd0aop'):
+    confdata['tomd0aop'] = 'D0.A/'
 if not confdata.get('loc'):
     confdata['loc'] = 'LOC-NCAP-SERVER'
 if not confdata.get('locclient'):
     confdata['locclient'] = 'LOC-NCAP-CLIENT'
-topicdanno = confdata['spfx']+confdata['tomdop']+'.A/'+confdata['ncapname'] # publish
-topicdannorecv = confdata['spfx']+confdata['tomdop']+'.A/#' # subscribe
-topiccanno = confdata['spfx']+confdata['tomcop']+'.A/'+confdata['ncapname'] # publish
-topiccannorecv = confdata['spfx']+confdata['tomcop']+'.A/#' # subscribe
+topicdanno = confdata['spfx']+confdata['tomd0aop'] # publish
+topiccanno = confdata['spfx']+confdata['tomcaop'] # publish
 topicdop = confdata['spfx']+confdata['tomdop']+confdata['loc']+'/'+confdata['ncapname'] # publish
 topiccop = confdata['spfx']+confdata['tomcop']+confdata['loc']+'/'+confdata['ncapname'] # subscribe
 topiccopres = confdata['spfx']+confdata['tomcop']+confdata['locclient']+'/'+confdata['appname'] # publish
 topicd0op = confdata['spfx']+confdata['tomd0op']+confdata['loc']+'/'+confdata['ncapname'] # subscribe
-topicd0opres = confdata['spfx']+confdata['tomd0op']+confdata['locclient']+'/'+confdata['ncapname'] # publish
+topicd0opres = confdata['spfx']+confdata['tomd0op']+confdata['locclient']+'/'+confdata['appname'] # publish
 if not confdata.get('TEMPTEDS'):
     confdata['TEMPTEDS'] = 'TEMPTEDS';
 if not confdata.get('HUMIDTEDS'):
@@ -125,6 +127,8 @@ if not confdata.get('SERVOTEDS'):
 if not confdata.get('SECURITYBINTEDS'):
     confdata['TEMPTEDS'] = 'SECURITYBINTEDS';
 #'_1451.1.6(SPFX)/D0(TOM)/LOC'
+print("Topics for announce")
+pprint.pprint([topiccanno, topicdanno])
 print("Topics for subscribe")
 pprint.pprint([topiccop, topicd0op])
 print("Topics for publish")
@@ -167,7 +171,7 @@ vtemp = {}
 
 binblk_discovery_cmd = {
     'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
-    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #4
+    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #8
     'msgType'           : {'offset' : 2, 'type': '<B'}, #1
     'msgLength'         : {'offset' : 3, 'type': '<H'},
     'appId'             : {'offset' : 5, 'type': '<16s'},
@@ -176,7 +180,7 @@ binblk_discovery_cmd = {
 
 #binblk_discovery_rep = {
 #    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
-#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #4
+#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #8
 #    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
 #    'msgLength'         : {'offset' : 3, 'type': '<H'},
 #    'errorCode'         : {'offset' : 5, 'type': '<H'},
@@ -189,7 +193,7 @@ binblk_discovery_cmd = {
 
 binblk_tim_discovery_cmd = {
     'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
-    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #5
+    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #9
     'msgType'           : {'offset' : 2, 'type': '<B'}, #1
     'msgLength'         : {'offset' : 3, 'type': '<H'},
     'ncapId'            : {'offset' : 5, 'type': '<16s'},
@@ -198,7 +202,7 @@ binblk_tim_discovery_cmd = {
 
 #binblk_tim_discovery_rep = {
 #    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
-#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #5
+#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #9
 #    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
 #    'msgLength'         : {'offset' : 3, 'type': '<H'},
 #    'errorCode'         : {'offset' : 5, 'type': '<H'},
@@ -209,7 +213,7 @@ binblk_tim_discovery_cmd = {
 
 binblk_tim_transducer_discovery_cmd = {
     'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
-    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #6
+    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #10
     'msgType'           : {'offset' : 2, 'type': '<B'}, #1
     'msgLength'         : {'offset' : 3, 'type': '<H'},
     'ncapId'            : {'offset' : 5, 'type': '<16s'},
@@ -219,7 +223,7 @@ binblk_tim_transducer_discovery_cmd = {
 
 #binblk_tim_transducer_discovery_rep = {
 #    'netSvcType'        : {'offset' : 0, 'type': '<B'}, #1
-#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #6
+#    'netSvcId'          : {'offset' : 1, 'type': '<B'}, #10
 #    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
 #    'msgLength'         : {'offset' : 3, 'type': '<H'},
 #    'errorCode'         : {'offset' : 5, 'type': '<H'},
@@ -381,7 +385,7 @@ def string_to_16byte_array(a: str) -> bytearray:
 
 def on_connect(client, userdata, flags, rc):
     print('[CONNECTED {}]'.format(rc))
-    mqtt_sub_topics = [(topiccop, 0), (topicd0op, 0), (topicdannorecv, 0), (topiccannorecv, 0)]
+    mqtt_sub_topics = [(topiccop, 0), (topicd0op, 0)]
     pprint.pprint(mqtt_sub_topics)
     client.subscribe(mqtt_sub_topics)
 
@@ -527,36 +531,42 @@ def on_message(mqttc, obj, msg):
     elif stopic[1]+'/' == confdata['tomd0op']:
         print("D0")
         mline = {}
-        if msg[0:3].encode() == b'\x01\x04\x01':
+        if msg[0:3].encode() == b'\x01\x08\x01':
             print("Receive Discover")
-            for k, v in binblk_discoverty_cmd.items():
+            for k, v in binblk_discovery_cmd.items():
                 t_offset = v['offset']
                 mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
             pprint.pprint(mline)
             print("appId: ", mline['appId'])
-            sbp = bytearray([0x1, 0x4, 0x2, 0x0, 0x0, 0x0, 0x0])
+            sbp = bytearray([0x1, 0x8, 0x2, 0x0, 0x0, 0x0, 0x0])
             mline['ncapId'] = buuid0
-            client.publish(topicd0opres, sbp+mline['appId']+mline['ncapId']+string_to_16byte_array(confdata['loc'])+bytearray([0x1, 10, 1, 1, 1]))
-        elif msg[0:3].encode() == b'\x01\x05\x01':
+            binstr = sbp+mline['appId']+mline['ncapId']+string_to_16byte_array(confdata['ncapname'])+bytearray([0x1, 10, 1, 1, 1]);
+            binstr = insert_length(binstr, 3)
+            client.publish(topicd0opres, binstr);
+        elif msg[0:3].encode() == b'\x01\x09\x01':
             print("Receive TIM Discover")
             for k, v in binblk_tim_discoverty_cmd.items():
                 t_offset = v['offset']
                 mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
             pprint.pprint(mline)
             print("appId: ", mline['appId'])
-            sbp = bytearray([0x1, 0x5, 0x2, 0x0, 0x0, 0x0, 0x0, 0x3])
+            sbp = bytearray([0x1, 0x9, 0x2, 0x0, 0x0, 0x0, 0x0, 0x3])
             mline['ncapId'] = buuid0
-            client.publish(topicd0opres, sbp+uuid0+uuid1+uuid2+string_to_16byte_array('Temp')+string_to_16byte_array('Humid')+string_to_16byte_array('Servo'))
-        elif msg[0:3].encode() == b'\x01\x06\x01':
+            binstr = sbp+uuid0+uuid1+uuid2+string_to_16byte_array('Temp')+string_to_16byte_array('Humid')+string_to_16byte_array('Servo')
+            binstr = insert_length(binstr, 3)
+            client.publish(topicd0opres, binstr)
+        elif msg[0:3].encode() == b'\x01\x0a\x01':
             print("Receive XDCR_CH Discover")
             for k, v in binblk_tim_transducer_discoverty_cmd.items():
                 t_offset = v['offset']
                 mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
             pprint.pprint(mline)
             print("appId: ", mline['appId'])
-            sbp = bytearray([0x1, 0x6, 0x2, 0x0, 0x0, 0x0, 0x0, 0x1])
+            sbp = bytearray([0x1, 0xa, 0x2, 0x0, 0x0, 0x0, 0x0, 0x1])
             mline['ncapId'] = buuid0
-            client.publish(topicd0opres, sbp+uuid0+string_to_16byte_array('CH0'))
+            binstr = sbp+uuid0+string_to_16byte_array('CH0')
+            binstr = insert_length(binstr, 3)
+            client.publish(topicd0opres, binstr)
         elif msg[0:3].encode() == b'\x02\x01\x01':
             print("Receive Sync Read")
             for k, v in binblk_read.items():
@@ -709,7 +719,9 @@ if __name__ == '__main__':
                 if aflag == True:
                     print("Announce")
                     sbp = bytearray([0x1, 0x1, 0x3, 0x0, 0x0])
-                    client.publish(topicd0opres, sbp+buuid0+string_to_16byte_array(confdata['loc'])+bytearray([0x1, 10, 1, 1, 1]))
+                    binstr = sbp+buuid0+string_to_16byte_array(confdata['ncapname'])+bytearray([0x1, 10, 1, 1, 1]);
+                    binstr = insert_length(binstr, 3)
+                    client.publish(topicdanno, binstr)
         except KeyboardInterrupt:
             print("Cleanup")
             if pflag == False:
