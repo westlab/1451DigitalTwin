@@ -18,6 +18,7 @@ import RPi.GPIO as GPIO
 import dht11
 import time
 import random
+from collections import OrderedDict
 
 parser = argparse.ArgumentParser(
     prog = 'NCAP.py',
@@ -175,7 +176,6 @@ binblk_discovery_cmd = {
     'msgType'           : {'offset' : 2, 'type': '<B'}, #1
     'msgLength'         : {'offset' : 3, 'type': '<H'},
     'appId'             : {'offset' : 5, 'type': '<16s'},
-    'timeout'           : {'offset' : 21, 'type': '<Q'},
 }
 
 #binblk_discovery_rep = {
@@ -196,8 +196,8 @@ binblk_tim_discovery_cmd = {
     'netSvcId'          : {'offset' : 1, 'type': '<B'}, #9
     'msgType'           : {'offset' : 2, 'type': '<B'}, #1
     'msgLength'         : {'offset' : 3, 'type': '<H'},
-    'ncapId'            : {'offset' : 5, 'type': '<16s'},
-    'timeout'           : {'offset' : 21, 'type': '<Q'},
+    'appId'             : {'offset' : 5, 'type': '<16s'},
+    'ncapId'            : {'offset' : 21, 'type': '<16s'},
 }
 
 #binblk_tim_discovery_rep = {
@@ -206,9 +206,11 @@ binblk_tim_discovery_cmd = {
 #    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
 #    'msgLength'         : {'offset' : 3, 'type': '<H'},
 #    'errorCode'         : {'offset' : 5, 'type': '<H'},
-#    'numOfTims'         : {'offset' : 7, 'type': '<2s'}, #num = 3
-#    'timIds'            : {'offset' : 9, 'type': '<48s'}, #array x 3
-#    'timNames'          : {'offset' : 57, 'type': '<48s'}, #array x 3
+#    'appId'             : {'offset' : 7, 'type': '<16s'},
+#    'ncapId'            : {'offset' : 23, 'type': '<16s'},
+#    'numOfTims'         : {'offset' : 39, 'type': '<2s'}, #num = 3
+#    'timIds'            : {'offset' : 41, 'type': '<48s'}, #array x 3
+#    'timNames'          : {'offset' : 59, 'type': '<48s'}, #array x 3
 #}
 
 binblk_tim_transducer_discovery_cmd = {
@@ -216,9 +218,9 @@ binblk_tim_transducer_discovery_cmd = {
     'netSvcId'          : {'offset' : 1, 'type': '<B'}, #10
     'msgType'           : {'offset' : 2, 'type': '<B'}, #1
     'msgLength'         : {'offset' : 3, 'type': '<H'},
-    'ncapId'            : {'offset' : 5, 'type': '<16s'},
-    'timId'             : {'offset' : 21, 'type': '<16s'},
-    'timeout'           : {'offset' : 37, 'type': '<Q'},
+    'appId'             : {'offset' : 5, 'type': '<16s'},
+    'ncapId'            : {'offset' : 21, 'type': '<16s'},
+    'timId'             : {'offset' : 37, 'type': '<16s'},
 }
 
 #binblk_tim_transducer_discovery_rep = {
@@ -227,9 +229,12 @@ binblk_tim_transducer_discovery_cmd = {
 #    'msgType'           : {'offset' : 2, 'type': '<B'}, #2
 #    'msgLength'         : {'offset' : 3, 'type': '<H'},
 #    'errorCode'         : {'offset' : 5, 'type': '<H'},
-#    'numOfTransducerChannels'   : {'offset' : 7, 'type': '<2s'}, #num
-#    'transducerChannelIds'      : {'offset' : 9, 'type': '<16s'}, #array
-#    'transducerChannelNames'    : {'offset' : 25, 'type': '<16s'}, #array
+#    'appId'             : {'offset' : 7, 'type': '<16s'},
+#    'ncapId'            : {'offset' : 23, 'type': '<16s'},
+#    'timId'             : {'offset' : 39, 'type': '<16s'},
+#    'numOfTransducerChannels'   : {'offset' : 55, 'type': '<2s'}, #num
+#    'transducerChannelIds'      : {'offset' : 57, 'type': '<16s'}, #array
+#    'transducerChannelNames'    : {'offset' : 73, 'type': '<16s'}, #array
 #
 #}
 
@@ -324,11 +329,17 @@ binblk_teds = {
 
 uuid0 = '0x00000000000000000000000000000000'
 uuid1 = '0x00000000000000000000000000000001'
-uuid2 = '0x00000000000000000000000000000010'
+uuid2 = '0x00000000000000000000000000000002'
 # big endian (MSB first)
-buuid0 = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0])
-buuid1 = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1])
-buuid2 = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x0])
+def hs2ba(hexstr: str) -> bytearray:
+    if hexstr.startswith("0x") or hexstr.startswith("0X"):
+        hexstr = hexstr[2:]
+    hexstr = hexstr.zfill(32)
+    return bytearray(int(hexstr[i:i+2], 16) for i in range(0, 32, 2))
+
+buuid0 = hs2ba(uuid0)
+buuid1 = hs2ba(uuid1)
+buuid2 = hs2ba(uuid2)
 bnull = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 
 # a.to_bytes(2, 'big')  # 2 bytes big endian
@@ -343,17 +354,42 @@ bnull = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 # byte -> str .decode()
 
 def insert_length(binstr, position):
-    length = len(binstr)
-    length_bytes = length.to_bytes(4, byteorder='big')
-    if position < 0 or position + 4 > len(binstr):
+    length = len(binstr)-5
+    length_bytes = length.to_bytes(2, byteorder='big')
+    if position < 0 or position + 2 > len(binstr):
         raise ValueError("Invalid Location of Length")
-    binstr = binstr[:position] + length_bytes + binstr[position+4:]
+    print("Fill length =", length, " encoded to: ", length_bytes)
+    binstr = binstr[:position] + length_bytes + binstr[position+2:]
     return binstr
 
 def hexstr2bin(hex_string):
     cleaned_hex_string = ''.join(hex_string.split())
     binary_data = bytes.fromhex(cleaned_hex_string)
     return binary_data
+
+def parsemsg(format_spec: dict, msg: str) -> dict:
+    """
+    msg: 本来はバイナリデータだったが、str型として受け取ってしまったもの
+         → 各文字のUnicodeコードポイントが 0〜255 の範囲内であり、ASCII＋バイナリデータが混在している
+    """
+    if isinstance(msg, str):
+        # 本来のバイト列に戻す：1文字=1バイトの仮定に基づいて復元
+        msg_bytes = msg.encode('latin-1')
+    elif isinstance(msg, bytes):
+        msg_bytes = msg
+    else:
+        raise TypeError(f"msg must be str or bytes, got {type(msg)}")
+
+    parsed = {}
+    for key, spec in format_spec.items():
+        offset = spec['offset']
+        dtype = spec['type']
+        try:
+            value = struct.unpack_from(dtype, msg_bytes, offset)[0]
+            parsed[key] = value.hex() if isinstance(value, bytes) else value
+        except struct.error as e:
+            parsed[key] = f"Error: {e}"
+    return parsed
 
 def tedsmsg(teds):
     if isinstance(teds, str):
@@ -377,7 +413,7 @@ def tedsmsg(teds):
 def s16(value):
     return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
 
-def string_to_16byte_array(a: str) -> bytearray:
+def str2hexba(a: str) -> bytearray:
     # encode strings to bytearray (supposed to be input simple ASCII/latin-1 (UTF-8 character will be more than 1 byte)
     encoded = a.encode('utf-8')[:16]  # limit less than 16 bytes
     padded = encoded.ljust(16, b'\x00')  # zero padding upto 16 bytes
@@ -400,7 +436,7 @@ def on_publish(mqttc, obj, mid):
     print("on_pub(mid): "+str(mid))
 
 def on_message(mqttc, obj, msg):
-    print("on_msg: " + msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+    print("on_msg: " + msg.topic + " " + str(msg.qos) + " " + str(msg.payload.hex()))
     stopic = msg.topic.split('/')
     msg = str(msg.payload.decode('latin-1'))
 #    ts = datetime.today().isoformat()
@@ -533,38 +569,34 @@ def on_message(mqttc, obj, msg):
         mline = {}
         if msg[0:3].encode() == b'\x01\x08\x01':
             print("Receive Discover")
-            for k, v in binblk_discovery_cmd.items():
-                t_offset = v['offset']
-                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            mline = parsemsg(binblk_discovery_cmd, msg)
             pprint.pprint(mline)
             print("appId: ", mline['appId'])
             sbp = bytearray([0x1, 0x8, 0x2, 0x0, 0x0, 0x0, 0x0])
-            mline['ncapId'] = buuid0
-            binstr = sbp+mline['appId']+mline['ncapId']+string_to_16byte_array(confdata['ncapname'])+bytearray([0x1, 10, 1, 1, 1]);
+            binstr = sbp+hs2ba(mline['appId'])+buuid0+str2hexba(confdata['ncapname'])+bytearray([0x1, 10, 1, 1, 1]);
             binstr = insert_length(binstr, 3)
             client.publish(topicd0opres, binstr);
         elif msg[0:3].encode() == b'\x01\x09\x01':
             print("Receive TIM Discover")
-            for k, v in binblk_tim_discoverty_cmd.items():
-                t_offset = v['offset']
-                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            mline = parsemsg(binblk_tim_discovery_cmd, msg)
             pprint.pprint(mline)
             print("appId: ", mline['appId'])
-            sbp = bytearray([0x1, 0x9, 0x2, 0x0, 0x0, 0x0, 0x0, 0x3])
-            mline['ncapId'] = buuid0
-            binstr = sbp+uuid0+uuid1+uuid2+string_to_16byte_array('Temp')+string_to_16byte_array('Humid')+string_to_16byte_array('Servo')
+            print("ncapId: ", mline['ncapId'])
+            sbp = bytearray([0x1, 0x9, 0x2, 0x0, 0x0, 0x0, 0x0])
+            binstr = sbp+hs2ba(mline['appId'])+hs2ba(mline['ncapId'])+bytearray([0x0, 0x3])+buuid0+buuid1+buuid2+str2hexba('Temp')+str2hexba('Humid')+str2hexba('Servo')
+            print("lengsh of ncapId:", len(mline['ncapId']))
             binstr = insert_length(binstr, 3)
+            print(binstr.hex())
             client.publish(topicd0opres, binstr)
         elif msg[0:3].encode() == b'\x01\x0a\x01':
             print("Receive XDCR_CH Discover")
-            for k, v in binblk_tim_transducer_discoverty_cmd.items():
-                t_offset = v['offset']
-                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            mline = parsemsg(binblk_tim_transducer_discovery_cmd, msg)
             pprint.pprint(mline)
             print("appId: ", mline['appId'])
-            sbp = bytearray([0x1, 0xa, 0x2, 0x0, 0x0, 0x0, 0x0, 0x1])
-            mline['ncapId'] = buuid0
-            binstr = sbp+uuid0+string_to_16byte_array('CH0')
+            print("ncapId: ", mline['ncapId'])
+            print("timId: ", mline['timId'])
+            sbp = bytearray([0x1, 0xa, 0x2, 0x0, 0x0, 0x0, 0x0])
+            binstr = sbp+hs2ba(mline['appId'])+hs2ba(mline['ncapId'])+hs2ba(mline['timId'])+bytearray([0x00, 0x01])+buuid0+str2hexba('CH0')
             binstr = insert_length(binstr, 3)
             client.publish(topicd0opres, binstr)
         elif msg[0:3].encode() == b'\x02\x01\x01':
@@ -575,7 +607,7 @@ def on_message(mqttc, obj, msg):
             pprint.pprint(mline)
             if mline['ncapId'] == buuid0:
                 print("tmid: ", mline['timId'])
-                sbp = bytearray([0x2, 0x1, 0x2, 0x0, 0x0, 0x0, 0x42])
+                sbp = bytearray([0x2, 0x1, 0x2, 0x0, 0x42])
                 chid = int.from_bytes(mline['channelId'], 'big')
                 print("chid(ml): ", mline['channelId'])
                 print('chid:',chid)
@@ -719,7 +751,7 @@ if __name__ == '__main__':
                 if aflag == True:
                     print("Announce")
                     sbp = bytearray([0x1, 0x1, 0x3, 0x0, 0x0])
-                    binstr = sbp+buuid0+string_to_16byte_array(confdata['ncapname'])+bytearray([0x1, 10, 1, 1, 1]);
+                    binstr = sbp+buuid0+str2hexba(confdata['ncapname'])+bytearray([0x1, 10, 1, 1, 1]);
                     binstr = insert_length(binstr, 3)
                     client.publish(topicdanno, binstr)
         except KeyboardInterrupt:
