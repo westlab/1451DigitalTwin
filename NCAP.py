@@ -455,7 +455,6 @@ def on_message(mqttc, obj, msg):
         f.close()
         pprint.pprint(rmsg)
         for mline in rmsg:
-            print("OK")
             if mline[0] == '2':
                 if mline[1] == '1':
                     if mline[2] == '1':
@@ -540,7 +539,7 @@ def on_message(mqttc, obj, msg):
                             print('tedsOffset', mline[9])
                             chid = int(mline[7])
                             if mline[5] == uuidncap:
-                                if mline[6] == hs2ba16(uuidtim0):
+                                if mline[6] == uuidtim0:
                                     client.publish(topiccopres, '3,2,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+mline[7]+','+mline[8]+','+confdata['TEMPTEDS'])
                                     print("Read TEMP TEDS")
                                 elif mline[6] == uuidtim1:
@@ -552,7 +551,7 @@ def on_message(mqttc, obj, msg):
                                 else:
                                     print("timId Error:",mline[4])
                             else:
-                                print("ncapId Error:",mline[3])
+                                print("ncapId Error:",mline[5])
                         elif mline[8] == '16':
                             print("Read Security TEDS Data COP")
                             print('appId', mline[4])
@@ -562,11 +561,11 @@ def on_message(mqttc, obj, msg):
                             print('TedsAccessCode = 16', mline[8])
                             print('tedsOffset', mline[9])
                             chid = int(mline[7])
-                            if mline[4] == uuidncap:
+                            if mline[5] == uuidncap:
                                 client.publish(topiccopres, '3,2,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+mline[7]+','+mline[8]+','+confdata['SECURITYTEDS'])
                                 print("Read QUERY TEDS")
                             else:
-                                print("ncapId Error:",mline[3])
+                                print("ncapId Error:",mline[5])
     elif stopic[1]+'/' == confdata['tomd0op']:
         print("D0")
         mline = {}
@@ -604,23 +603,25 @@ def on_message(mqttc, obj, msg):
             client.publish(topicd0opres, binstr)
         elif msg[0:3].encode() == b'\x02\x01\x01':
             print("Receive Sync Read")
-            for k, v in binblk_read.items():
-                t_offset = v['offset']
-                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            mline  = parsemsg(binblk_read, msg)
             pprint.pprint(mline)
-            if mline['ncapId'] == hs2ba16(uuidncap):
+            print(mline['ncapId'], uuidncap)
+            if '0x'+mline['ncapId'] == uuidncap:
                 print("tmid: ", mline['timId'])
                 sbp = bytearray([0x2, 0x1, 0x2, 0x0, 0x42])
-                chid = int.from_bytes(mline['channelId'], 'big')
+                chid = int('0x'+mline['channelId'], 16)
                 print("chid(ml): ", mline['channelId'])
                 print('chid:',chid)
-                if mline['timId'] == hs2ba16(uuidtim0):
-                    binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+(str(vtemp[chid]).encode()+bnull)[0:7]+bts
+                print("vtemp[chid]: ", vtemp[chid])
+                print((str(vtemp[chid]).encode()+bnull)[0:5])
+                print(bts)
+                if '0x'+mline['timId'] == uuidtim0:
+                    binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+(str(vtemp[chid]).encode()+bnull)[0:5]+bts
                     binstr = insert_length(binstr, 3)
                     client.publish(topicd0opres, binstr)
                     print("Read TEMP")
-                elif mline['timId'] == hs2ba16(uuidtim1):
-                    binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+(str(vhumid[chid]).encode()+bnull)[0:7]+bts
+                elif '0x'+mline['timId'] == uuidtim1:
+                    binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+(str(vhumid[chid]).encode()+bnull)[0:5]+bts
                     binstr = insert_length(binstr, 3)
                     client.publish(topicd0opres, binstr)
                     print("Read HUMID")
@@ -630,23 +631,21 @@ def on_message(mqttc, obj, msg):
                 print("ncapId Error")
         elif msg[0:3].encode() == b'\x02\x07\x01':
             print("Receive Sync Write")
-            for k, v in binblk_write.items():
-                t_offset = v['offset']
-                mline[k] = struct.unpack_from(v['type'], msg.encode(), t_offset)[0]
+            mline  = parsemsg(binblk_write, msg)
             pprint.pprint(mline)
-            if mline['ncapId'] == hs2ba16(uuidncap):
+            if '0x'+mline['ncapId'] == uuidncap:
                 print("tmid: ", mline['timId'])
                 sbp = bytearray([0x2, 0x7, 0x2, 0x0, 0x0, 0x0, 0x38])
-                chid = int.from_bytes(mline['channelId'], 'big')
+                chid = int('0x'+mline['channelId'], 16)
                 print("chid(ml): ", mline['channelId'])
                 print('chid:',chid)
                 print('dataValue:',mline['dataValue'])
-                if mline['timId'] == hs2ba16(uuidtim2):
+                if '0x'+mline['timId'] == uuidtim2:
                     if pflag == False:
                         p.ChangeDutyCycle(int(mline['dataValue'])/25+2.4)
                         time.sleep(0.4)
                         p.ChangeDutyCycle(0.0)
-                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])
+                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Write Servo Response")
@@ -666,17 +665,17 @@ def on_message(mqttc, obj, msg):
                 if mline['ncapId'] == hs2ba16(uuidncap):
                     sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
                     if mline['timId'] == hs2ba16(uuidtim0):
-                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['TEMPBINTEDS']))
+                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['TEMPBINTEDS']))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read TEMP BINARY TEDS")
                     elif mline['timId'] == hs2ba16(uuidtim1):
-                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['HUMIDBINTEDS']))
+                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['HUMIDBINTEDS']))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read HUMID BINARY TEDS")
                     elif mline['timId'] == hs2ba16(uuidtim2):
-                        binstr = sbp+mline['appId']+mline['ncapId']+mline['timId']+bytearray(mline['channelId'])+bytearray(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['SERVOBINTEDS']))
+                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['SERVOBINTEDS']))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read SERVO BINARY TEDS")
