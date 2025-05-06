@@ -598,7 +598,7 @@ def on_message(mqttc, obj, msg):
             print("ncapId: ", mline['ncapId'])
             print("timId: ", mline['timId'])
             sbp = bytearray([0x1, 0xa, 0x2, 0x0, 0x0, 0x0, 0x0])
-            binstr = sbp+hs2ba16(mline['appId'])+hs2ba16(mline['ncapId'])+hs2ba16(mline['timId'])+bytearray([0x00, 0x01])+bytearray([0x00, 0x00])+str2ba('CH0')
+            binstr = sbp+hs2ba16(mline['appId'])+hs2ba16(mline['ncapId'])+hs2ba16(mline['timId'])+bytearray([0x00, 0x01])+bytearray([0x00, 0x01])+str2ba('CH0')
             binstr = insert_length(binstr, 3)
             client.publish(topicd0opres, binstr)
         elif msg[0:3].encode() == b'\x02\x01\x01':
