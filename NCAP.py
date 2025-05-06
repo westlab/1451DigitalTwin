@@ -14,7 +14,6 @@ import csv
 import pprint
 import datetime
 import temporenc
-import RPi.GPIO as GPIO
 import dht11
 import time
 import random
@@ -77,6 +76,7 @@ f = open(args.config, "r+")
 confdata = yaml.safe_load(f)
 
 if pflag == False:
+    import RPi.GPIO as GPIO
     print('GPIO.set')
     print('Sensor')
     GPIO.setwarnings(True)
