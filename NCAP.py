@@ -127,6 +127,64 @@ if not confdata.get('SERVOTEDS'):
     confdata['SERVOBINTEDS'] = 'SERVOBINTEDS';
 if not confdata.get('SECURITYBINTEDS'):
     confdata['TEMPTEDS'] = 'SECURITYBINTEDS';
+if not confdata.get('UUIDNCAP'):
+    confdata['UUIDNCAP'] = '0x00000000000000000000000000010000'
+if not confdata.get('UUIDTIM0'):
+    confdata['UUIDTIM0'] = '0x00000000000000000000000000020000'
+if not confdata.get('UUIDTIM1'):
+    confdata['UUIDTIM1'] = '0x00000000000000000000000000020001'
+if not confdata.get('UUIDTIM2'):
+    confdata['UUIDTIM2'] = '0x00000000000000000000000000020002'
+if not confdata.get('UUIDAPP0'):
+    confdata['UUIDAPP0'] = '0x00000000000000000000000000030000'
+if not confdata.get('TEMPBINIDTEDS'):
+    confdata['TEMPBINIDTEDS'] = '0x00'
+if not confdata.get('TEMPBINCHANTEDS'):
+    confdata['TEMPBINCHANTEDS'] = '0x00'
+if not confdata.get('TEMPBINMETATEDS'):
+    confdata['TEMPBINMETATEDS'] = '0x00'
+if not confdata.get('TEMPBINPHYTEDS'):
+    confdata['TEMPBINPHYTEDS'] = '0x00'
+if not confdata.get('HUMIDBINIDTEDS'):
+    confdata['HUMIDBINIDTEDS'] = '0x00'
+if not confdata.get('HUMIDBINCHANTEDS'):
+    confdata['HUMIDBINCHANTEDS'] = '0x00'
+if not confdata.get('HUMIDBINMETATEDS'):
+    confdata['HUMIDBINMETATEDS'] = '0x00'
+if not confdata.get('HUMIDBINPHYTEDS'):
+    confdata['HUMIDBINPHYTEDS'] = '0x00'
+if not confdata.get('SERVOBINIDTEDS'):
+    confdata['SERVOBINIDTEDS'] = '0x00'
+if not confdata.get('SERVOBINCHANTEDS'):
+    confdata['SERVOBINCHANTEDS'] = '0x00'
+if not confdata.get('SERVOBINMETATEDS'):
+    confdata['SERVOBINMETATEDS'] = '0x00'
+if not confdata.get('SERVOBINPHYTEDS'):
+    confdata['SERVOBINPHYTEDS'] = '0x00'
+
+uuidncap = confdata['UUIDNCAP']
+uuidtim0 = confdata['UUIDTIM0']
+uuidtim1 = confdata['UUIDTIM1']
+uuidtim2 = confdata['UUIDTIM2']
+uuidapp0 = confdata['UUIDAPP0']
+
+tempteds = [None]*10
+humidteds = [None]*10
+servoteds = [None]*10
+
+tempteds[1] = confdata['TEMPBINIDTEDS']
+tempteds[2] = confdata['TEMPBINCHANTEDS']
+tempteds[8] = confdata['TEMPBINMETATEDS']
+tempteds[9] = confdata['TEMPBINPHYTEDS']
+humidteds[1] = confdata['HUMIDBINIDTEDS']
+humidteds[2] = confdata['HUMIDBINCHANTEDS']
+humidteds[8] = confdata['HUMIDBINMETATEDS']
+humidteds[9] = confdata['HUMIDBINPHYTEDS']
+servoteds[1] = confdata['SERVOBINIDTEDS']
+servoteds[2] = confdata['SERVOBINCHANTEDS']
+servoteds[8] = confdata['SERVOBINMETATEDS']
+servoteds[9] = confdata['SERVOBINPHYTEDS']
+
 #'_1451.1.6(SPFX)/D0(TOM)/LOC'
 print("Topics for announce")
 pprint.pprint([topiccanno, topicdanno])
@@ -327,11 +385,6 @@ binblk_teds = {
 #Notification 4
 #Callback 5
 
-uuidncap = '0x00000000000000000000000000010000'
-uuidtim0 = '0x00000000000000000000000000020000'
-uuidtim1 = '0x00000000000000000000000000020001'
-uuidtim2 = '0x00000000000000000000000000020002'
-uuidapp0 = '0x00000000000000000000000000030000'
 # big endian (MSB first)
 def hs2ba16(hexstr: str) -> bytearray:
     if hexstr.startswith("0x") or hexstr.startswith("0X"):
@@ -659,23 +712,27 @@ def on_message(mqttc, obj, msg):
             print("Receive TEDS")
             mline  = parsemsg(binblk_teds, msg)
             pprint.pprint(mline)
-            if mline['tedsAccessCode'] == 3:
+            if mline['tedsAccessCode'] in (1, 2, 8, 9):
                 if '0x'+mline['ncapId'] == uuidncap:
                     sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
                     if '0x'+mline['timId'] == uuidtim0:
                         for key in ['appId', 'ncapId', 'timId']:
                             print(f"{key}: type={type(mline[key])}, value={repr(mline[key])}")
-                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['TEMPBINTEDS']))
+                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(tempteds[mline['tedsAccessCode']]))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read TEMP BINARY TEDS")
                     elif '0x'+mline['timId'] == uuidtim1:
-                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['HUMIDBINTEDS']))
+                        for key in ['appId', 'ncapId', 'timId']:
+                            print(f"{key}: type={type(mline[key])}, value={repr(mline[key])}")
+                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(humidteds[mline['tedsAccessCode']]))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read HUMID BINARY TEDS")
                     elif '0x'+mline['timId'] == uuidtim2:
-                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['SERVOBINTEDS']))
+                        for key in ['appId', 'ncapId', 'timId']:
+                            print(f"{key}: type={type(mline[key])}, value={repr(mline[key])}")
+                        binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(servoteds[mline['tedsAccessCode']]))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read SERVO BINARY TEDS")
