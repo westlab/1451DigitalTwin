@@ -1,0 +1,26 @@
+### localhost
+#mqtthost: 127.0.0.1
+#mqttport: 1883
+### plugfest
+#username: oceanlec
+#password: ocl2023pw
+#mqtthost: 131.113.98.83 #plugfest.west.sd.keio.ac.jp
+#mqttport: 24883
+### hivemq
+mqtthost: broker.hivemq.com
+mqttport: 1883
+# needs / in the end
+spfx: _1451.1.6/
+tomdop: D/
+tomcop: C/
+tomd0op: D0/
+# Does not need / in the end
+loc: OUC-LEC/2023/west/ncap0
+locclient: OUC-LEC/2023/west/application0
+# TEDS
+TEMPTEDS: '<?xml version="1.0" encoding="UTF-8"?> <TEDS ID="[v03]"> <BasicTEDS> <Manufacturer>Dewesoft</Manufacturer> <Model>1</Model> <VersionLetter>A</VersionLetter> <VersionNumber>1</VersionNumber> <SerialNumber>1</SerialNumber> </BasicTEDS> <TEDS-Code length="40">6A4000200401000098D0421F00000000 00000012040000120400001204000000 C34800000000E000</TEDS-Code> <Info-Section EditorVersion="Dewesoft TedsEditor V2.2.12"> <InfoLine16>2023/05/22 0:25:06: Templates cleared by User.</InfoLine16> <InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17> </EditorActivity> </Info-Section> </TEDS>'
+HUMIDTEDS: '<?xml version="1.0" encoding="UTF-8"?> <TEDS ID="[v03]"> <BasicTEDS> <Manufacturer>UnknownID(109)</Manufacturer> <Model>1</Model> <VersionLetter>A</VersionLetter> <VersionNumber>1</VersionNumber> <SerialNumber>2</SerialNumber> </BasicTEDS> <TEDS-Code length="31">6D4000200402000080A0000000000000 C8420000000000869100000000C001</TEDS-Code> <Info-Section EditorVersion="Dewesoft TedsEditor V2.2.12"> </EditorActivity> </Info-Section> </TEDS>'
+SERVOTEDS: '<?xml version="1.0" encoding="UTF-8"?> <TEDS ID="[v03]"> <BasicTEDS> <Manufacturer>UnknownID(109)</Manufacturer> <Model>1</Model> <VersionLetter>A</VersionLetter> <VersionNumber>1</VersionNumber> <SerialNumber>3</SerialNumber> </BasicTEDS> <TEDS-Code length="69">6D4000200403000080A0000000000000 C8420000000000869100000000806AC0 82757A6CE560CDE450FA6C4D8B52EBB3 F9A43EA5050C00000280000034430300 00FE041C00</TEDS-Code> <Info-Section EditorVersion="Dewesoft TedsEditor V2.2.12"> <InfoLine16>2023/05/22 0:25:06: Templates cleared by User.</InfoLine16> <InfoLine17>2023/05/22 0:25:28: Base template [#38] Thermistor created.</InfoLine17> <InfoLine18>2023/05/22 0:25:38: TEDS write ChNr.1 started...</InfoLine18> <InfoLine19>2023/05/22 0:25:42: TEDS write to file [IEEE1451_4_106_1_A_1_1.tedsxml] done.</InfoLine19> <InfoLine22>2023/05/22 0:28:21: Templates cleared by User.</InfoLine22> </EditorActivity> </Info-Section> </TEDS>'
+TEMPBINTEDS: '6A4000200401000098D0421F00000000 00000012040000120400001204000000 C34800000000E000'
+HUMIDBINTEDS: '6D4000200402000080A0000000000000 C8420000000000869100000000C001'
+SERVOBINTEDS: '6D4000200403000080A0000000000000 C8420000000000869100000000806AC0 82757A6CE560CDE450FA6C4D8B52EBB3 F9A43EA5050C00000280000034430300 00FE041C00'
