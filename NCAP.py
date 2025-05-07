@@ -137,30 +137,12 @@ if not confdata.get('UUIDTIM2'):
     confdata['UUIDTIM2'] = '0x00000000000000000000000000020002'
 if not confdata.get('UUIDAPP0'):
     confdata['UUIDAPP0'] = '0x00000000000000000000000000030000'
-if not confdata.get('TEMPBINIDTEDS'):
-    confdata['TEMPBINIDTEDS'] = '0x00'
-if not confdata.get('TEMPBINCHANTEDS'):
-    confdata['TEMPBINCHANTEDS'] = '0x00'
-if not confdata.get('TEMPBINMETATEDS'):
-    confdata['TEMPBINMETATEDS'] = '0x00'
-if not confdata.get('TEMPBINPHYTEDS'):
-    confdata['TEMPBINPHYTEDS'] = '0x00'
-if not confdata.get('HUMIDBINIDTEDS'):
-    confdata['HUMIDBINIDTEDS'] = '0x00'
-if not confdata.get('HUMIDBINCHANTEDS'):
-    confdata['HUMIDBINCHANTEDS'] = '0x00'
-if not confdata.get('HUMIDBINMETATEDS'):
-    confdata['HUMIDBINMETATEDS'] = '0x00'
-if not confdata.get('HUMIDBINPHYTEDS'):
-    confdata['HUMIDBINPHYTEDS'] = '0x00'
-if not confdata.get('SERVOBINIDTEDS'):
-    confdata['SERVOBINIDTEDS'] = '0x00'
-if not confdata.get('SERVOBINCHANTEDS'):
-    confdata['SERVOBINCHANTEDS'] = '0x00'
-if not confdata.get('SERVOBINMETATEDS'):
-    confdata['SERVOBINMETATEDS'] = '0x00'
-if not confdata.get('SERVOBINPHYTEDS'):
-    confdata['SERVOBINPHYTEDS'] = '0x00'
+prefixes = ['TEMP', 'HUMID', 'SERVO']
+suffixes = ['BINIDTEDS', 'BINCHANTEDS', 'BINMETATEDS', 'BINNAMETEDS', 'BINPHYTEDS']
+for prefix in prefixes:
+    for suffix in suffixes:
+        key = prefix + suffix
+        confdata.setdefault(key, '0x00')
 
 uuidncap = confdata['UUIDNCAP']
 uuidtim0 = confdata['UUIDTIM0']
@@ -168,22 +150,25 @@ uuidtim1 = confdata['UUIDTIM1']
 uuidtim2 = confdata['UUIDTIM2']
 uuidapp0 = confdata['UUIDAPP0']
 
-tempteds = [None]*10
-humidteds = [None]*10
-servoteds = [None]*10
+tempteds = [None]*17
+humidteds = [None]*17
+servoteds = [None]*17
 
-tempteds[1] = confdata['TEMPBINIDTEDS']
-tempteds[2] = confdata['TEMPBINCHANTEDS']
-tempteds[8] = confdata['TEMPBINMETATEDS']
-tempteds[9] = confdata['TEMPBINPHYTEDS']
-humidteds[1] = confdata['HUMIDBINIDTEDS']
-humidteds[2] = confdata['HUMIDBINCHANTEDS']
-humidteds[8] = confdata['HUMIDBINMETATEDS']
-humidteds[9] = confdata['HUMIDBINPHYTEDS']
-servoteds[1] = confdata['SERVOBINIDTEDS']
-servoteds[2] = confdata['SERVOBINCHANTEDS']
-servoteds[8] = confdata['SERVOBINMETATEDS']
-servoteds[9] = confdata['SERVOBINPHYTEDS']
+tempteds[1] = confdata['TEMPBINMETATEDS']
+tempteds[2] = confdata['TEMPBINIDTEDS']
+tempteds[3] = confdata['TEMPBINCHANTEDS']
+tempteds[13] = confdata['TEMPBINPHYTEDS']
+tempteds[16] = confdata['SECURITYBINTEDS']
+humidteds[1] = confdata['HUMIDBINMETATEDS']
+humidteds[2] = confdata['HUMIDBINIDTEDS']
+humidteds[3] = confdata['HUMIDBINCHANTEDS']
+humidteds[13] = confdata['HUMIDBINPHYTEDS']
+humidteds[16] = confdata['SECURITYBINTEDS']
+servoteds[1] = confdata['SERVOBINMETATEDS']
+servoteds[2] = confdata['SERVOBINIDTEDS']
+servoteds[3] = confdata['SERVOBINCHANTEDS']
+servoteds[13] = confdata['SERVOBINPHYTEDS']
+servoteds[16] = confdata['SECURITYBINTEDS']
 
 #'_1451.1.6(SPFX)/D0(TOM)/LOC'
 print("Topics for announce")
@@ -712,7 +697,7 @@ def on_message(mqttc, obj, msg):
             print("Receive TEDS")
             mline  = parsemsg(binblk_teds, msg)
             pprint.pprint(mline)
-            if mline['tedsAccessCode'] in (1, 2, 8, 9):
+            if mline['tedsAccessCode'] in (1, 2, 3, 12, 13, 16):
                 if '0x'+mline['ncapId'] == uuidncap:
                     sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
                     if '0x'+mline['timId'] == uuidtim0:
@@ -738,16 +723,6 @@ def on_message(mqttc, obj, msg):
                         print("Read SERVO BINARY TEDS")
                     else:
                         print("timId Error", mline['timId'])
-                else:
-                    print("ncapId Error")
-                    print(mline['ncapId'])
-            elif mline['tedsAccessCode'] == 16:
-                if '0x'+mline['ncapId'] == uuidncap:
-                    sbp = bytearray([0x3, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0])
-                    binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(confdata['SECURITYBINTEDS']))
-                    binstr = insert_length(binstr, 3)
-                    client.publish(topicd0opres, binstr)
-                    print("Read SECURITY BINARY TEDS")
                 else:
                     print("ncapId Error")
                     print(mline['ncapId'])
