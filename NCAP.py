@@ -111,39 +111,6 @@ topiccop = confdata['spfx']+confdata['tomcop']+confdata['loc']+'/'+confdata['nca
 topiccopres = confdata['spfx']+confdata['tomcop']+confdata['locclient']+'/'+confdata['appname'] # publish
 topicd0op = confdata['spfx']+confdata['tomd0op']+confdata['loc']+'/'+confdata['ncapname'] # subscribe
 topicd0opres = confdata['spfx']+confdata['tomd0op']+confdata['locclient']+'/'+confdata['appname'] # publish
-if not confdata.get('TEMPTEDS'):
-    confdata['TEMPTEDS'] = 'TEMPTEDS';
-if not confdata.get('HUMIDTEDS'):
-    confdata['HUMIDTEDS'] = 'HUMIDTEDS';
-if not confdata.get('SERVOTEDS'):
-    confdata['SERVOTEDS'] = 'SERVOTEDS';
-if not confdata.get('SECURITYTEDS'):
-    confdata['TEMPTEDS'] = 'SECURITYTEDS';
-if not confdata.get('TEMPBINTEDS'):
-    confdata['TEMPBINTEDS'] = 'TEMPBINTEDS';
-if not confdata.get('HUMIDTEDS'):
-    confdata['HUMIDBINTEDS'] = 'HUMIDBINTEDS';
-if not confdata.get('SERVOTEDS'):
-    confdata['SERVOBINTEDS'] = 'SERVOBINTEDS';
-if not confdata.get('SECURITYBINTEDS'):
-    confdata['TEMPTEDS'] = 'SECURITYBINTEDS';
-if not confdata.get('UUIDNCAP'):
-    confdata['UUIDNCAP'] = '0x00000000000000000000000000010000'
-if not confdata.get('UUIDTIM0'):
-    confdata['UUIDTIM0'] = '0x00000000000000000000000000020000'
-if not confdata.get('UUIDTIM1'):
-    confdata['UUIDTIM1'] = '0x00000000000000000000000000020001'
-if not confdata.get('UUIDTIM2'):
-    confdata['UUIDTIM2'] = '0x00000000000000000000000000020002'
-if not confdata.get('UUIDAPP0'):
-    confdata['UUIDAPP0'] = '0x00000000000000000000000000030000'
-prefixes = ['TEMP', 'HUMID', 'SERVO']
-suffixes = ['BINIDTEDS', 'BINCHANTEDS', 'BINMETATEDS', 'BINNAMETEDS', 'BINPHYTEDS']
-for prefix in prefixes:
-    for suffix in suffixes:
-        key = prefix + suffix
-        confdata.setdefault(key, '0x00')
-
 uuidncap = confdata['UUIDNCAP']
 uuidtim0 = confdata['UUIDTIM0']
 uuidtim1 = confdata['UUIDTIM1']
@@ -157,16 +124,19 @@ servoteds = [None]*17
 tempteds[1] = confdata['TEMPBINMETATEDS']
 tempteds[2] = confdata['TEMPBINIDTEDS']
 tempteds[3] = confdata['TEMPBINCHANTEDS']
+tempteds[12] = confdata['TEMPBINNAMETEDS']
 tempteds[13] = confdata['TEMPBINPHYTEDS']
 tempteds[16] = confdata['SECURITYBINTEDS']
 humidteds[1] = confdata['HUMIDBINMETATEDS']
 humidteds[2] = confdata['HUMIDBINIDTEDS']
 humidteds[3] = confdata['HUMIDBINCHANTEDS']
+humidteds[12] = confdata['HUMIDBINNAMETEDS']
 humidteds[13] = confdata['HUMIDBINPHYTEDS']
 humidteds[16] = confdata['SECURITYBINTEDS']
 servoteds[1] = confdata['SERVOBINMETATEDS']
 servoteds[2] = confdata['SERVOBINIDTEDS']
 servoteds[3] = confdata['SERVOBINCHANTEDS']
+servoteds[12] = confdata['SERVOBINNAMETEDS']
 servoteds[13] = confdata['SERVOBINPHYTEDS']
 servoteds[16] = confdata['SECURITYBINTEDS']
 
