@@ -401,24 +401,29 @@ def parsemsg(format_spec: dict, msg: str) -> dict:
             parsed[key] = f"Error: {e}"
     return parsed
 
-def tedsmsg(teds):
-    if isinstance(teds, str):
-        teds = teds.encode('utf-8')
-    # 1. 長さを計算し、チェックサムと長さのの6バイトを加えます
-    length = len(teds) + 6  # チェックサム込みの長さ
-    # 2. 長さを4バイトのビッグエンディアンで表現します
-    length_bytes = length.to_bytes(2, byteorder = 'big')
-#    length_bytes = length.to_bytes(2, byteorder = 'little')
-#    length_bytes = struct.pack('>I', length)
-    # 3. 先頭4バイトを長さ情報に置き換えます
-    teds = length_bytes + teds
-    # 4. チェックサムを計算します（全てのバイトの合計を65536で割った余り）
-    checksum = sum(teds) % 65536
-    # 5. チェックサムを2バイトのビッグエンディアンで表現します
-    checksum_bytes = struct.pack('>H', checksum)
-    # 6. 末尾にチェックサムを追加します
-    teds = teds + checksum_bytes
-    return teds
+def tedsmsg(teds_body: bytes) -> bytes:
+    # Step 1: Length (4バイト, little-endian)
+    teds_length = len(teds_body)
+    length_bytes = teds_length.to_bytes(4, byteorder='little')
+    
+    # Step 2: Combine Length + Body
+    teds_full = length_bytes + teds_body
+
+    # Step 3: CRC-16-CCITT 計算
+    def compute_crc16_ccitt(data: bytes) -> int:
+        crc = 0xFFFF
+        for byte in data:
+            crc ^= byte << 8
+            for _ in range(8):
+                crc = (crc << 1) ^ 0x1021 if (crc & 0x8000) else crc << 1
+                crc &= 0xFFFF
+        return crc
+
+    crc = compute_crc16_ccitt(teds_full)
+    crc_bytes = crc.to_bytes(2, byteorder='big')
+
+    # Step 4: 完全なTEDSデータ
+    return teds_full + crc_bytes
 
 def s16(value):
     return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
@@ -674,6 +679,7 @@ def on_message(mqttc, obj, msg):
                         for key in ['appId', 'ncapId', 'timId']:
                             print(f"{key}: type={type(mline[key])}, value={repr(mline[key])}")
                         binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(tempteds[mline['tedsAccessCode']]))
+                        print(sbp,bytearray.fromhex(mline['appId']),",",bytearray.fromhex(mline['ncapId']),",",bytearray.fromhex(mline['timId']),",",bytearray.fromhex(mline['channelId']),",",bytearray.fromhex(mline['tedsOffset']),",",tedsmsg(hexstr2bin(tempteds[mline['tedsAccessCode']])))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read TEMP BINARY TEDS")
