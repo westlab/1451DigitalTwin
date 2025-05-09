@@ -635,7 +635,7 @@
         "bgcolor": "",
         "className": "",
         "icon": "",
-        "payload": "2,1,1,0x00000000000000000000000000030000,0x00000000000000000000000000010000,0x00000000000000000000000000020001,0,0,0",
+        "payload": "2,1,1,0x2400250026002700280029003a030f0f,0x2400250026002700280029003a010f0f,0x2400250026002700280029003a020f01,1,0,0",
         "payloadType": "str",
         "topic": "",
         "topicType": "str",
@@ -672,7 +672,7 @@
         "diff": false,
         "className": "",
         "x": 1410,
-        "y": 680,
+        "y": 800,
         "wires": []
     },
     {
@@ -721,7 +721,7 @@
         "diff": false,
         "className": "",
         "x": 1410,
-        "y": 640,
+        "y": 720,
         "wires": []
     },
     {
@@ -734,12 +734,12 @@
         "rules": [
             {
                 "t": "cont",
-                "v": "0x00000000000000000000000000020000",
+                "v": "0x2400250026002700280029003a020f00",
                 "vt": "str"
             },
             {
                 "t": "cont",
-                "v": "0x00000000000000000000000000020001",
+                "v": "0x2400250026002700280029003a020f01",
                 "vt": "str"
             }
         ],
@@ -747,7 +747,7 @@
         "repair": false,
         "outputs": 2,
         "x": 1010,
-        "y": 660,
+        "y": 760,
         "wires": [
             [
                 "37725cd568c488dc"
@@ -809,8 +809,8 @@
         "className": "",
         "topic": "",
         "name": "",
-        "x": 870,
-        "y": 600,
+        "x": 1210,
+        "y": 620,
         "wires": []
     },
     {
@@ -900,7 +900,7 @@
         "bgcolor": "",
         "className": "",
         "icon": "",
-        "payload": "3,2,1,0,0x00000000000000000000000000030000,0x00000000000000000000000000010000,0x00000000000000000000000000020001,0,4,0",
+        "payload": "3,2,1,0,0x2400250026002700280029003a030f0f,0x2400250026002700280029003a010f0f,0x2400250026002700280029003a020f01,1,4,0",
         "payloadType": "str",
         "topic": "",
         "topicType": "str",
@@ -928,7 +928,7 @@
         "bgcolor": "",
         "className": "",
         "icon": "",
-        "payload": "3,2,1,0,0x00000000000000000000000000030000,0x00000000000000000000000000010000,0x00000000000000000000000000020000,0,4,0",
+        "payload": "3,2,1,0,0x2400250026002700280029003a030f0f,0x2400250026002700280029003a010f0f,0x2400250026002700280029003a020f00,1,4,0",
         "payloadType": "str",
         "topic": "",
         "topicType": "str",
@@ -968,8 +968,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 850,
-        "y": 560,
+        "x": 1190,
+        "y": 580,
         "wires": []
     },
     {
@@ -987,13 +987,8 @@
         "y": 560,
         "wires": [
             [
-                "6fbfbaf089ccd2ab",
-                "48eb6497066517cb",
-                "8a5fc0dd6b0dfc14",
-                "a8a6354eb16b3655",
-                "1096085ef5376371",
-                "740823ac03c904f1",
-                "3b4fa548f6bba24c"
+                "3b4fa548f6bba24c",
+                "74a3146e2517ebc1"
             ]
         ]
     },
@@ -1002,7 +997,7 @@
         "type": "debug",
         "z": "0c7a731dc303bfda",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1010,8 +1005,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 840,
-        "y": 440,
+        "x": 1180,
+        "y": 460,
         "wires": []
     },
     {
@@ -1027,8 +1022,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 850,
-        "y": 400,
+        "x": 1190,
+        "y": 420,
         "wires": []
     },
     {
@@ -1044,8 +1039,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 850,
-        "y": 480,
+        "x": 1190,
+        "y": 500,
         "wires": []
     },
     {
@@ -1061,8 +1056,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 840,
-        "y": 520,
+        "x": 1180,
+        "y": 540,
         "wires": []
     },
     {
@@ -1088,7 +1083,7 @@
         "repair": false,
         "outputs": 2,
         "x": 830,
-        "y": 720,
+        "y": 820,
         "wires": [
             [
                 "797be9366cb3cffc"
@@ -1110,10 +1105,11 @@
         "template": "{{sample}}",
         "output": "str",
         "x": 1200,
-        "y": 640,
+        "y": 720,
         "wires": [
             [
-                "ccbb4021f26245f6"
+                "ccbb4021f26245f6",
+                "0271ae2968d24863"
             ]
         ]
     },
@@ -1129,10 +1125,11 @@
         "template": "{{teds}}",
         "output": "str",
         "x": 1010,
-        "y": 780,
+        "y": 880,
         "wires": [
             [
-                "979eb85cc7eda7d5"
+                "979eb85cc7eda7d5",
+                "0758608b16147699"
             ]
         ]
     },
@@ -1150,7 +1147,7 @@
         "layout": "row-spread",
         "className": "TEDSTEXT",
         "x": 1230,
-        "y": 780,
+        "y": 880,
         "wires": []
     },
     {
@@ -1194,7 +1191,7 @@
         "bgcolor": "",
         "className": "",
         "icon": "",
-        "payload": "2,1,1,0x00000000000000000000000000030000,0x00000000000000000000000000010000,0x00000000000000000000000000020000,0,0,0",
+        "payload": "2,1,1,0x2400250026002700280029003a030f0f,0x2400250026002700280029003a010f0f,0x2400250026002700280029003a020f00,1,0,0",
         "payloadType": "str",
         "topic": "",
         "topicType": "str",
@@ -1238,7 +1235,7 @@
         "type": "function",
         "z": "0c7a731dc303bfda",
         "name": "SyncWriteCmd",
-        "func": "msg.payload = '2,7,1,0x00000000000000000000000000030000,0x00000000000000000000000000010000,0x00000000000000000000000000020002,0,0,'+\n    + msg.payload;\nreturn msg;",
+        "func": "msg.payload = '2,7,1,0x2400250026002700280029003a030f0f,0x2400250026002700280029003a010f0f,0x2400250026002700280029003a020f02,1,0,'+\n    + msg.payload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1309,7 +1306,7 @@
         "bgcolor": "",
         "className": "",
         "icon": "",
-        "payload": "3,2,1,0,0x00000000000000000000000000030000,0x00000000000000000000000000010000,0x00000000000000000000000000020002,0,4,0",
+        "payload": "3,2,1,0,0x2400250026002700280029003a030f0f,0x2400250026002700280029003a010f0f,0x2400250026002700280029003a020f02,1,4,0",
         "payloadType": "str",
         "topic": "",
         "topicType": "str",
@@ -1362,7 +1359,7 @@
         "bgcolor": "",
         "className": "",
         "icon": "",
-        "payload": "3,2,1,0,0x00000000000000000000000000030000,0x00000000000000000000000000010000,0x00000000000000000000000000020000,0,16,0",
+        "payload": "3,2,1,0,0x2400250026002700280029003a030f0f,0x2400250026002700280029003a010f0f,0x2400250026002700280029003a020f0f,1,16,0",
         "payloadType": "str",
         "topic": "",
         "topicType": "str",
@@ -1386,10 +1383,119 @@
         "template": "{{sample}}",
         "output": "str",
         "x": 1200,
-        "y": 680,
+        "y": 800,
         "wires": [
             [
-                "aa8973059778364c"
+                "aa8973059778364c",
+                "05cc4815ac989825"
+            ]
+        ]
+    },
+    {
+        "id": "0271ae2968d24863",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "TEMP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1390,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "05cc4815ac989825",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "HUMID",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1400,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "0758608b16147699",
+        "type": "debug",
+        "z": "0c7a731dc303bfda",
+        "name": "TEDS",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "74a3146e2517ebc1",
+        "type": "switch",
+        "z": "0c7a731dc303bfda",
+        "name": "",
+        "property": "typeid",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "2,1,2",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "3,2,2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 750,
+        "y": 560,
+        "wires": [
+            [
+                "146dc54f4fab9526"
+            ],
+            [
+                "146dc54f4fab9526"
+            ]
+        ]
+    },
+    {
+        "id": "146dc54f4fab9526",
+        "type": "function",
+        "z": "0c7a731dc303bfda",
+        "name": "function 2",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 560,
+        "wires": [
+            [
+                "48eb6497066517cb",
+                "6fbfbaf089ccd2ab",
+                "740823ac03c904f1",
+                "1096085ef5376371",
+                "a8a6354eb16b3655",
+                "8a5fc0dd6b0dfc14"
             ]
         ]
     },
@@ -1459,7 +1565,7 @@
         "rap": false,
         "inputs": 0,
         "x": 200,
-        "y": 560,
+        "y": 740,
         "wires": [
             [
                 "dc076277db143607",
@@ -1473,7 +1579,7 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "TEMP D0 BIN",
-        "func": "var buf = new Buffer(64); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 1;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 63;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = 0; // TimeDuration 0\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 4\nbuf[61] = 0; // 5\nbuf[62] = 0; // 6\nbuf[63] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(64); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 1;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 64;\nbuf[5] = 0x24; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0x25; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0x26; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0x27; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0x28; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0x29; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0x3a; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0xf; // 14\nbuf[20] = 0xf; // 15\nbuf[21] = 0x24; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0x25; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0x26; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0x27; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0x28; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0x29; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0x3a; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0xf; // 14\nbuf[36] = 0xf; // 15\nbuf[37] = 0x24; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0x25; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0x26; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0x27; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0x28; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0x29; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0x3a; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0xf; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId\nbuf[54] = 1; //\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = 0; // TimeDuration 0\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 4\nbuf[61] = 0; // 5\nbuf[62] = 0; // 6\nbuf[63] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1492,22 +1598,18 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "Array2Str",
-        "func": "msg.typeid = msg.payload.slice(0,3).join()\nmsg.timid = parseInt(msg.payload.slice(37,53)[15]);\nmsg.sample = msg.payload.slice(55, 60);\nmsg.teds = msg.payload.slice(59)\nreturn msg;",
+        "func": "msg.typeid = msg.payload.slice(0,3).join()\nmsg.timid = parseInt(msg.payload.slice(39,55)[15]);\nmsg.sample = msg.payload.slice(57, 61);\nmsg.teds = msg.payload.slice(61)\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 530,
-        "y": 560,
+        "y": 740,
         "wires": [
             [
-                "30fd5a99a9e5d16e",
-                "7a901a05159d97a0",
-                "3a84580609f34008",
-                "1e46a66b9925cc0d",
-                "d542f8e0b35fddcc",
-                "adafa614399b6d2e"
+                "adafa614399b6d2e",
+                "40a0670e137cf6b4"
             ]
         ]
     },
@@ -1535,8 +1637,8 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 1260,
-        "y": 680,
+        "x": 1300,
+        "y": 860,
         "wires": []
     },
     {
@@ -1544,7 +1646,7 @@
         "type": "debug",
         "z": "a4c183a95164db51",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1552,7 +1654,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 540,
-        "y": 380,
+        "y": 560,
         "wires": []
     },
     {
@@ -1613,7 +1715,7 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "HUMID D0 BIN",
-        "func": "var buf = new Buffer(64); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 1;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 63;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0; // 14\nbuf[52] = 1; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = 0; // TimeDuration 0\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 4\nbuf[61] = 0; // 5\nbuf[62] = 0; // 6\nbuf[63] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(64); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 1;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 64;\nbuf[5] = 0x24; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0x25; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0x26; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0x27; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0x28; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0x29; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0x3a; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0xf; // 14\nbuf[20] = 0xf; // 15\nbuf[21] = 0x24; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0x25; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0x26; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0x27; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0x28; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0x29; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0x3a; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0xf; // 14\nbuf[36] = 0xf; // 15\nbuf[37] = 0x24; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0x25; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0x26; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0x27; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0x28; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0x29; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0x3a; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0xf; // 14\nbuf[52] = 1; // 15\nbuf[53] = 0; // ChannelId\nbuf[54] = 1; //\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = 0; // TimeDuration 0\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 4\nbuf[61] = 0; // 5\nbuf[62] = 0; // 6\nbuf[63] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1700,7 +1802,7 @@
         "topic": "",
         "name": "",
         "x": 730,
-        "y": 420,
+        "y": 600,
         "wires": []
     },
     {
@@ -1725,8 +1827,8 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "x": 890,
-        "y": 720,
+        "x": 930,
+        "y": 900,
         "wires": [
             [
                 "629390aa10a785d3"
@@ -1741,7 +1843,7 @@
         "type": "debug",
         "z": "a4c183a95164db51",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1776,8 +1878,8 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 1270,
-        "y": 740,
+        "x": 1310,
+        "y": 940,
         "wires": []
     },
     {
@@ -1811,7 +1913,7 @@
         "z": "a4c183a95164db51",
         "name": "",
         "group": "3a3f9853.90cc98",
-        "order": 1,
+        "order": 6,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -1864,7 +1966,7 @@
         "z": "a4c183a95164db51",
         "name": "",
         "group": "3a3f9853.90cc98",
-        "order": 2,
+        "order": 7,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -1891,7 +1993,7 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "TEMP TEDS D0 BIN",
-        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 4; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0x24; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0x25; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0x26; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0x27; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0x28; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0x29; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0x3a; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0xf; // 14\nbuf[20] = 0xf; // 15\nbuf[21] = 0x24; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0x25; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0x26; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0x27; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0x28; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0x29; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0x3a; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0xf; // 14\nbuf[36] = 0xf; // 15\nbuf[37] = 0x24; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0x25; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0x26; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0x27; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0x28; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0x29; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0x3a; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0xf; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 1; // 3\nbuf[55] = global.get('TEDSID'); // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1910,7 +2012,7 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "HUMID TEDS D0 BIN",
-        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0; // 14\nbuf[52] = 1; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 4; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0x24; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0x25; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0x26; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0x27; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0x28; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0x29; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0x3a; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0xf; // 14\nbuf[20] = 0xf; // 15\nbuf[21] = 0x24; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0x25; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0x26; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0x27; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0x28; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0x29; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0x3a; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0xf; // 14\nbuf[36] = 0xf; // 15\nbuf[37] = 0x24; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0x25; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0x26; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0x27; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0x28; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0x29; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0x3a; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0xf; // 14\nbuf[52] = 1; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 1; // 3\nbuf[55] = global.get('TEDSID'); // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1929,15 +2031,15 @@
         "type": "debug",
         "z": "a4c183a95164db51",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 780,
-        "y": 640,
+        "x": 1130,
+        "y": 780,
         "wires": []
     },
     {
@@ -1953,8 +2055,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 770,
-        "y": 520,
+        "x": 1120,
+        "y": 660,
         "wires": []
     },
     {
@@ -1970,8 +2072,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 780,
-        "y": 480,
+        "x": 1130,
+        "y": 620,
         "wires": []
     },
     {
@@ -1979,7 +2081,7 @@
         "type": "debug",
         "z": "a4c183a95164db51",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1987,8 +2089,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 780,
-        "y": 560,
+        "x": 1130,
+        "y": 700,
         "wires": []
     },
     {
@@ -1996,7 +2098,7 @@
         "type": "debug",
         "z": "a4c183a95164db51",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2004,8 +2106,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 770,
-        "y": 600,
+        "x": 1120,
+        "y": 740,
         "wires": []
     },
     {
@@ -2031,13 +2133,14 @@
         "repair": false,
         "outputs": 2,
         "x": 720,
-        "y": 740,
+        "y": 920,
         "wires": [
             [
                 "2409118d90faf447"
             ],
             [
-                "e43c104db6933a01"
+                "e43c104db6933a01",
+                "5015450ad575358c"
             ]
         ]
     },
@@ -2046,7 +2149,7 @@
         "type": "ui_text",
         "z": "a4c183a95164db51",
         "group": "3a3f9853.90cc98",
-        "order": 6,
+        "order": 10,
         "width": "6",
         "height": "2",
         "name": "",
@@ -2054,8 +2157,8 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "",
-        "x": 1260,
-        "y": 800,
+        "x": 1300,
+        "y": 1020,
         "wires": []
     },
     {
@@ -2087,7 +2190,7 @@
         "initialize": "",
         "finalize": "",
         "x": 530,
-        "y": 420,
+        "y": 600,
         "wires": [
             [
                 "bf918d6a9f2f1804"
@@ -2126,7 +2229,7 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "SERVO D0 BIN",
-        "func": "var buf = new Buffer(65); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 7;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 64;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0; // 14\nbuf[52] = 2; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = msg.payload;\nbuf[57] = 0 ; // TimeDuration\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(66); // バイナリの配列をつくる\nbuf[0] = 2;\nbuf[1] = 7;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 66;\nbuf[5] = 0x24; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0x25; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0x26; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0x27; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0x28; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0x29; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0x3a; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0xf; // 14\nbuf[20] = 0xf; // 15\nbuf[21] = 0x24; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0x25; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0x26; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0x27; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0x28; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0x29; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0x3a; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0xf; // 14\nbuf[36] = 0xf; // 15\nbuf[37] = 0x24; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0x25; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0x26; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0x27; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0x28; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0x29; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0x3a; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0xf; // 14\nbuf[52] = 2; // 15\nbuf[53] = 0; // ChannelId \nbuf[54] = 1; //\nbuf[55] = 0; // samplingMode 0=default\nbuf[56] = msg.payload;\nbuf[57] = 0; // end of string\nbuf[58] = 0; // TimeDuration\nbuf[59] = 0; // TimeDuration\nbuf[60] = 0; // TimeDuration\nbuf[61] = 0; // TimeDuration\nbuf[62] = 0; // TimeDuration\nbuf[63] = 0; // TimeDuration\nbuf[64] = 0; // TimeDuration\nbuf[65] = 0; // TimeDuration\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2171,7 +2274,7 @@
         "z": "a4c183a95164db51",
         "name": "",
         "group": "3a3f9853.90cc98",
-        "order": 2,
+        "order": 8,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2198,7 +2301,7 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "SERVO TEDS D0 BIN",
-        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0; // 14\nbuf[52] = 2; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 4; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0x24; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0x25; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0x26; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0x27; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0x28; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0x29; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0x3a; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0xf; // 14\nbuf[20] = 0xf; // 15\nbuf[21] = 0x24; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0x25; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0x26; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0x27; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0x28; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0x29; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0x3a; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0xf; // 14\nbuf[36] = 0xf; // 15\nbuf[37] = 0x24; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0x25; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0x26; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0x27; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0x28; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0x29; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0x3a; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0xf; // 14\nbuf[52] = 2; // 15\nbuf[53] = 0; // ChannelId\nbuf[54] = 1; //\nbuf[55] = global.get('TEDSID'); // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2268,7 +2371,7 @@
         "z": "a4c183a95164db51",
         "name": "",
         "group": "3a3f9853.90cc98",
-        "order": 2,
+        "order": 9,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2295,7 +2398,7 @@
         "type": "function",
         "z": "a4c183a95164db51",
         "name": "SERVO TEDS D0 BIN",
-        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0; // 14\nbuf[20] = 0; // 15\nbuf[21] = 0; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0; // 14\nbuf[36] = 0; // 15\nbuf[37] = 0; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId 0 = 1\nbuf[54] = 0; // 3\nbuf[55] = 16; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
+        "func": "var buf = new Buffer(71); // バイナリの配列をつくる\nbuf[0] = 3;\nbuf[1] = 2;\nbuf[2] = 1;\nbuf[3] = 0;\nbuf[4] = 67;\nbuf[5] = 0x24; // UUID appId 0\nbuf[6] = 0; // 1\nbuf[7] = 0x25; // 2\nbuf[8] = 0; // 3\nbuf[9] = 0x26; // 4\nbuf[10] = 0; // 5\nbuf[11] = 0x27; // 6\nbuf[12] = 0; // 7\nbuf[13] = 0x28; // 8\nbuf[14] = 0; // 9\nbuf[15] = 0x29; // 10\nbuf[16] = 0; // 11\nbuf[17] = 0x3a; // 12\nbuf[18] = 3; // 13\nbuf[19] = 0xf; // 14\nbuf[20] = 0xf; // 15\nbuf[21] = 0x24; // UUID ncapId 0\nbuf[22] = 0; // 1\nbuf[23] = 0x25; // 2\nbuf[24] = 0; // 3\nbuf[25] = 0x26; // 4\nbuf[26] = 0; // 5\nbuf[27] = 0x27; // 6\nbuf[28] = 0; // 7\nbuf[29] = 0x28; // 8\nbuf[30] = 0; // 9\nbuf[31] = 0x29; // 10\nbuf[32] = 0; // 11\nbuf[33] = 0x3a; // 12\nbuf[34] = 1; // 13\nbuf[35] = 0xf; // 14\nbuf[36] = 0xf; // 15\nbuf[37] = 0x24; // UUID timId 0\nbuf[38] = 0; // 1\nbuf[39] = 0x25; // 2\nbuf[40] = 0; // 3\nbuf[41] = 0x26; // 4\nbuf[42] = 0; // 5\nbuf[43] = 0x27; // 6\nbuf[44] = 0; // 7\nbuf[45] = 0x28; // 8\nbuf[46] = 0; // 9\nbuf[47] = 0x29; // 10\nbuf[48] = 0; // 11\nbuf[49] = 0x3a; // 12\nbuf[50] = 2; // 13\nbuf[51] = 0xf; // 14\nbuf[52] = 0; // 15\nbuf[53] = 0; // ChannelId\nbuf[54] = 1; //\nbuf[55] = 16; // 0 tedsAccessCode\nbuf[56] = 0; // 0 tedsOffset\nbuf[57] = 0; // 1\nbuf[58] = 0; // 2\nbuf[59] = 0; // 3\nbuf[60] = 0; // 0 timeout\nbuf[61] = 0; // 1\nbuf[62] = 0; // 2\nbuf[63] = 0; // 3\nbuf[64] = 0; // 4\nbuf[65] = 0; // 5\nbuf[66] = 0; // 6\nbuf[77] = 0; // 7\nmsg.payload = buf;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2320,11 +2423,12 @@
         "syntax": "mustache",
         "template": "{{sample}}",
         "output": "str",
-        "x": 1060,
-        "y": 740,
+        "x": 1100,
+        "y": 940,
         "wires": [
             [
-                "9c09104671edbe28"
+                "9c09104671edbe28",
+                "dc38bd8551277538"
             ]
         ]
     },
@@ -2339,11 +2443,12 @@
         "syntax": "mustache",
         "template": "{{sample}}",
         "output": "str",
-        "x": 1060,
-        "y": 680,
+        "x": 1100,
+        "y": 860,
         "wires": [
             [
-                "4a76375d90ee0a70"
+                "4a76375d90ee0a70",
+                "dddcc4ff24cc83e2"
             ]
         ]
     },
@@ -2358,8 +2463,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 890,
-        "y": 800,
+        "x": 930,
+        "y": 1020,
         "wires": [
             [
                 "4f84dd09a1e8ca24"
@@ -2377,12 +2482,366 @@
         "syntax": "mustache",
         "template": "{{teds}}",
         "output": "str",
-        "x": 1060,
-        "y": 800,
+        "x": 1100,
+        "y": 1020,
         "wires": [
             [
-                "db422cf5094a66ef"
+                "db422cf5094a66ef",
+                "6c44b6a7e4ae2ddd"
             ]
         ]
+    },
+    {
+        "id": "7a301d0ea33df5e1",
+        "type": "inject",
+        "z": "a4c183a95164db51",
+        "name": "Chan TEDS",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "3",
+        "payloadType": "num",
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "83f14fb1506b84e0"
+            ]
+        ]
+    },
+    {
+        "id": "65942ddc9b1256e6",
+        "type": "inject",
+        "z": "a4c183a95164db51",
+        "name": "Meta TEDS",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 130,
+        "y": 380,
+        "wires": [
+            [
+                "43eb5e963ed23654"
+            ]
+        ]
+    },
+    {
+        "id": "3b4c7a68dd2e3877",
+        "type": "inject",
+        "z": "a4c183a95164db51",
+        "name": "Name TEDS",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "12",
+        "payloadType": "num",
+        "x": 130,
+        "y": 460,
+        "wires": [
+            [
+                "299d20ad096d1f15"
+            ]
+        ]
+    },
+    {
+        "id": "83f14fb1506b84e0",
+        "type": "ui_button",
+        "z": "a4c183a95164db51",
+        "name": "",
+        "group": "3a3f9853.90cc98",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "Chan TEDS",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "3",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "str",
+        "x": 330,
+        "y": 420,
+        "wires": [
+            [
+                "ec36f0d3366952aa"
+            ]
+        ]
+    },
+    {
+        "id": "43eb5e963ed23654",
+        "type": "ui_button",
+        "z": "a4c183a95164db51",
+        "name": "",
+        "group": "3a3f9853.90cc98",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "Meta TEDS",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "1",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "str",
+        "x": 330,
+        "y": 380,
+        "wires": [
+            [
+                "ec36f0d3366952aa"
+            ]
+        ]
+    },
+    {
+        "id": "299d20ad096d1f15",
+        "type": "ui_button",
+        "z": "a4c183a95164db51",
+        "name": "",
+        "group": "3a3f9853.90cc98",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "Name TEDS",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "12",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "str",
+        "x": 330,
+        "y": 460,
+        "wires": [
+            [
+                "ec36f0d3366952aa"
+            ]
+        ]
+    },
+    {
+        "id": "ec36f0d3366952aa",
+        "type": "function",
+        "z": "a4c183a95164db51",
+        "name": "set TEDS ID",
+        "func": "global.set(\"TEDSID\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "40a0670e137cf6b4",
+        "type": "switch",
+        "z": "a4c183a95164db51",
+        "name": "",
+        "property": "typeid",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "2,1,2",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "3,2,2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 710,
+        "y": 700,
+        "wires": [
+            [
+                "8d33ac0fce4f74f3"
+            ],
+            [
+                "8d33ac0fce4f74f3"
+            ]
+        ]
+    },
+    {
+        "id": "8d33ac0fce4f74f3",
+        "type": "function",
+        "z": "a4c183a95164db51",
+        "name": "function 1",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 700,
+        "wires": [
+            [
+                "30fd5a99a9e5d16e",
+                "7a901a05159d97a0",
+                "3a84580609f34008",
+                "1e46a66b9925cc0d",
+                "d542f8e0b35fddcc"
+            ]
+        ]
+    },
+    {
+        "id": "5015450ad575358c",
+        "type": "debug",
+        "z": "a4c183a95164db51",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "88230c72eb91f6de",
+        "type": "inject",
+        "z": "a4c183a95164db51",
+        "name": "Phy TEDS",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "13",
+        "payloadType": "num",
+        "x": 120,
+        "y": 500,
+        "wires": [
+            [
+                "db1b9b21bbad0810"
+            ]
+        ]
+    },
+    {
+        "id": "db1b9b21bbad0810",
+        "type": "ui_button",
+        "z": "a4c183a95164db51",
+        "name": "",
+        "group": "3a3f9853.90cc98",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "Phy TEDS",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "13",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "str",
+        "x": 330,
+        "y": 500,
+        "wires": [
+            [
+                "ec36f0d3366952aa"
+            ]
+        ]
+    },
+    {
+        "id": "dddcc4ff24cc83e2",
+        "type": "debug",
+        "z": "a4c183a95164db51",
+        "name": "TEMP",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1290,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "dc38bd8551277538",
+        "type": "debug",
+        "z": "a4c183a95164db51",
+        "name": "HUMID",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1300,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "6c44b6a7e4ae2ddd",
+        "type": "debug",
+        "z": "a4c183a95164db51",
+        "name": "TEDS",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1290,
+        "y": 980,
+        "wires": []
     }
 ]

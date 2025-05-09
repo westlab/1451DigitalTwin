@@ -18,6 +18,7 @@ import RPi.GPIO as GPIO
 import dht11
 import time
 import random
+import re
 from collections import OrderedDict
 
 parser = argparse.ArgumentParser(
@@ -122,19 +123,16 @@ humidteds = [None]*17
 servoteds = [None]*17
 
 tempteds[1] = confdata['TEMPBINMETATEDS']
-tempteds[2] = confdata['TEMPBINIDTEDS']
 tempteds[3] = confdata['TEMPBINCHANTEDS']
 tempteds[12] = confdata['TEMPBINNAMETEDS']
 tempteds[13] = confdata['TEMPBINPHYTEDS']
 tempteds[16] = confdata['SECURITYBINTEDS']
 humidteds[1] = confdata['HUMIDBINMETATEDS']
-humidteds[2] = confdata['HUMIDBINIDTEDS']
 humidteds[3] = confdata['HUMIDBINCHANTEDS']
 humidteds[12] = confdata['HUMIDBINNAMETEDS']
 humidteds[13] = confdata['HUMIDBINPHYTEDS']
 humidteds[16] = confdata['SECURITYBINTEDS']
 servoteds[1] = confdata['SERVOBINMETATEDS']
-servoteds[2] = confdata['SERVOBINIDTEDS']
 servoteds[3] = confdata['SERVOBINCHANTEDS']
 servoteds[12] = confdata['SERVOBINNAMETEDS']
 servoteds[13] = confdata['SERVOBINPHYTEDS']
@@ -148,8 +146,8 @@ pprint.pprint([topiccop, topicd0op])
 print("Topics for publish")
 pprint.pprint([topiccopres, topicd0opres])
 
-vhumid = {}
-vtemp = {}
+vhumid = [None]*2
+vtemp = [None]*2
 
 #binblk_anno = {
 #    'netSvcType'        : {'offset': 0, 'type': '<B'}, #1
@@ -264,7 +262,7 @@ binblk_read = {
     'timeout'           : {'offset': 56, 'type': '<8B'},
 }
 
-#binblk_read = {
+#binblk_read_rep = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
@@ -292,7 +290,7 @@ binblk_write = {
     'timeout'           : {'offset': 57, 'type': '<8B'},
 }
 
-#binblk_write = {
+#binblk_write_rep = {
 #    'netSvcType'        : {'offset': 0,  'type': '<B'},
 #    'netSvcID'          : {'offset': 1,  'type': '<B'},
 #    'msgType'           : {'offset': 2,  'type': '<B'},
@@ -349,17 +347,6 @@ def hs2ba16(hexstr: str) -> bytearray:
 
 bnull = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 
-# a.to_bytes(2, 'big')  # 2 bytes big endian
-# b'\x00\x80'
-# a.to_bytes(4, 'little')  # 4 bytes little endian
-# b'\x80\x00\x00\x00'
-# int.from_bytes(b'\x00\x80', 'big')
-# 128
-# int.from_bytes(b'\x80\x00\x00\x00', 'little')
-# 128
-# str -> byte .encode()
-# byte -> str .decode()
-
 def insert_length(binstr, position):
     length = len(binstr)-5
     length_bytes = length.to_bytes(2, byteorder='big')
@@ -369,6 +356,12 @@ def insert_length(binstr, position):
     return binstr
 
 def hexstr2bin(hex_string):
+    hex_string = re.sub(r'[\s_]', '', hex_string)
+    cleaned = ''
+    for idx, ch in enumerate(hex_string):
+        if not re.match(r'[0-9a-fA-F]', ch):
+            raise ValueError(f"Invalid character '{ch}' at position {idx} in original string")
+        cleaned += ch
     cleaned_hex_string = ''.join(hex_string.split())
     binary_data = bytes.fromhex(cleaned_hex_string)
     return binary_data
@@ -378,12 +371,7 @@ def str2ba(input_str: str) -> bytearray:
     return bytearray(encoded + b'\x00')  # add NULL termination
 
 def parsemsg(format_spec: dict, msg: str) -> dict:
-    """
-    msg: 本来はバイナリデータだったが、str型として受け取ってしまったもの
-         → 各文字のUnicodeコードポイントが 0〜255 の範囲内であり、ASCII＋バイナリデータが混在している
-    """
     if isinstance(msg, str):
-        # 本来のバイト列に戻す：1文字=1バイトの仮定に基づいて復元
         msg_bytes = msg.encode('latin-1')
     elif isinstance(msg, bytes):
         msg_bytes = msg
@@ -402,9 +390,6 @@ def parsemsg(format_spec: dict, msg: str) -> dict:
     return parsed
 
 def calculate_checksum(data: bytes) -> bytes:
-    """
-    .0 に準拠したチェックサムを計算する（0xFFFF - sum(data[i]) over 2-byte chunks）。
-    """
     checksum = 0
     for byte in data:
         checksum += byte
@@ -413,17 +398,19 @@ def calculate_checksum(data: bytes) -> bytes:
     return final_checksum.to_bytes(2, byteorder='big')
 
 def tedsmsg(teds_body: bytes) -> bytes:
+    print("TEDS:", teds_body.hex())
     # Step 1: Length field (4 bytes, big-endian)
-    teds_length = len(teds_body)
+    teds_length = len(teds_body)+2 # including checksum
+    print("LEN:", teds_length)
     length_bytes = teds_length.to_bytes(4, byteorder='big')
-
     # Step 2: Combine Length + Body
     teds_full = length_bytes + teds_body
-
+    print("Add Length:", teds_full.hex())
     # Step 3: .0準拠チェックサムの計算
     checksum_bytes = calculate_checksum(teds_full)
-
     # Step 4: 完全なメッセージを返す（Length + Body + Checksum）
+    hoge = teds_full+checksum_bytes
+    print("Finally:", hoge.hex())
     return teds_full + checksum_bytes
 
 def s16(value):
@@ -492,8 +479,8 @@ def on_message(mqttc, obj, msg):
                                 print('publish: sampleData:', str(vtemp[chid]))
                                 print('publish: sts:', sts)
                                 client.publish(topiccopres, '2,1,2,0,'+mline[3]+','+mline[4]+','+mline[5]+','+str(chid)+','+str(vtemp[chid])+','+sts)
-                                print("Read TEMP Response")
-                            if mline[5] == uuidtim1:
+                                print("Read TEMP Response:", vtemp[chid])
+                            elif mline[5] == uuidtim1:
                                 print(topiccopres)
                                 print('publish: appId as ml 4:', mline[3])
                                 print('publish: ncapId as ml 5:', mline[4])
@@ -502,11 +489,11 @@ def on_message(mqttc, obj, msg):
                                 print('publish: sampleData:', str(vhumid[chid]))
                                 print('publish: sts:', sts)
                                 client.publish(topiccopres, '2,1,2,0,'+mline[3]+','+mline[4]+','+mline[5]+','+str(chid)+','+str(vhumid[chid])+','+sts)
-                                print("Read HUMID")
+                                print("Read HUMID Response:", vhumid[chid])
                             else:
-                                print("timId Error:", mline[5])
+                                print("timId Error(1):", repr(mline[5]), repr(uuidtim0))
                         else:
-                            print("ncapId Error:", mline[4])
+                            print("ncapId Error:", mline[4], uuidncap)
                 elif mline[1] == '7':
                     if mline[2] == '1':
 #271
@@ -536,7 +523,7 @@ def on_message(mqttc, obj, msg):
                                 else:
                                     print("++++++++++++ Psuedo Servo:", mline[8]);
                             else:
-                                print("timId Error:", mline[5])
+                                print("timId Error(2):", mline[5])
                         else:
                             print("ncapId Error:", mline[4])
             elif mline[0] == '3':
@@ -563,7 +550,7 @@ def on_message(mqttc, obj, msg):
                                     client.publish(topiccopres, '3,2,2,0,0,'+mline[4]+','+mline[5]+','+mline[6]+','+mline[7]+','+mline[8]+','+confdata['SERVOTEDS'])
                                     print("Read SERVO TEDS")
                                 else:
-                                    print("timId Error:",mline[4])
+                                    print("timId Error(3):",mline[4])
                             else:
                                 print("ncapId Error:",mline[5])
                         elif mline[8] == '16':
@@ -599,7 +586,7 @@ def on_message(mqttc, obj, msg):
             print("appId: ", mline['appId'])
             print("ncapId: ", mline['ncapId'])
             sbp = bytearray([0x1, 0x9, 0x2, 0x0, 0x0, 0x0, 0x0])
-            binstr = sbp+hs2ba16(mline['appId'])+hs2ba16(mline['ncapId'])+bytearray([0x0, 0x3])+hs2ba16(uuidtim0)+hs2ba16(uuidtim1)+hs2ba16(uuidtim2)+str2ba('Temp')+str2ba('Humid')+str2ba('Servo')
+            binstr = sbp+hs2ba16(mline['appId'])+hs2ba16(mline['ncapId'])+bytearray([0x0, 0x3])+hs2ba16(uuidtim0)+hs2ba16(uuidtim1)+hs2ba16(uuidtim2)+str2ba(confdata['NAMETIM0'])+str2ba(confdata['NAMETIM1'])+str2ba(confdata['NAMETIM2'])
             print("lengsh of ncapId:", len(mline['ncapId']))
             binstr = insert_length(binstr, 3)
             print(binstr.hex())
@@ -622,7 +609,7 @@ def on_message(mqttc, obj, msg):
             print(mline['ncapId'], uuidncap)
             if '0x'+mline['ncapId'] == uuidncap:
                 print("tmid: ", mline['timId'])
-                sbp = bytearray([0x2, 0x1, 0x2, 0x0, 0x42])
+                sbp = bytearray([0x2, 0x1, 0x2, 0x0, 0x0, 0x0, 0x0])
                 chid = int('0x'+mline['channelId'], 16)
                 print("chid(ml): ", mline['channelId'])
                 print('chid:',chid)
@@ -633,14 +620,14 @@ def on_message(mqttc, obj, msg):
                     binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+(str(vtemp[chid]).encode()+bnull)[0:5]+bts
                     binstr = insert_length(binstr, 3)
                     client.publish(topicd0opres, binstr)
-                    print("Read TEMP")
+                    print("Read TEMP Response:", vtemp[chid])
                 elif '0x'+mline['timId'] == uuidtim1:
                     binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+(str(vhumid[chid]).encode()+bnull)[0:5]+bts
                     binstr = insert_length(binstr, 3)
                     client.publish(topicd0opres, binstr)
-                    print("Read HUMID")
+                    print("Read HUMID Response:", vhumid[chid])
                 else:
-                    print("timId Error", mline['timId'])
+                    print("timId Error(4)", mline['timId'])
             else:
                 print("ncapId Error")
         elif msg[0:3].encode() == b'\x02\x07\x01':
@@ -666,7 +653,7 @@ def on_message(mqttc, obj, msg):
                     else:
                         print("++++++++++++ Pseudo Servo:", mline['dataValue']);
                 else:
-                    print("timId Error", mline['timId'])
+                    print("timId Error(5)", mline['timId'])
             else:
                 print("ncapId Error")
         elif msg[0:3].encode() == b'\x03\x02\x01':
@@ -679,14 +666,15 @@ def on_message(mqttc, obj, msg):
                     if '0x'+mline['timId'] == uuidtim0:
                         for key in ['appId', 'ncapId', 'timId']:
                             print(f"{key}: type={type(mline[key])}, value={repr(mline[key])}")
+                        print("TEDS: ", mline['tedsAccessCode'], " = ", tempteds[mline['tedsAccessCode']])
                         binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(tempteds[mline['tedsAccessCode']]))
-                        print(sbp,bytearray.fromhex(mline['appId']),",",bytearray.fromhex(mline['ncapId']),",",bytearray.fromhex(mline['timId']),",",bytearray.fromhex(mline['channelId']),",",bytearray.fromhex(mline['tedsOffset']),",",tedsmsg(hexstr2bin(tempteds[mline['tedsAccessCode']])))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read TEMP BINARY TEDS")
                     elif '0x'+mline['timId'] == uuidtim1:
                         for key in ['appId', 'ncapId', 'timId']:
                             print(f"{key}: type={type(mline[key])}, value={repr(mline[key])}")
+                        print("TEDS: ", mline['tedsAccessCode'], " = ", humidteds[mline['tedsAccessCode']])
                         binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(humidteds[mline['tedsAccessCode']]))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
@@ -694,12 +682,13 @@ def on_message(mqttc, obj, msg):
                     elif '0x'+mline['timId'] == uuidtim2:
                         for key in ['appId', 'ncapId', 'timId']:
                             print(f"{key}: type={type(mline[key])}, value={repr(mline[key])}")
+                        print("TEDS: ", mline['tedsAccessCode']," = ", servoteds[mline['tedsAccessCode']])
                         binstr = sbp+bytearray.fromhex(mline['appId'])+bytearray.fromhex(mline['ncapId'])+bytearray.fromhex(mline['timId'])+bytearray.fromhex(mline['channelId'])+bytearray.fromhex(mline['tedsOffset'])+tedsmsg(hexstr2bin(servoteds[mline['tedsAccessCode']]))
                         binstr = insert_length(binstr, 3)
                         client.publish(topicd0opres, binstr)
                         print("Read SERVO BINARY TEDS")
                     else:
-                        print("timId Error", mline['timId'])
+                        print("timId Error(6)", mline['timId'])
                 else:
                     print("ncapId Error")
                     print(mline['ncapId'])
@@ -740,24 +729,24 @@ if __name__ == '__main__':
                 if pflag == False:
                     result = instance.read()
                     if result.is_valid():
-                        vtemp[0] = result.temperature
-                        vhumid[0] = result.humidity
+                        vtemp[1] = result.temperature
+                        vhumid[1] = result.humidity
                         if dflag == True:
                             print("Last valid input: " + str(datetime.datetime.now()))
-                            print("Temperature: %-3.1f C" % vtemp[0])
-                            print("Humidity: %-3.1f %%" % vhumid[0])
+                            print("Temperature: %-3.1f C" % vtemp[1])
+                            print("Humidity: %-3.1f %%" % vhumid[1])
                             client.publish(topicdop+'/'+str(0)+'/TIME', str(datetime.datetime.now()))
-                            client.publish(topicdop+'/'+str(0)+'/TEMP', vtemp[0])
-                            client.publish(topicdop+'/'+str(0)+'/HUMID', vhumid[0])
+                            client.publish(topicdop+'/'+str(0)+'/TEMP', vtemp[1])
+                            client.publish(topicdop+'/'+str(0)+'/HUMID', vhumid[1])
                 else:
-                    vtemp[0] = random.randrange(100,300)/10
-                    vhumid[0] = random.randrange(200,700)/10
+                    vtemp[1] = random.randrange(100,300)/10
+                    vhumid[1] = random.randrange(200,700)/10
                     print("Last valid input: " + str(datetime.datetime.now()))
-                    print("Temperature: %-3.1f C" % vtemp[0])
-                    print("Humidity: %-3.1f %%" % vhumid[0])
+                    print("Temperature: %-3.1f C" % vtemp[1])
+                    print("Humidity: %-3.1f %%" % vhumid[1])
                     client.publish(topicdop+'/'+str(0)+'/TIME', str(datetime.datetime.now()))
-                    client.publish(topicdop+'/'+str(0)+'/TEMP', vtemp[0])
-                    client.publish(topicdop+'/'+str(0)+'/HUMID', vhumid[0])
+                    client.publish(topicdop+'/'+str(0)+'/TEMP', vtemp[1])
+                    client.publish(topicdop+'/'+str(0)+'/HUMID', vhumid[1])
                 time.sleep(3)
                 if aflag == True:
                     print("Announce")
