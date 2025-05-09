@@ -401,29 +401,30 @@ def parsemsg(format_spec: dict, msg: str) -> dict:
             parsed[key] = f"Error: {e}"
     return parsed
 
+def calculate_checksum(data: bytes) -> bytes:
+    """
+    .0 に準拠したチェックサムを計算する（0xFFFF - sum(data[i]) over 2-byte chunks）。
+    """
+    checksum = 0
+    for byte in data:
+        checksum += byte
+    checksum &= 0xFFFF  # Ensure 16-bit limit
+    final_checksum = (0xFFFF - checksum) & 0xFFFF
+    return final_checksum.to_bytes(2, byteorder='big')
+
 def tedsmsg(teds_body: bytes) -> bytes:
-    # Step 1: Length (4バイト, little-endian)
+    # Step 1: Length field (4 bytes, big-endian)
     teds_length = len(teds_body)
-    length_bytes = teds_length.to_bytes(4, byteorder='little')
-    
+    length_bytes = teds_length.to_bytes(4, byteorder='big')
+
     # Step 2: Combine Length + Body
     teds_full = length_bytes + teds_body
 
-    # Step 3: CRC-16-CCITT 計算
-    def compute_crc16_ccitt(data: bytes) -> int:
-        crc = 0xFFFF
-        for byte in data:
-            crc ^= byte << 8
-            for _ in range(8):
-                crc = (crc << 1) ^ 0x1021 if (crc & 0x8000) else crc << 1
-                crc &= 0xFFFF
-        return crc
+    # Step 3: .0準拠チェックサムの計算
+    checksum_bytes = calculate_checksum(teds_full)
 
-    crc = compute_crc16_ccitt(teds_full)
-    crc_bytes = crc.to_bytes(2, byteorder='big')
-
-    # Step 4: 完全なTEDSデータ
-    return teds_full + crc_bytes
+    # Step 4: 完全なメッセージを返す（Length + Body + Checksum）
+    return teds_full + checksum_bytes
 
 def s16(value):
     return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
