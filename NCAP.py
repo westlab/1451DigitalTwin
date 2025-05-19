@@ -121,6 +121,7 @@ uuidapp0 = confdata['UUIDAPP0']
 tempteds = [None]*17
 humidteds = [None]*17
 servoteds = [None]*17
+CKtrans = 273.2
 
 tempteds[1] = confdata['TEMPBINMETATEDS']
 tempteds[3] = confdata['TEMPBINCHANTEDS']
@@ -729,7 +730,7 @@ if __name__ == '__main__':
                 if pflag == False:
                     result = instance.read()
                     if result.is_valid():
-                        vtemp[1] = result.temperature
+                        vtemp[1] = result.temperature+CKtrans
                         vhumid[1] = result.humidity
                         if dflag == True:
                             print("Last valid input: " + str(datetime.datetime.now()))
@@ -739,7 +740,7 @@ if __name__ == '__main__':
                             client.publish(topicdop+'/'+str(0)+'/TEMP', vtemp[1])
                             client.publish(topicdop+'/'+str(0)+'/HUMID', vhumid[1])
                 else:
-                    vtemp[1] = random.randrange(100,300)/10
+                    vtemp[1] = random.randrange(100,300)/10+CKtrans
                     vhumid[1] = random.randrange(200,700)/10
                     print("Last valid input: " + str(datetime.datetime.now()))
                     print("Temperature: %-3.1f C" % vtemp[1])
