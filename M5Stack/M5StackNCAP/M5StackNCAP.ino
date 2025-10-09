@@ -1,33 +1,31 @@
 #include <M5Core2.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <SensirionI2CScd4x.h>
+#include "SensirionI2cScd4x.h"
 #include <Wire.h>
 
 // Wi-Fi設定
-const char* ssid = "westexp-mobile";         // Wi-FiのSSIDを入力してください
-const char* password = "kyouryokunawestnohashi"; // Wi-Fiのパスワードを入力してください
+const char* ssid = "westexp-mobile";
+const char* password = "kyouryokunawestnohashi";
 
 // MQTTブローカー設定
 const char* mqtt_server = "broker.hivemq.com";
 const int mqtt_port = 1883;
 
-// Device name
-const char* device_name = "Core2_1";
-//const char* device_name = "Core2_2";
+// Device name（MACアドレスから自動生成）
+String device_name;
+String topic_name;
 
-String topic_name = (String)"_IECON_Plugfest/" + (String)device_name + (String)"/sample";
-
-SensirionI2CScd4x scd4x;
+SensirionI2cScd4x scd4x;
 
 // MQTT client
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 // グラフ設定
-#define GRAPH_WIDTH  280
-#define GRAPH_HEIGHT 45
-#define GRAPH_X      20
+#define GRAPH_WIDTH  268
+#define GRAPH_HEIGHT 48
+#define GRAPH_X      42
 
 #define GRAPH_SPACING 5
 
@@ -39,9 +37,9 @@ PubSubClient client(espClient);
 #define CAPTION_HUM_Y   (GRAPH_TEMP_Y + GRAPH_HEIGHT + GRAPH_SPACING)
 #define GRAPH_HUM_Y     (CAPTION_HUM_Y + 10)
 
-float co2_values[GRAPH_WIDTH];   // CO2値の配列
-float temp_values[GRAPH_WIDTH];  // 温度値の配列
-float hum_values[GRAPH_WIDTH];   // 湿度値の配列
+float co2_values[GRAPH_WIDTH];
+float temp_values[GRAPH_WIDTH];
+float hum_values[GRAPH_WIDTH];
 
 void setup_wifi() {
   delay(10);
@@ -51,7 +49,6 @@ void setup_wifi() {
 
   WiFi.begin(ssid, password);
 
-  // Wi-Fi接続を試みる
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -64,11 +61,9 @@ void setup_wifi() {
 }
 
 void reconnect() {
-  // 再接続するまでループ
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    // 接続を試みる
-    if (client.connect(device_name)) {
+    if (client.connect(device_name.c_str())) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");
@@ -79,21 +74,6 @@ void reconnect() {
   }
 }
 
-void printUint16Hex(uint16_t value) {
-  Serial.print(value < 4096 ? "0" : "");
-  Serial.print(value < 256 ? "0" : "");
-  Serial.print(value < 16 ? "0" : "");
-  Serial.print(value, HEX);
-}
-
-void printSerialNumber(uint16_t serial0, uint16_t serial1, uint16_t serial2) {
-  Serial.print("Serial: 0x");
-  printUint16Hex(serial0);
-  printUint16Hex(serial1);
-  printUint16Hex(serial2);
-  Serial.println();
-}
-
 void setup() {
   M5.begin();
   Serial.begin(115200);
@@ -101,12 +81,26 @@ void setup() {
     delay(100);
   }
 
+  // MACアドレスから下位16ビットを取得してデバイス名を生成
+  uint8_t mac[6];
+  WiFi.macAddress(mac);
+  char mac_suffix[5];
+  sprintf(mac_suffix, "%02X%02X", mac[4], mac[5]);
+  device_name = "Core2_" + String(mac_suffix);
+  
+  topic_name = "_IECON_Plugfest/" + device_name + "/sample";
+
+  Serial.print("Device Name: ");
+  Serial.println(device_name);
+  Serial.print("Topic Name: ");
+  Serial.println(topic_name);
+
   // ディスプレイの初期化
   M5.Lcd.fillScreen(BLACK);
   M5.Lcd.setTextColor(WHITE, BLACK);
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(10, 10);
-  M5.Lcd.printf("Device: %s", device_name);
+  M5.Lcd.printf("Device: %s", device_name.c_str());
 
   setup_wifi();
 
@@ -117,9 +111,8 @@ void setup() {
   uint16_t error;
   char errorMessage[256];
 
-  scd4x.begin(Wire);
+  scd4x.begin(Wire, 0x62);
 
-  // 測定が開始されている場合は停止
   error = scd4x.stopPeriodicMeasurement();
   if (error) {
     Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
@@ -127,19 +120,17 @@ void setup() {
     Serial.println(errorMessage);
   }
 
-  uint16_t serial0;
-  uint16_t serial1;
-  uint16_t serial2;
-  error = scd4x.getSerialNumber(serial0, serial1, serial2);
+  uint64_t serialNumber;
+  error = scd4x.getSerialNumber(serialNumber);
   if (error) {
     Serial.print("Error trying to execute getSerialNumber(): ");
     errorToString(error, errorMessage, 256);
     Serial.println(errorMessage);
   } else {
-    printSerialNumber(serial0, serial1, serial2);
+    Serial.print("Serial: 0x");
+    Serial.println(serialNumber, HEX);
   }
 
-  // 測定開始
   error = scd4x.startPeriodicMeasurement();
   if (error) {
     Serial.print("Error trying to execute startPeriodicMeasurement(): ");
@@ -157,22 +148,40 @@ void setup() {
   }
 
   M5.Lcd.setTextSize(1);
-  M5.Lcd.setTextColor(WHITE);
+  M5.Lcd.setTextColor(WHITE, BLACK);
 
-  // CO2グラフのキャプションと枠を描画
+  // CO2グラフ（枠を1ピクセル外側に描画）
   M5.Lcd.setCursor(GRAPH_X, CAPTION_CO2_Y);
   M5.Lcd.print("CO2 Concentration (ppm)");
-  M5.Lcd.drawRect(GRAPH_X - 1, GRAPH_CO2_Y - 1, GRAPH_WIDTH + 2, GRAPH_HEIGHT + 2, WHITE);
+  M5.Lcd.drawRect(GRAPH_X - 2, GRAPH_CO2_Y - 2, GRAPH_WIDTH + 4, GRAPH_HEIGHT + 4, WHITE);
+  M5.Lcd.setCursor(5, GRAPH_CO2_Y);
+  M5.Lcd.print("5000");
+  M5.Lcd.setCursor(5, GRAPH_CO2_Y + GRAPH_HEIGHT / 2 - 4);
+  M5.Lcd.print("2500");
+  M5.Lcd.setCursor(15, GRAPH_CO2_Y + GRAPH_HEIGHT - 8);
+  M5.Lcd.print("0");
 
-  // 温度グラフのキャプションと枠を描画
+  // 温度グラフ（枠を1ピクセル外側に描画）
   M5.Lcd.setCursor(GRAPH_X, CAPTION_TEMP_Y);
   M5.Lcd.print("Temperature (C)");
-  M5.Lcd.drawRect(GRAPH_X - 1, GRAPH_TEMP_Y - 1, GRAPH_WIDTH + 2, GRAPH_HEIGHT + 2, WHITE);
+  M5.Lcd.drawRect(GRAPH_X - 2, GRAPH_TEMP_Y - 2, GRAPH_WIDTH + 4, GRAPH_HEIGHT + 4, WHITE);
+  M5.Lcd.setCursor(15, GRAPH_TEMP_Y);
+  M5.Lcd.print("40");
+  M5.Lcd.setCursor(15, GRAPH_TEMP_Y + GRAPH_HEIGHT / 2 - 4);
+  M5.Lcd.print("15");
+  M5.Lcd.setCursor(10, GRAPH_TEMP_Y + GRAPH_HEIGHT - 8);
+  M5.Lcd.print("-10");
 
-  // 湿度グラフのキャプションと枠を描画
+  // 湿度グラフ（枠を1ピクセル外側に描画）
   M5.Lcd.setCursor(GRAPH_X, CAPTION_HUM_Y);
   M5.Lcd.print("Humidity (%)");
-  M5.Lcd.drawRect(GRAPH_X - 1, GRAPH_HUM_Y - 1, GRAPH_WIDTH + 2, GRAPH_HEIGHT + 2, WHITE);
+  M5.Lcd.drawRect(GRAPH_X - 2, GRAPH_HUM_Y - 2, GRAPH_WIDTH + 4, GRAPH_HEIGHT + 4, WHITE);
+  M5.Lcd.setCursor(10, GRAPH_HUM_Y);
+  M5.Lcd.print("100");
+  M5.Lcd.setCursor(15, GRAPH_HUM_Y + GRAPH_HEIGHT / 2 - 4);
+  M5.Lcd.print("50");
+  M5.Lcd.setCursor(15, GRAPH_HUM_Y + GRAPH_HEIGHT - 8);
+  M5.Lcd.print("0");
 }
 
 void loop() {
@@ -186,14 +195,13 @@ void loop() {
 
   delay(100);
 
-  // 測定結果の読み取り
   uint16_t co2 = 0;
   float temperature = 0.0f;
   float humidity = 0.0f;
   bool isDataReady = false;
-  error = scd4x.getDataReadyFlag(isDataReady);
+  error = scd4x.getDataReadyStatus(isDataReady);
   if (error) {
-    Serial.print("Error trying to execute getDataReadyFlag(): ");
+    Serial.print("Error trying to execute getDataReadyStatus(): ");
     errorToString(error, errorMessage, 256);
     Serial.println(errorMessage);
     return;
@@ -224,12 +232,11 @@ void loop() {
       temp_values[i] = temp_values[i + 1];
       hum_values[i] = hum_values[i + 1];
     }
-    // 新しいデータポイントを追加
     co2_values[GRAPH_WIDTH - 1] = co2;
     temp_values[GRAPH_WIDTH - 1] = temperature;
     hum_values[GRAPH_WIDTH - 1] = humidity;
 
-    // グラフエリアをクリア
+    // グラフエリアをクリア（枠の内側のみ）
     M5.Lcd.fillRect(GRAPH_X, GRAPH_CO2_Y, GRAPH_WIDTH, GRAPH_HEIGHT, BLACK);
     M5.Lcd.fillRect(GRAPH_X, GRAPH_TEMP_Y, GRAPH_WIDTH, GRAPH_HEIGHT, BLACK);
     M5.Lcd.fillRect(GRAPH_X, GRAPH_HUM_Y, GRAPH_WIDTH, GRAPH_HEIGHT, BLACK);
@@ -243,7 +250,7 @@ void loop() {
 
     // 温度グラフの描画
     for (int i = 0; i < GRAPH_WIDTH - 1; i++) {
-      int y1 = GRAPH_TEMP_Y + GRAPH_HEIGHT - ((temp_values[i] + 10) / 50.0) * GRAPH_HEIGHT; // 温度範囲を-10℃から40℃と仮定
+      int y1 = GRAPH_TEMP_Y + GRAPH_HEIGHT - ((temp_values[i] + 10) / 50.0) * GRAPH_HEIGHT;
       int y2 = GRAPH_TEMP_Y + GRAPH_HEIGHT - ((temp_values[i + 1] + 10) / 50.0) * GRAPH_HEIGHT;
       M5.Lcd.drawLine(GRAPH_X + i, y1, GRAPH_X + i + 1, y2, RED);
     }
@@ -257,15 +264,14 @@ void loop() {
 
     // 最新の値を表示
     M5.Lcd.setTextColor(WHITE, BLACK);
-    M5.Lcd.fillRect(10, GRAPH_HUM_Y + GRAPH_HEIGHT + 5, 300, 20, BLACK);
-    M5.Lcd.setCursor(10, GRAPH_HUM_Y + GRAPH_HEIGHT + 5);
-    M5.Lcd.printf("CO2: %d ppm  Temp: %.2f C  Humidity: %.2f %%", co2, temperature, humidity);
+    M5.Lcd.fillRect(10, GRAPH_HUM_Y + GRAPH_HEIGHT + 12, 300, 20, BLACK);
+    M5.Lcd.setCursor(10, GRAPH_HUM_Y + GRAPH_HEIGHT + 12);
+    M5.Lcd.printf("Keio Univ. WestLab  CO2:%d Temp:%.1fC Hum:%.1f%%", co2, temperature, humidity);
 
-    // MQTTメッセージの準備
+    // MQTTメッセージの送信
     char mqttMessage[128];
-    snprintf(mqttMessage, sizeof(mqttMessage), "{\"device\":\"%s\",\"co2\":%d,\"temperature\":%.2f,\"humidity\":%.2f}", device_name, co2, temperature, humidity);
+    snprintf(mqttMessage, sizeof(mqttMessage), "{\"device\":\"%s\",\"co2\":%d,\"temperature\":%.2f,\"humidity\":%.2f}", device_name.c_str(), co2, temperature, humidity);
 
-    // MQTTブローカーに送信
     if (client.connected()) {
       if (!client.publish(topic_name.c_str(), mqttMessage)) {
         Serial.println("Failed to publish MQTT message");
