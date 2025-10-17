@@ -349,7 +349,7 @@ def hs2ba16(hexstr: str) -> bytearray:
 bnull = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 
 def insert_length(binstr, position):
-    length = len(binstr)-5
+    length = len(binstr)-6
     length_bytes = length.to_bytes(2, byteorder='big')
     if position < 0 or position + 2 > len(binstr):
         raise ValueError("Invalid Location of Length")
@@ -446,7 +446,7 @@ def on_message(mqttc, obj, msg):
 #    ts = datetime.today().isoformat()
     ts = datetime.datetime.now()
     bts = temporenc.packb(ts)
-    sts = str(ts)
+    sts = str(ts)+'\0'
     if stopic[1]+'/' == confdata['tomcop']:
         print("C")
         f = io.StringIO()
